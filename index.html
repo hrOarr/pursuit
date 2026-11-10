@@ -217,6 +217,42 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
 .step-ic .ti{font-size:13px}
 .step.done{background:var(--ok-bg);border-color:transparent;color:var(--fg)}
 .step.done .step-ic{background:var(--ok);color:#fff}
+.seg.part{background:color-mix(in srgb,var(--accent) 45%,var(--surface-3))}
+.uni-meta{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}
+.dmeta{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--fg-2)}
+.dmeta .ti{font-size:14px;color:var(--muted)}
+.ddot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0}
+.dsep{color:var(--border-strong);font-weight:400}
+.urg-urgent{color:var(--bad);font-weight:600} .urg-urgent .ddot{background:var(--bad)}
+.urg-soon{color:var(--warn);font-weight:600} .urg-soon .ddot{background:var(--warn)}
+.urg-open{color:var(--ok);font-weight:600} .urg-open .ddot{background:var(--ok)}
+.urg-upcoming{color:var(--info);font-weight:600} .urg-upcoming .ddot{background:var(--info)}
+.urg-closed{color:var(--muted);font-weight:600} .urg-closed .ddot{background:var(--muted)}
+.urg-none{color:var(--muted);font-weight:600} .urg-none .ddot{background:var(--muted)}
+.stages{display:flex;flex-direction:column;gap:6px}
+.stg{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface-2)}
+.stg-h{display:flex;align-items:center;gap:10px;width:100%;padding:9px 11px;background:none;border:none;color:var(--fg);font-size:13px;font-weight:600;cursor:pointer;text-align:left}
+.stg-h:hover{background:var(--surface-3)}
+.stg-ic{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--surface-3);color:var(--muted);flex-shrink:0}
+.stg-ic .ti{font-size:14px}
+.stg-t{flex:1;min-width:0}
+.stg-x{font-size:11.5px;color:var(--fg-2);font-weight:600;font-variant-numeric:tabular-nums;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:1px 8px}
+.stg-chev{color:var(--muted);display:inline-flex;font-size:14px}
+.stg.part .stg-ic{background:var(--accent-soft);color:var(--accent)}
+.stg.done{background:var(--ok-bg)}
+.stg.done .stg-ic{background:var(--ok);color:#fff}
+.stg.done .stg-x{color:var(--ok);border-color:transparent;background:color-mix(in srgb,var(--ok) 14%,transparent)}
+.stg-items{display:none;flex-direction:column;gap:2px;padding:4px 8px 9px 11px;border-top:1px solid var(--border);background:var(--surface)}
+.stg-items.open{display:flex}
+.sitem{position:relative;display:flex;align-items:center;gap:10px;padding:6px;border-radius:7px;font-size:13px;color:var(--fg-2);cursor:pointer;font-weight:500}
+.sitem:hover{background:var(--surface-2)}
+.sitem input{position:absolute;opacity:0;width:0;height:0}
+.sitem-box{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border-strong);display:grid;place-items:center;flex-shrink:0;color:#fff;transition:background .15s,border-color .15s}
+.sitem-box .ti{font-size:12px;opacity:0;transition:opacity .15s}
+.sitem.on .sitem-box{background:var(--accent);border-color:var(--accent)}
+.sitem.on .sitem-box .ti{opacity:1}
+.sitem.on{color:var(--fg)}
+.sitem input:focus-visible+.sitem-box{outline:2px solid var(--accent-soft);outline-offset:2px}
 .reqs{display:flex;flex-direction:column;gap:4px}
 .reqitem{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:var(--fg);padding:5px 8px;border-radius:8px;background:var(--surface-2);line-height:1.45}
 .reqitem input{accent-color:var(--accent);width:15px;height:15px;margin:2px 0 0;flex-shrink:0}
@@ -456,8 +492,16 @@ const DOC_MASTER=[
   {id:"funds",icon:"wallet",name:"Proof of funds",desc:"Bank statements for the residence-permit/visa stage. Austria (over 24): ~€15,300/yr. Amounts vary by country."},
 ];
 const BASE_REQ=["Bachelor's in CS / SWE or related","Official transcripts + degree certificate","Statement of Purpose","Academic CV","2–3 recommendation letters","Passport copy"];
-const STEPS=[["gathered","Requirements gathered","folder"],["uploaded","Documents uploaded","upload"],["paid","Application fee paid","cash"],["submitted","Application submitted","send"],["interview","Interview / test done","users"],["decision","Decision received","flag"]];
-function appProgress(u){const s=u.steps||{};const done=STEPS.filter(([k])=>s[k]).length;const next=STEPS.find(([k])=>!s[k]);return{done,total:STEPS.length,pct:Math.round(done/STEPS.length*100),current:next?next[1]:"Complete"};}
+const STAGES=[
+  {k:"gather",t:"Gather requirements",ic:"folder",items:[["ielts","IELTS / English score"],["transcript","Transcripts"],["degree","Degree certificate"],["apostille","Apostille / legalisation"],["sop","Statement of Purpose"],["cv","Academic CV"],["lor","Recommendation letters"],["passport","Passport"],["funds","Proof of funds"]]},
+  {k:"upload",t:"Upload to portal",ic:"upload",items:[["account","Create portal account"],["form","Fill application form"],["docs","Upload all documents"]]},
+  {k:"pay",t:"Pay application fee",ic:"cash",items:[["paid","Fee paid"],["receipt","Save payment receipt"]]},
+  {k:"submit",t:"Submit application",ic:"send",items:[["review","Final review"],["submit","Submit application"],["confirm","Confirmation received"]]},
+  {k:"interview",t:"Interview / entrance test",ic:"users",items:[["scheduled","Scheduled"],["done","Completed"]]},
+  {k:"decision",t:"Decision",ic:"flag",items:[["received","Decision received"],["respond","Respond to offer"]]}
+];
+function stageState(u,stg){const s=(u.steps&&u.steps[stg.k])||{};const done=stg.items.filter(([ik])=>s[ik]).length;return{done,total:stg.items.length,complete:done===stg.items.length&&stg.items.length>0,any:done>0};}
+function appProgress(u){let done=0,current="",found=false;for(const stg of STAGES){const ss=stageState(u,stg);if(ss.complete)done++;else if(!found){current=stg.t;found=true;}}return{done,total:STAGES.length,current:found?current:"All stages complete"};}
 
 /* ============ recommended catalog ============ */
 const CATALOG=[
@@ -497,6 +541,7 @@ let unis=[],schols=[],profile=null,analysis=null;
 let loaded=false;
 let tab="universities",fDeg="all",noteTimers={};
 let openCards=new Set();
+let openStages=new Set();
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
@@ -727,12 +772,9 @@ function renderUnis(){
 }
 function uniCard(u){
   const st=STATUS[u.status]||STATUS.not_started, el=ELIG[u.eligibility]||ELIG.match;
-  const nc=daysLeft(u.close_date), no=daysLeft(u.open_date);
-  const docs=u.docs||{}, reqDone=u.req_done||{}, reqs=Array.isArray(u.requirements)?u.requirements:[];
-  const done=DOC_KEYS.filter(([k])=>docs[k]).length;
-  const reqMet=reqs.filter((_,i)=>reqDone[i]).length;
   const statusOpts=UNI_STATUS_ORDER.map(k=>`<option value="${k}"${u.status===k?" selected":""}>${STATUS[k].label}</option>`).join("");
   const cm=countryMeta(u.country), wp=winProgress(u), ap=appProgress(u);
+  const dateline=u.close_date?`${wp.label} <span class="dsep">·</span> ${fmtDate(u.close_date)}`:wp.label;
   return `<div class="uni" data-id="${esc(u.id)}" style="--rail:${cm.c}">
     <div class="uni-top">
       <div class="uni-head">
@@ -748,31 +790,20 @@ function uniCard(u){
         <span class="bdg pill-slate">${esc(u.degree||"Masters")}</span>
       </div>
       <div class="apptrack">
-        <div class="segs">${STEPS.map(([k])=>`<span class="seg${(u.steps||{})[k]?" on":""}"></span>`).join("")}</div>
-        <span class="apptrack-lbl">${ap.done}/${ap.total} · ${ap.done===ap.total?"Complete":esc(ap.current)}</span>
+        <div class="segs">${STAGES.map(stg=>{const ss=stageState(u,stg);return `<span class="seg${ss.complete?" on":ss.any?" part":""}"></span>`;}).join("")}</div>
+        <span class="apptrack-lbl">${ap.done}/${ap.total} stages${ap.done===ap.total?"":" · "+esc(ap.current)}</span>
       </div>
     </div>
-    <div class="runway-wrap rw-${wp.state}">
-      <div class="runway-head">
-        <span class="rw-date">${u.open_date?("Opens "+fmtDate(u.open_date)):" "}</span>
-        <span class="rw-status">${wp.label}</span>
-        <span class="rw-date">${u.close_date?("Closes "+fmtDate(u.close_date)):""}</span>
-      </div>
-      <div class="runway"><div class="runway-fill" style="width:${wp.pct}%"></div></div>
-    </div>
-    <div class="metarow">
-      <span class="meta"><i class="ti ti-cash"></i><b>${esc(u.tuition||"—")}</b></span>
-      <span class="meta"><i class="ti ti-language"></i>IELTS <b>${esc(u.ielts||"—")}</b></span>
-      <span class="meta"><i class="ti ti-list-check"></i>Reqs <b>${reqMet}/${reqs.length||0}</b></span>
-      <span class="meta"><i class="ti ti-checklist"></i>Docs <b>${done}/${DOC_KEYS.length}</b></span>
+    <div class="uni-meta">
+      <span class="dmeta urg-${wp.state}"><span class="ddot"></span>${dateline}</span>
+      <span class="dmeta"><i class="ti ti-cash"></i>${esc(u.tuition||"—")}</span>
+      <span class="dmeta"><i class="ti ti-language"></i>IELTS ${esc(u.ielts||"—")}</span>
     </div>
     <div class="detail" id="det-${esc(u.id)}">
-      <div class="detail-grid"><span class="lbl-mini">Application progress</span>
-        <div class="steps">${STEPS.map(([k,label,icon])=>{const on=(u.steps||{})[k];return `<button class="step${on?" done":""}" data-step="${k}"><span class="step-ic"><i class="ti ti-${on?"check":icon}"></i></span><span class="step-lbl">${esc(label)}</span></button>`;}).join("")}</div>
+      <div class="detail-grid"><span class="lbl-mini">Application pipeline</span>
+        <div class="stages">${STAGES.map(stg=>{const ss=stageState(u,stg);const sopen=openStages.has(u.id+"|"+stg.k);const s=(u.steps&&u.steps[stg.k])||{};return `<div class="stg${ss.complete?" done":ss.any?" part":""}"><button class="stg-h" data-stagetoggle="${stg.k}"><span class="stg-ic"><i class="ti ti-${ss.complete?"check":stg.ic}"></i></span><span class="stg-t">${esc(stg.t)}</span><span class="stg-x">${ss.done}/${ss.total}</span><span class="stg-chev"><i class="ti ti-chevron-${sopen?"up":"down"}"></i></span></button><div class="stg-items${sopen?" open":""}" id="stg-${esc(u.id)}-${stg.k}">${stg.items.map(([ik,il])=>`<label class="sitem${s[ik]?" on":""}"><input type="checkbox" data-sitem="${stg.k}:${ik}"${s[ik]?" checked":""}><span class="sitem-box"><i class="ti ti-check"></i></span><span class="sitem-t">${esc(il)}</span></label>`).join("")}</div></div>`;}).join("")}</div>
       </div>
       ${u.elig_note?`<div class="detail-grid"><span class="lbl-mini">Why this fit</span><div class="elig-note">${esc(u.elig_note)}</div></div>`:""}
-      ${reqs.length?`<div class="detail-grid"><span class="lbl-mini">Requirements — tick what you've met</span><div class="reqs">${reqs.map((r,i)=>`<label class="reqitem${reqDone[i]?" met":""}"><input type="checkbox" data-req="${i}"${reqDone[i]?" checked":""}><span>${esc(r)}</span></label>`).join("")}</div></div>`:""}
-      <div class="detail-grid"><span class="lbl-mini">Documents for this program</span><div class="docs-row">${DOC_KEYS.map(([k,lb])=>`<label class="docchk${docs[k]?" done":""}"><input type="checkbox" data-doc="${k}"${docs[k]?" checked":""}>${lb}</label>`).join("")}</div></div>
       <div class="detail-grid"><span class="lbl-mini">Notes</span><textarea class="note-area" data-note placeholder="Portal login, supervisor emails, to-dos…">${esc(u.notes||"")}</textarea></div>
       ${u.link?`<a class="applink" href="${esc(u.link)}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i>Open application page</a>`:""}
     </div>
@@ -785,15 +816,17 @@ function uniCard(u){
   </div>`;
 }
 $("#uniHost").addEventListener("click",e=>{const card=e.target.closest(".uni");if(!card)return;const id=card.dataset.id;
-  if(e.target.closest("[data-step]")){const key=e.target.closest("[data-step]").dataset.step;const u=unis.find(x=>x.id===id)||{};const cur=(u.steps||{})[key];const steps=Object.assign({},u.steps,{[key]:!cur});const patch={steps};if(key==="submitted"&&!cur&&!["applied","admitted","rejected","waitlisted"].includes(u.status)){patch.status="applied";patch.applied_date=u.applied_date||new Date().toISOString().slice(0,10);}writeUni(id,patch);return;}
+  if(e.target.closest("[data-stagetoggle]")){const b=e.target.closest("[data-stagetoggle]");const k=b.dataset.stagetoggle;const box=document.getElementById("stg-"+id+"-"+k);if(!box)return;const open=box.classList.toggle("open");if(open)openStages.add(id+"|"+k);else openStages.delete(id+"|"+k);const ci=b.querySelector(".stg-chev i");if(ci)setIcon(ci,open?"chevron-up":"chevron-down");return;}
   if(e.target.closest("[data-expand]")){const d=$("#det-"+CSS.escape(id));const open=d.classList.toggle("open");if(open)openCards.add(id);else openCards.delete(id);setIcon(e.target.closest("[data-expand]").querySelector("i"),open?"chevron-up":"chevron-down");return;}
   if(e.target.closest("[data-edit]")){openUniModal(unis.find(u=>u.id===id));return;}
   if(e.target.closest("[data-del]")){delUni(id);return;}});
-function reopenCards(){openCards.forEach(id=>{const d=document.getElementById("det-"+id);if(!d){openCards.delete(id);return;}d.classList.add("open");const card=d.closest(".uni");const i=card?card.querySelector("[data-expand] i"):null;if(i)setIcon(i,"chevron-up");});}
+function reopenCards(){
+  openCards.forEach(id=>{const d=document.getElementById("det-"+id);if(!d){openCards.delete(id);return;}d.classList.add("open");const card=d.closest(".uni");const i=card?card.querySelector("[data-expand] i"):null;if(i)setIcon(i,"chevron-up");});
+  openStages.forEach(key=>{const p=key.split("|"),id=p[0],k=p[1];const box=document.getElementById("stg-"+id+"-"+k);if(!box){openStages.delete(key);return;}box.classList.add("open");const h=box.previousElementSibling;const ci=h?h.querySelector(".stg-chev i"):null;if(ci)setIcon(ci,"chevron-up");});
+}
 $("#uniHost").addEventListener("change",e=>{const card=e.target.closest(".uni");if(!card)return;const id=card.dataset.id;const u=unis.find(x=>x.id===id)||{};
   if(e.target.matches("[data-status]")){const v=e.target.value;writeUni(id,{status:v,applied_date:(v==="applied"&&!u.applied_date)?new Date().toISOString().slice(0,10):(u.applied_date||null)});toast("Status updated");return;}
-  if(e.target.matches("[data-doc]")){const docs=Object.assign({},u.docs,{[e.target.dataset.doc]:e.target.checked});writeUni(id,{docs});return;}
-  if(e.target.matches("[data-req]")){const rd=Object.assign({},u.req_done,{[e.target.dataset.req]:e.target.checked});writeUni(id,{req_done:rd});return;}});
+  if(e.target.matches("[data-sitem]")){const parts=e.target.dataset.sitem.split(":"),k=parts[0],ik=parts[1];const steps=Object.assign({},u.steps);steps[k]=Object.assign({},steps[k],{[ik]:e.target.checked});const patch={steps};const sub=STAGES.find(x=>x.k==="submit");if(sub&&sub.items.every(([i2])=>(steps.submit||{})[i2])&&!["applied","admitted","rejected","waitlisted"].includes(u.status)){patch.status="applied";patch.applied_date=u.applied_date||new Date().toISOString().slice(0,10);}writeUni(id,patch);return;}});
 $("#uniHost").addEventListener("input",e=>{if(!e.target.matches("[data-note]"))return;const id=e.target.closest(".uni").dataset.id,val=e.target.value;clearTimeout(noteTimers[id]);noteTimers[id]=setTimeout(()=>{writeUni(id,{notes:val});toast("Notes saved");},700);});
 
 /* ============ scholarships ============ */
@@ -831,7 +864,7 @@ $("#schHost").addEventListener("click",e=>{const card=e.target.closest(".sch");i
 
 /* ============ documents ============ */
 function renderDocs(){
-  $("#docHost").innerHTML=DOC_MASTER.map(d=>{const total=unis.length,have=unis.filter(u=>(u.docs||{})[d.id]).length,pct=total?Math.round(have/total*100):0;
+  $("#docHost").innerHTML=DOC_MASTER.map(d=>{const total=unis.length,have=unis.filter(u=>((u.steps&&u.steps.gather)||{})[d.id]).length,pct=total?Math.round(have/total*100):0;
     return `<div class="doccard"><h3><i class="ti ti-${d.icon}" style="color:var(--accent)"></i>${esc(d.name)}</h3><p>${esc(d.desc)}</p><div class="status"><span class="bdg ${pct===100&&total?"pill-ok":pct>0?"pill-warn":"pill-slate"}">${total?`Ready for ${have}/${total} programs`:"Add programs first"}</span></div></div>`;}).join("");
   renderIcons($("#docHost"));
 }
