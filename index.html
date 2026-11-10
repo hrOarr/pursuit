@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pursuit</title>
+<meta name="description" content="Chart your path to studying abroad — track Masters & PhD applications and scholarships.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+:root{
+  --bg:#f5f7fa; --surface:#ffffff; --surface-2:#eef1f6; --surface-3:#e7ebf1;
+  --border:#e2e7ee; --border-strong:#ccd4df;
+  --fg:#181d26; --fg-2:#56606f; --muted:#8a93a2;
+  --accent:#4f5bd5; --accent-fg:#ffffff; --accent-soft:rgba(79,91,213,.10);
+  --ok:#1f9d6b; --ok-bg:rgba(31,157,107,.12);
+  --warn:#bd7710; --warn-bg:rgba(189,119,16,.13);
+  --bad:#d2483f; --bad-bg:rgba(210,72,63,.12);
+  --info:#2f6fd0; --info-bg:rgba(47,111,208,.12);
+  --applied:#6d5ae0; --applied-bg:rgba(109,90,224,.13);
+  --slate:#6b7280; --slate-bg:rgba(107,114,128,.12);
+  --orange:#d9772e; --orange-bg:rgba(217,119,46,.13);
+  --shadow:0 1px 2px rgba(20,28,40,.04),0 2px 8px rgba(20,28,40,.05);
+  --shadow-lg:0 8px 30px rgba(20,28,40,.14);
+  --radius:14px; --radius-sm:9px;
+  --font-head:"Space Grotesk",ui-sans-serif,system-ui,sans-serif;
+  --font-body:"Inter",ui-sans-serif,system-ui,-apple-system,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1218; --surface:#161b23; --surface-2:#1d232d; --surface-3:#242b36;
+  --border:#262d39; --border-strong:#39424f;
+  --fg:#e9ecf1; --fg-2:#a6afbd; --muted:#717b8a;
+  --accent:#8b95f0; --accent-fg:#13151f; --accent-soft:rgba(139,149,240,.15);
+  --ok:#3bbd87; --ok-bg:rgba(59,189,135,.15);
+  --warn:#e0a44a; --warn-bg:rgba(224,164,74,.15);
+  --bad:#ef6b61; --bad-bg:rgba(239,107,97,.15);
+  --info:#5b9af0; --info-bg:rgba(91,154,240,.15);
+  --applied:#9b8bf0; --applied-bg:rgba(155,139,240,.16);
+  --slate:#9aa3b2; --slate-bg:rgba(154,163,178,.15);
+  --orange:#eb9a5a; --orange-bg:rgba(235,154,90,.15);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 2px 10px rgba(0,0,0,.35);
+  --shadow-lg:0 10px 34px rgba(0,0,0,.5);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0e1218; --surface:#161b23; --surface-2:#1d232d; --surface-3:#242b36;
+  --border:#262d39; --border-strong:#39424f;
+  --fg:#e9ecf1; --fg-2:#a6afbd; --muted:#717b8a;
+  --accent:#8b95f0; --accent-fg:#13151f; --accent-soft:rgba(139,149,240,.15);
+  --ok:#3bbd87; --ok-bg:rgba(59,189,135,.15);
+  --warn:#e0a44a; --warn-bg:rgba(224,164,74,.15);
+  --bad:#ef6b61; --bad-bg:rgba(239,107,97,.15);
+  --info:#5b9af0; --info-bg:rgba(91,154,240,.15);
+  --applied:#9b8bf0; --applied-bg:rgba(155,139,240,.16);
+  --slate:#9aa3b2; --slate-bg:rgba(154,163,178,.15);
+  --orange:#eb9a5a; --orange-bg:rgba(235,154,90,.15);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 2px 10px rgba(0,0,0,.35);
+  --shadow-lg:0 10px 34px rgba(0,0,0,.5);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);line-height:1.5;font-size:14px;-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+[hidden]{display:none!important}
+h1,h2,h3{font-family:var(--font-head);margin:0;text-wrap:balance;letter-spacing:-.01em}
+button{font-family:inherit;cursor:pointer}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));max-width:1180px;margin:0 auto}
+.tnum{font-variant-numeric:tabular-nums}
+.ti{display:inline-flex;align-items:center;justify-content:center;width:1em;height:1em;line-height:1;flex-shrink:0;vertical-align:-.125em}
+.ti svg{width:1em;height:1em;display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ti-loader svg{animation:spin 1s linear infinite}
+@media (prefers-reduced-motion:reduce){.ti-loader svg{animation:none}}
+
+.top{position:sticky;top:0;z-index:30;background:var(--surface);border-bottom:1px solid var(--border)}
+.top-in{display:flex;align-items:center;gap:14px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--applied));display:grid;place-items:center;flex-shrink:0;color:#fff;font-size:19px}
+.brand h1{font-size:18px;font-weight:600;white-space:nowrap}
+.brand .sub{font-size:11.5px;color:var(--muted);white-space:nowrap}
+.top-sp{flex:1}
+.chip-user{display:flex;align-items:center;gap:8px;padding:5px 11px 5px 6px;background:var(--surface-2);border:1px solid var(--border);border-radius:999px;font-size:12.5px;font-weight:500;color:var(--fg-2);white-space:nowrap}
+.chip-user .av{width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--accent-fg);display:grid;place-items:center;font-weight:700;font-size:11px;font-family:var(--font-head)}
+.icon-btn{width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg-2);display:grid;place-items:center;font-size:17px}
+.icon-btn:hover{color:var(--fg);border-color:var(--border-strong)}
+
+.dash{padding-top:18px}
+.stat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:8px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:13px 15px;box-shadow:var(--shadow);min-width:0}
+.stat .k{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:5px}
+.stat .v{font-family:var(--font-head);font-size:26px;font-weight:600;margin-top:6px;letter-spacing:-.02em}
+.stat .vsub{font-size:11.5px;color:var(--fg-2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat.hl{background:linear-gradient(150deg,var(--accent-soft),transparent);border-color:color-mix(in srgb,var(--accent) 30%,var(--border))}
+
+.tabs{display:flex;gap:4px;margin:18px 0 0;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:10px 15px;background:none;border:none;border-bottom:2px solid transparent;color:var(--fg-2);font-size:14px;font-weight:500;white-space:nowrap;display:flex;align-items:center;gap:7px;margin-bottom:-1px}
+.tab .ti{font-size:17px}
+.tab:hover{color:var(--fg)}
+.tab.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tab .cnt{font-size:11px;background:var(--surface-3);color:var(--fg-2);border-radius:999px;padding:1px 7px;font-weight:600}
+.tab.on .cnt{background:var(--accent-soft);color:var(--accent)}
+
+.panel{padding:18px 0 60px}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px}
+.seg{display:flex;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:3px;gap:2px}
+.seg button{padding:5px 11px;border:none;background:none;border-radius:7px;font-size:12.5px;font-weight:500;color:var(--fg-2);white-space:nowrap}
+.seg button.on{background:var(--surface);color:var(--fg);box-shadow:var(--shadow);font-weight:600}
+select.ctl,input.ctl{font-family:inherit;font-size:13px;padding:7px 11px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg);border-radius:9px}
+select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-color:var(--accent)}
+.ctl-sp{flex:1}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg);font-size:13px;font-weight:600}
+.btn:hover{border-color:var(--border-strong)}
+.btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.05)}
+.btn .ti{font-size:16px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:13px}
+.uni{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+.uni-top{padding:14px 15px 12px;display:flex;flex-direction:column;gap:9px}
+.uni-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.flag{font-size:12px;font-weight:600;color:var(--fg-2);display:flex;align-items:center;gap:6px;letter-spacing:.02em;flex-wrap:wrap}
+.flag .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.uni h3{font-size:16px;font-weight:600;line-height:1.25}
+.uni .prog{font-size:13px;color:var(--fg-2);margin-top:2px}
+.badges{display:flex;flex-wrap:wrap;gap:6px}
+.bdg{font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;display:inline-flex;align-items:center;gap:4px;letter-spacing:.01em}
+.pill-slate{background:var(--slate-bg);color:var(--slate)} .pill-info{background:var(--info-bg);color:var(--info)}
+.pill-warn{background:var(--warn-bg);color:var(--warn)} .pill-applied{background:var(--applied-bg);color:var(--applied)}
+.pill-ok{background:var(--ok-bg);color:var(--ok)} .pill-bad{background:var(--bad-bg);color:var(--bad)}
+.pill-orange{background:var(--orange-bg);color:var(--orange)}
+.win{display:flex;gap:0;padding:0 15px 12px}
+.win-cell{flex:1;min-width:0}
+.win-cell .wl{font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:4px}
+.win-cell .wv{font-size:13px;font-weight:600;margin-top:2px}
+.win-div{width:1px;background:var(--border);margin:2px 14px}
+.metarow{display:flex;flex-wrap:wrap;gap:4px 16px;padding:0 15px 13px}
+.meta{font-size:12px;color:var(--fg-2);display:flex;align-items:center;gap:5px}
+.meta .ti{font-size:14px;color:var(--muted)}
+.meta b{color:var(--fg);font-weight:600}
+.dl-soon{color:var(--bad)} .dl-near{color:var(--warn)} .dl-ok{color:var(--fg-2)} .dl-open{color:var(--ok)}
+.uni-foot{margin-top:auto;border-top:1px solid var(--border);display:flex;align-items:stretch;background:var(--surface-2)}
+.uni-foot select{flex:1;border:none;background:none;color:var(--fg);font-family:inherit;font-size:12.5px;font-weight:600;padding:10px 12px}
+.uni-foot select:focus{outline:2px solid var(--accent-soft);outline-offset:-2px}
+.foot-btn{border:none;border-left:1px solid var(--border);background:none;color:var(--fg-2);padding:0 13px;font-size:16px;display:grid;place-items:center}
+.foot-btn:hover{color:var(--fg);background:var(--surface-3)}
+.foot-btn.danger:hover{color:var(--bad)}
+.verify{font-size:10.5px;color:var(--warn);background:var(--warn-bg);padding:2px 7px;border-radius:999px;font-weight:600}
+
+.detail{border-top:1px solid var(--border);padding:13px 15px;display:none;flex-direction:column;gap:13px;background:var(--surface)}
+.detail.open{display:flex}
+.lbl-mini{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.detail-grid{display:flex;flex-direction:column;gap:7px}
+.elig-note{font-size:12.5px;color:var(--fg-2);line-height:1.5}
+.reqs{display:flex;flex-direction:column;gap:4px}
+.reqitem{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:var(--fg);padding:5px 8px;border-radius:8px;background:var(--surface-2);line-height:1.45}
+.reqitem input{accent-color:var(--accent);width:15px;height:15px;margin:2px 0 0;flex-shrink:0}
+.reqitem.met{color:var(--fg-2)}
+.reqitem.met span{text-decoration:line-through;text-decoration-color:var(--muted)}
+.docs-row{display:flex;flex-wrap:wrap;gap:6px}
+.docchk{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:5px 10px;border-radius:999px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg-2);font-weight:500}
+.docchk input{accent-color:var(--accent);width:14px;height:14px;margin:0}
+.docchk.done{background:var(--ok-bg);color:var(--ok);border-color:transparent}
+.note-area{width:100%;min-height:56px;resize:vertical;border:1px solid var(--border);background:var(--surface-2);color:var(--fg);border-radius:9px;padding:9px 11px;font-family:inherit;font-size:13px}
+.note-area:focus{outline:2px solid var(--accent-soft);border-color:var(--accent)}
+.applink{font-size:12.5px;color:var(--accent);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;word-break:break-all}
+.applink:hover{text-decoration:underline}
+
+.empty{text-align:center;padding:48px 20px;color:var(--fg-2)}
+.empty .ti{font-size:40px;color:var(--muted)}
+.empty h3{font-size:17px;margin:12px 0 5px;color:var(--fg)}
+.empty p{font-size:13.5px;max-width:440px;margin:0 auto 16px}
+.note-bar{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--warn);background:var(--warn-bg);border:1px solid color-mix(in srgb,var(--warn) 25%,transparent);padding:8px 13px;border-radius:9px;margin-bottom:14px}
+.note-bar.err{color:var(--bad);background:var(--bad-bg);border-color:color-mix(in srgb,var(--bad) 25%,transparent)}
+.skel{height:168px;border-radius:var(--radius);background:linear-gradient(100deg,var(--surface-2) 30%,var(--surface-3) 50%,var(--surface-2) 70%);background-size:200% 100%;animation:sh 1.3s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){.skel{animation:none}}
+
+.sch{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 15px;display:flex;flex-direction:column;gap:9px}
+.sch-cover{font-size:12.5px;color:var(--fg-2);line-height:1.5}
+.sch-foot{display:flex;align-items:center;gap:8px;margin-top:2px}
+.sch-foot select{flex:1;font-family:inherit;font-size:12.5px;font-weight:600;padding:7px 10px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg);border-radius:8px}
+
+.docmaster{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.doccard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px;box-shadow:var(--shadow)}
+.doccard h3{font-size:15px;display:flex;align-items:center;gap:8px}
+.doccard p{font-size:12.5px;color:var(--fg-2);margin:7px 0 0;line-height:1.5}
+.doccard .status{margin-top:11px}
+
+.prof{display:grid;grid-template-columns:1.3fr 1fr;gap:14px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+.card h3{font-size:14px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;font-weight:600}
+.prow{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13.5px}
+.prow:last-child{border-bottom:none}
+.prow .pl{color:var(--fg-2)} .prow .pv{font-weight:600;text-align:right}
+.taglist{display:flex;flex-wrap:wrap;gap:7px}
+.ctag{font-size:12px;font-weight:600;padding:5px 11px;border-radius:999px;background:var(--surface-2);border:1px solid var(--border);color:var(--fg-2)}
+.summary{font-size:13.5px;color:var(--fg-2);line-height:1.6}
+
+.overlay{position:fixed;inset:0;background:rgba(10,14,20,.55);z-index:60;display:none;align-items:flex-start;justify-content:center;padding:24px 16px;overflow-y:auto}
+.overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-lg);width:100%;max-width:560px;margin:auto}
+.modal-h{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-h h3{font-size:16px}
+.modal-b{padding:18px;display:flex;flex-direction:column;gap:13px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:12px;font-weight:600;color:var(--fg-2)}
+.field input,.field select,.field textarea{font-family:inherit;font-size:13.5px;padding:9px 11px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg);border-radius:9px;width:100%}
+.field textarea{min-height:90px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--accent-soft);border-color:var(--accent)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.field-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px}
+.modal-f{padding:14px 18px;border-top:1px solid var(--border);display:flex;gap:9px;justify-content:flex-end}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);font-size:13px;font-weight:600;padding:10px 18px;border-radius:999px;box-shadow:var(--shadow-lg);z-index:80;opacity:0;pointer-events:none;transition:opacity .25s;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis}
+.toast.show{opacity:1}
+
+@media (max-width:860px){ .stat-grid{grid-template-columns:repeat(3,1fr)} .prof{grid-template-columns:1fr} }
+@media (max-width:520px){ .stat-grid{grid-template-columns:repeat(2,1fr)} .brand .sub{display:none} .field-row,.field-row-3{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap top-in">
+    <div class="brand">
+      <div class="logo"><i class="ti ti-peak"></i></div>
+      <div style="min-width:0"><h1>Pursuit</h1><div class="sub">The pursuit of what's next — study, scholarships, career</div></div>
+    </div>
+    <div class="top-sp"></div>
+    <div id="userChip" class="chip-user" hidden><span class="av" id="userAv">A</span><span id="userName">You</span></div>
+    <button class="icon-btn" id="refreshBtn" title="Refresh from database" aria-label="Refresh"><i class="ti ti-refresh"></i></button>
+    <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme"><i class="ti ti-moon"></i></button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div id="noteBar" class="note-bar" hidden><i class="ti ti-info-circle"></i><span id="noteBarTxt"></span></div>
+
+  <div class="dash"><div class="stat-grid" id="statGrid"></div></div>
+
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-tab="universities"><i class="ti ti-building-bank"></i><span>Universities</span><span class="cnt" id="cUni">0</span></button>
+    <button class="tab" data-tab="scholarships"><i class="ti ti-award"></i><span>Scholarships</span><span class="cnt" id="cSch">0</span></button>
+    <button class="tab" data-tab="documents"><i class="ti ti-folder"></i><span>Documents</span></button>
+    <button class="tab" data-tab="profile"><i class="ti ti-user"></i><span>Profile</span></button>
+  </div>
+
+  <div class="panel" id="panel-universities">
+    <div class="controls">
+      <div class="seg" id="degSeg">
+        <button data-deg="all" class="on">All</button>
+        <button data-deg="Masters">Masters</button>
+        <button data-deg="PhD">PhD</button>
+      </div>
+      <select class="ctl" id="fCountry"><option value="all">All countries</option></select>
+      <select class="ctl" id="fIntake"><option value="all">All intakes</option></select>
+      <select class="ctl" id="fStatus">
+        <option value="all">All statuses</option>
+        <option value="not_started">Not started</option>
+        <option value="researching">Researching</option>
+        <option value="docs_ready">Docs ready</option>
+        <option value="applied">Applied</option>
+        <option value="admitted">Admitted</option>
+        <option value="waitlisted">Waitlisted</option>
+        <option value="rejected">Rejected</option>
+      </select>
+      <select class="ctl" id="fSort">
+        <option value="deadline">Sort: Closing date</option>
+        <option value="opening">Sort: Opening date</option>
+        <option value="priority">Sort: Priority</option>
+        <option value="country">Sort: Country</option>
+        <option value="status">Sort: Status</option>
+        <option value="name">Sort: Name</option>
+      </select>
+      <div class="ctl-sp"></div>
+      <button class="btn primary" id="addUniBtn"><i class="ti ti-plus"></i>Add program</button>
+    </div>
+    <div id="uniHost"></div>
+  </div>
+
+  <div class="panel" id="panel-scholarships" hidden>
+    <div class="controls">
+      <select class="ctl" id="fSchCountry"><option value="all">All countries</option></select>
+      <select class="ctl" id="fSchStatus">
+        <option value="all">All statuses</option>
+        <option value="not_started">Not started</option>
+        <option value="researching">Researching</option>
+        <option value="applied">Applied</option>
+        <option value="awarded">Awarded</option>
+        <option value="rejected">Rejected</option>
+      </select>
+      <div class="ctl-sp"></div>
+      <button class="btn primary" id="addSchBtn"><i class="ti ti-plus"></i>Add scholarship</button>
+    </div>
+    <div id="schHost"></div>
+  </div>
+
+  <div class="panel" id="panel-documents" hidden>
+    <p style="font-size:13.5px;color:var(--fg-2);margin:0 0 16px;max-width:640px">Your master document checklist. These apply across most applications — get them ready once and reuse. Per-program document and requirement tracking lives on each university card.</p>
+    <div class="docmaster" id="docHost"></div>
+  </div>
+
+  <div class="panel" id="panel-profile" hidden><div class="prof" id="profHost"></div></div>
+</div>
+
+<div class="overlay" id="uniOverlay">
+  <div class="modal">
+    <div class="modal-h"><h3 id="uniModalTitle">Add program</h3><button class="icon-btn" id="uniClose"><i class="ti ti-x"></i></button></div>
+    <div class="modal-b">
+      <div class="field"><label>University</label><input id="mName" placeholder="e.g. TU Wien"></div>
+      <div class="field"><label>Program</label><input id="mProg" placeholder="e.g. MSc Software Engineering"></div>
+      <div class="field-row">
+        <div class="field"><label>Country</label><input id="mCountry" placeholder="e.g. Austria"></div>
+        <div class="field"><label>Degree</label><select id="mDeg"><option>Masters</option><option>PhD</option></select></div>
+      </div>
+      <div class="field-row-3">
+        <div class="field"><label>Application opens</label><input id="mOpen" type="date"></div>
+        <div class="field"><label>Application closes</label><input id="mClose" type="date"></div>
+        <div class="field"><label>Intake</label><input id="mIntake" placeholder="e.g. Winter 2027/28"></div>
+      </div>
+      <div class="field-row-3">
+        <div class="field"><label>Tuition</label><input id="mTuition" placeholder="e.g. €726/sem"></div>
+        <div class="field"><label>IELTS</label><input id="mIelts" placeholder="e.g. 6.5"></div>
+        <div class="field"><label>Priority</label><select id="mPrio"><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></div>
+      </div>
+      <div class="field"><label>Eligibility</label><select id="mElig"><option value="match">Match — I qualify</option><option value="caution">Caution — check requirements</option><option value="stretch">Stretch — ambitious</option></select></div>
+      <div class="field"><label>Requirements (one per line)</label><textarea id="mReqs" placeholder="Bachelor's in CS (180 ECTS)&#10;IELTS 6.5&#10;Statement of Purpose&#10;2 recommendation letters"></textarea></div>
+      <div class="field"><label>Application link</label><input id="mLink" placeholder="https://..."></div>
+    </div>
+    <div class="modal-f"><button class="btn" id="uniCancel">Cancel</button><button class="btn primary" id="uniSave">Save program</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="schOverlay">
+  <div class="modal">
+    <div class="modal-h"><h3 id="schModalTitle">Add scholarship</h3><button class="icon-btn" id="schClose"><i class="ti ti-x"></i></button></div>
+    <div class="modal-b">
+      <div class="field"><label>Scholarship name</label><input id="sName" placeholder="e.g. Stipendium Hungaricum"></div>
+      <div class="field"><label>Country / scope</label><input id="sCountry" placeholder="e.g. Hungary"></div>
+      <div class="field"><label>Coverage</label><input id="sCover" placeholder="e.g. Full tuition + stipend + housing"></div>
+      <div class="field-row">
+        <div class="field"><label>Opens</label><input id="sOpen" type="date"></div>
+        <div class="field"><label>Deadline</label><input id="sDeadline" type="date"></div>
+      </div>
+      <div class="field"><label>Link</label><input id="sLink" placeholder="https://..."></div>
+    </div>
+    <div class="modal-f"><button class="btn" id="schCancel">Cancel</button><button class="btn primary" id="schSave">Save scholarship</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+/* ============ Supabase config ============ */
+const SB_URL="https://jtxgrpwfvuqyynzjgdsj.supabase.co";
+const SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0eGdycHdmdnVxeXluempnZHNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM1OTI1OTEsImV4cCI6MjA5OTE2ODU5MX0.XCf3wsv98xqiZcdb1GAyX0s-qP7_BFkOpgXI8s6npWo";
+let sb=null;
+try{ sb=window.supabase.createClient(SB_URL,SB_KEY); }catch(e){ sb=null; }
+
+/* ============ config ============ */
+const STATUS={
+  not_started:{label:"Not started",cls:"pill-slate"}, researching:{label:"Researching",cls:"pill-info"},
+  docs_ready:{label:"Docs ready",cls:"pill-warn"}, applied:{label:"Applied",cls:"pill-applied"},
+  admitted:{label:"Admitted",cls:"pill-ok"}, waitlisted:{label:"Waitlisted",cls:"pill-orange"}, rejected:{label:"Rejected",cls:"pill-bad"},
+};
+const UNI_STATUS_ORDER=["not_started","researching","docs_ready","applied","waitlisted","admitted","rejected"];
+const SCH_STATUS={ not_started:{label:"Not started",cls:"pill-slate"}, researching:{label:"Researching",cls:"pill-info"}, applied:{label:"Applied",cls:"pill-applied"}, awarded:{label:"Awarded",cls:"pill-ok"}, rejected:{label:"Rejected",cls:"pill-bad"} };
+const ELIG={match:{label:"Eligible",cls:"pill-ok",ti:"circle-check"},caution:{label:"Check reqs",cls:"pill-warn",ti:"alert-triangle"},stretch:{label:"Stretch",cls:"pill-bad",ti:"target-arrow"}};
+const PRIO={high:{label:"High",cls:"pill-bad"},medium:{label:"Medium",cls:"pill-warn"},low:{label:"Low",cls:"pill-slate"}};
+const DOC_KEYS=[["ielts","IELTS"],["transcript","Transcript"],["apostille","Apostille"],["sop","SOP"],["lor","LOR"],["cv","CV"],["passport","Passport"],["funds","Funds proof"]];
+const DOC_MASTER=[
+  {id:"ielts",icon:"language",name:"IELTS / English test",desc:"You have IELTS 6.5 — valid 2 years from the test date. Re-check validity before each deadline; some programs want each band ≥ 6.0."},
+  {id:"transcript",icon:"file-certificate",name:"Transcripts & degree",desc:"Official JU BSc certificate and all-semester transcripts in English."},
+  {id:"apostille",icon:"stamp",name:"Apostille / legalisation",desc:"Authentication of your degree & transcripts via the Bangladesh Ministry of Foreign Affairs. Start early — it takes weeks."},
+  {id:"sop",icon:"writing",name:"Statement of Purpose",desc:"Tailor per program. Lead with your microservices scale work and ICPC background."},
+  {id:"lor",icon:"users",name:"Recommendation letters",desc:"2–3 letters — a manager, a senior colleague, and ideally a JU professor."},
+  {id:"cv",icon:"file-cv",name:"Academic CV",desc:"English, academic format. Include projects, ICPC achievements, work impact."},
+  {id:"passport",icon:"id",name:"Passport",desc:"6+ months validity beyond intended entry, 2+ blank pages."},
+  {id:"funds",icon:"wallet",name:"Proof of funds",desc:"Bank statements for the residence-permit/visa stage. Austria (over 24): ~€15,300/yr. Amounts vary by country."},
+];
+const BASE_REQ=["Bachelor's in CS / SWE or related","Official transcripts + degree certificate","Statement of Purpose","Academic CV","2–3 recommendation letters","Passport copy"];
+
+/* ============ recommended catalog ============ */
+const CATALOG=[
+  {id:"at-tuwien-se",country:"Austria",cc:"AT",name:"TU Wien",program:"MSc Software Engineering & Internet Computing",degree:"Masters",tuition:"€726.72/sem",open_date:"2027-01-16",close_date:"2027-07-15",intake:"Winter 2027/28",ielts:"6.5",eligibility:"match",elig_note:"IELTS 6.5 meets the minimum; your Java/Spring/microservices background is a direct fit.",link:"https://www.tuwien.at/en/studies/admission",priority:"high",verify:true,requirements:["Bachelor's in CS/SWE (min 180 ECTS)","IELTS 6.5 overall","Official transcripts + degree","Document legalisation / apostille","Statement of Purpose","Academic CV","Residence permit after admission (funds ~€15,300/yr if over 24)"]},
+  {id:"at-tuwien-ds",country:"Austria",cc:"AT",name:"TU Wien",program:"MSc Data Science",degree:"Masters",tuition:"€726.72/sem",open_date:"2027-01-16",close_date:"2027-07-15",intake:"Winter 2027/28",ielts:"6.5",eligibility:"match",elig_note:"Strong option alongside SE. Same non-EU winter window.",link:"https://www.tuwien.at/en/studies/admission",priority:"medium",verify:true,requirements:["Bachelor's in CS or related (180 ECTS)","Sufficient maths/statistics background","IELTS 6.5","Transcripts + apostille","Statement of Purpose","CV"]},
+  {id:"at-jku-cs",country:"Austria",cc:"AT",name:"JKU Linz",program:"MSc Computer Science (Software Engineering)",degree:"Masters",tuition:"€1,454/yr",open_date:"2027-03-01",close_date:"2027-04-30",intake:"Winter 2027/28",ielts:"6.5",eligibility:"match",elig_note:"Lower cost of living than Vienna. Apply early — non-EU review can exceed 6 months.",link:"https://cs.jku.at/master/",priority:"high",verify:true,requirements:["Bachelor's in CS / Business Informatics or equivalent","IELTS 6.5 (each band ≥ 6.5)","Transcripts + degree","Apply early (6-month non-EU processing)","Statement of Purpose","CV"]},
+  {id:"at-univie-cs",country:"Austria",cc:"AT",name:"University of Vienna",program:"MSc Computer Science",degree:"Masters",tuition:"€726.72/sem",open_date:"2027-03-01",close_date:"2027-04-07",intake:"Winter 2027/28",ielts:"6.5",eligibility:"caution",elig_note:"Uses a selection procedure with an entrance test on CS fundamentals. Prepare the test topics.",link:"https://studieren.univie.ac.at/en/",priority:"medium",verify:true,requirements:["Bachelor's in CS or related","Pass CS entrance test (logic gates, boolean algebra, CMOS, theory)","IELTS 6.5","Transcripts + apostille","Register in the selection-procedure window (Mar–Apr)"]},
+  {id:"at-tugraz-se",country:"Austria",cc:"AT",name:"TU Graz",program:"MSc Software Engineering & Management",degree:"Masters",tuition:"€726.72/sem",open_date:"2027-03-01",close_date:"2027-07-13",intake:"Winter 2027/28",ielts:"7.0",eligibility:"caution",elig_note:"May require IELTS 7.0 (higher than your 6.5). Ask if an English-medium degree waives it.",link:"https://www.tugraz.at/en/studying-and-teaching",priority:"low",verify:true,requirements:["Bachelor's in CS/SWE","IELTS 7.0 (verify; English-medium waiver possible)","Transcripts + apostille","Statement of Purpose","CV"]},
+  {id:"nl-tudelft-cs",country:"Netherlands",cc:"NL",name:"TU Delft",program:"MSc Computer Science",degree:"Masters",tuition:"~€21,000/yr",open_date:"2026-10-01",close_date:"2027-04-01",intake:"Fall 2027",ielts:"6.5",eligibility:"caution",elig_note:"Top-ranked, competitive, high non-EU tuition. Dates & fee approximate — verify.",link:"https://www.tudelft.nl/en/education/programmes/masters",priority:"medium",verify:true,requirements:["Bachelor's in CS (strong maths/programming)","IELTS 6.5 (writing ≥ 6.0)","Apply via Studielink + TU Delft portal","Transcripts + grade list","Statement of Purpose","2 recommendation letters","GRE sometimes requested"]},
+  {id:"nl-tue-cse",country:"Netherlands",cc:"NL",name:"TU Eindhoven",program:"MSc Computer Science & Engineering",degree:"Masters",tuition:"~€22,000/yr",open_date:"2026-10-01",close_date:"2027-04-01",intake:"Fall 2027",ielts:"6.5",eligibility:"match",elig_note:"Strong industry links. Figures approximate — verify.",link:"https://www.tue.nl/en/education/graduate-school",priority:"low",verify:true,requirements:["Bachelor's in CS or related","IELTS 6.5","Apply via Studielink + TU/e portal","Transcripts","Motivation letter","CV"]},
+  {id:"nl-uva-se",country:"Netherlands",cc:"NL",name:"University of Amsterdam",program:"MSc Software Engineering",degree:"Masters",tuition:"~€18,000/yr",open_date:"2026-10-01",close_date:"2027-04-01",intake:"Fall 2027",ielts:"6.5",eligibility:"match",elig_note:"One-year intensive SE master. Figures approximate — verify.",link:"https://www.uva.nl/en/programmes",priority:"low",verify:true,requirements:["Bachelor's in CS/SWE","IELTS 6.5","Programming & software-engineering background","Transcripts","Motivation letter","CV"]},
+  {id:"fi-aalto-cs",country:"Finland",cc:"FI",name:"Aalto University",program:"MSc Computer Science",degree:"Masters",tuition:"~€15,000/yr",open_date:"2026-11-15",close_date:"2027-01-15",intake:"Autumn 2027",ielts:"6.5",eligibility:"match",elig_note:"Scholarships (50–100% tuition) decided with admission. Deadline typically early January — verify.",link:"https://www.aalto.fi/en/study-options",priority:"high",verify:true,requirements:["Bachelor's in CS or related","IELTS 6.5 (writing ≥ 5.5)","Apply via Studyinfo.fi","Transcripts + degree","Statement of Purpose","CV","Scholarship considered automatically"]},
+  {id:"se-kth-dist",country:"Sweden",cc:"SE",name:"KTH Royal Institute",program:"MSc Software Eng. of Distributed Systems",degree:"Masters",tuition:"~SEK 310,000/yr",open_date:"2026-10-16",close_date:"2027-01-15",intake:"Autumn 2027",ielts:"6.5",eligibility:"match",elig_note:"Apply via universityadmissions.se. Swedish Institute scholarships applied for separately.",link:"https://www.kth.se/en/studies",priority:"high",verify:true,requirements:["Bachelor's in CS/EE (approx 180 ECTS)","IELTS 6.5 (each part ≥ 5.5)","Apply via universityadmissions.se","Pay SEK 900 application fee","Transcripts + degree","CV + motivation letter"]},
+  {id:"se-chalmers-se",country:"Sweden",cc:"SE",name:"Chalmers",program:"MSc Software Engineering & Technology",degree:"Masters",tuition:"~SEK 280,000/yr",open_date:"2026-10-16",close_date:"2027-01-15",intake:"Autumn 2027",ielts:"6.5",eligibility:"match",elig_note:"Also via universityadmissions.se. Figures approximate — verify.",link:"https://www.chalmers.se/en/education/",priority:"medium",verify:true,requirements:["Bachelor's in CS/SWE","IELTS 6.5","Apply via universityadmissions.se","SEK 900 application fee","Transcripts","CV"]},
+  {id:"us-utd-cs",country:"USA",cc:"US",name:"UT Dallas",program:"MS Computer Science",degree:"Masters",tuition:"~$40,000 total",open_date:"2026-09-01",close_date:"2027-05-01",intake:"Fall 2027",ielts:"6.5",eligibility:"match",elig_note:"Accessible admit for strong profiles; GRE often optional. Verify test policy.",link:"https://cs.utdallas.edu/",priority:"medium",verify:true,requirements:["Bachelor's in CS or related","IELTS 6.5 / TOEFL 80+ (verify)","Transcripts (WES evaluation sometimes)","Statement of Purpose","3 recommendation letters","GRE optional"]},
+  {id:"us-neu-se",country:"USA",cc:"US",name:"Northeastern University",program:"MS Software Engineering Systems",degree:"Masters",tuition:"~$50,000 total",open_date:"2026-09-01",close_date:"2027-03-01",intake:"Fall 2027",ielts:"6.5",eligibility:"caution",elig_note:"Strong co-op program; higher cost. Check funding. Figures approximate — verify.",link:"https://www.khoury.northeastern.edu/",priority:"low",verify:true,requirements:["Bachelor's in CS/engineering","TOEFL/IELTS (verify minimums)","Transcripts","Statement of Purpose","Recommendation letters","GRE optional"]},
+  {id:"us-gatech-phd",country:"USA",cc:"US",name:"Georgia Tech",program:"PhD Computer Science",degree:"PhD",tuition:"Funded (stipend + waiver)",open_date:"2026-09-01",close_date:"2026-12-15",intake:"Fall 2027",ielts:"7.0",eligibility:"stretch",elig_note:"Funded but highly competitive; wants research output + faculty fit. GPA 3.44 below typical — industry depth and ICPC help.",link:"https://www.cc.gatech.edu/phd-cs",priority:"low",verify:true,requirements:["Bachelor's/Master's in CS","Research statement + faculty fit","TOEFL/IELTS (high)","GRE may be required","3 strong recommendation letters","Research experience / publications preferred"]},
+  {id:"ca-waterloo-cs",country:"Canada",cc:"CA",name:"University of Waterloo",program:"MMath Computer Science",degree:"Masters",tuition:"~CAD 20,000/yr",open_date:"2026-10-01",close_date:"2027-02-01",intake:"Fall 2027",ielts:"7.0",eligibility:"caution",elig_note:"Research-based — secure a supervisor first. Often wants IELTS 7.0.",link:"https://uwaterloo.ca/future-students/",priority:"medium",verify:true,requirements:["Secure a supervisor BEFORE applying","Bachelor's in CS (strong GPA)","IELTS 7.0","Transcripts","Statement of research interest","2–3 recommendation letters"]},
+  {id:"ca-ubc-cs",country:"Canada",cc:"CA",name:"UBC",program:"MSc Computer Science",degree:"Masters",tuition:"~CAD 10,000/yr",open_date:"2026-10-01",close_date:"2026-12-15",intake:"Fall 2027",ielts:"6.5",eligibility:"caution",elig_note:"Thesis-based, supervisor required; early deadline. Competitive.",link:"https://www.cs.ubc.ca/students/grad",priority:"low",verify:true,requirements:["Secure a supervisor","Bachelor's in CS (B+ average)","IELTS 6.5 (reading/listening ≥ 6.0)","Transcripts","Statement of intent","3 recommendation letters"]},
+  {id:"ca-ualberta-cs",country:"Canada",cc:"CA",name:"University of Alberta",program:"MSc Computing Science",degree:"Masters",tuition:"~CAD 9,000/yr",open_date:"2026-10-01",close_date:"2027-01-15",intake:"Fall 2027",ielts:"6.5",eligibility:"match",elig_note:"Good value, strong AI/ML group. Supervisor-based. Verify deadline.",link:"https://www.ualberta.ca/computing-science/",priority:"medium",verify:true,requirements:["Supervisor contact recommended","Bachelor's in CS","IELTS 6.5","Transcripts","Statement of purpose","3 recommendation letters"]},
+  {id:"hu-bme-cse",country:"Hungary",cc:"HU",name:"BME Budapest",program:"MSc Computer Science Engineering",degree:"Masters",tuition:"~€5,000/yr or free via Stipendium",open_date:"2026-11-15",close_date:"2027-01-15",intake:"Fall 2027",ielts:"6.0",eligibility:"match",elig_note:"Apply through Stipendium Hungaricum for a full scholarship. Great value route.",link:"https://www.bme.hu/?language=en",priority:"high",verify:true,requirements:["Bachelor's in CS/engineering","IELTS 6.0+","Apply via Stipendium Hungaricum (Tempus) portal","Transcripts + degree","Motivation letter","Medical certificate (for scholarship)","Entrance interview (online)"]},
+  {id:"hu-elte-cs",country:"Hungary",cc:"HU",name:"ELTE",program:"MSc Computer Science",degree:"Masters",tuition:"~€6,000/yr",open_date:"2026-11-15",close_date:"2027-01-15",intake:"Fall 2027",ielts:"6.0",eligibility:"match",elig_note:"Also eligible for Stipendium Hungaricum. Budapest, low living cost.",link:"https://www.elte.hu/en/",priority:"medium",verify:true,requirements:["Bachelor's in CS or related","IELTS 6.0+","Apply via Stipendium Hungaricum or self-financed portal","Transcripts","Motivation letter","Entrance interview"]},
+];
+const SCH_CATALOG=[
+  {id:"sc-oead",country:"Austria",name:"OeAD / Ernst Mach Grant",cover:"Monthly living stipend (~€1,150) + insurance for study in Austria.",open_date:"2026-12-01",deadline:"2027-03-01",link:"https://oead.at/en/",verify:true},
+  {id:"sc-erasmus",country:"EU-wide",name:"Erasmus Mundus Joint Masters",cover:"Full: tuition + travel + monthly living. Highly competitive, applied via each EMJM consortium.",open_date:"2026-10-01",deadline:"2027-01-15",link:"https://www.eacea.ec.europa.eu/scholarships/emjmd-catalogue_en",verify:true},
+  {id:"sc-stiphun",country:"Hungary",name:"Stipendium Hungaricum",cover:"Full: tuition waiver + monthly stipend + accommodation + medical. The main route for Hungary.",open_date:"2026-11-15",deadline:"2027-01-15",link:"https://stipendiumhungaricum.hu/",verify:true},
+  {id:"sc-aalto",country:"Finland",name:"Aalto University Scholarship",cover:"50–100% tuition waiver, decided together with admission. No separate application.",open_date:"2026-11-15",deadline:"2027-01-15",link:"https://www.aalto.fi/en/study-at-aalto/tuition-fees-and-scholarships",verify:true},
+  {id:"sc-sisgp",country:"Sweden",name:"Swedish Institute Scholarships (SISGP)",cover:"Full: tuition + living + travel + insurance. Separate application after university admission.",open_date:"2027-02-01",deadline:"2027-02-10",link:"https://si.se/en/apply/scholarships/",verify:true},
+  {id:"sc-holland",country:"Netherlands",name:"Holland Scholarship",cover:"€5,000 one-off (first year), for non-EEA students at participating universities.",open_date:"2026-11-01",deadline:"2027-02-01",link:"https://www.studyinnl.org/finances/holland-scholarship",verify:true},
+  {id:"sc-vanier",country:"Canada",name:"Vanier CGS (PhD) / Dept funding",cover:"PhD: up to CAD 50,000/yr (Vanier). Masters: TA/RA funding negotiated with supervisor.",open_date:"2026-09-01",deadline:"2026-11-01",link:"https://vanier.gc.ca/",verify:true},
+  {id:"sc-dept-us",country:"USA",name:"Departmental RA/TA (PhD)",cover:"PhD admits are typically fully funded (stipend + tuition waiver) via research/teaching assistantships.",open_date:"2026-09-01",deadline:"2026-12-15",link:"",verify:true},
+];
+
+/* ============ state ============ */
+let unis=[],schols=[],profile=null;
+let loaded=false;
+let tab="universities",fDeg="all",noteTimers={};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ============ icons ============ */
+const ICONS={
+  moon:'<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  refresh:'<path d="M20 11a8 8 0 0 0-14-5l-2 2M4 6V3M4 6h3M4 13a8 8 0 0 0 14 5l2-2M20 18v3M20 18h-3"/>',
+  "building-bank":'<path d="M3 21h18M5 10h14M5 6l7-3 7 3M5 10v11M19 10v11M9 14v3M12 14v3M15 14v3"/>',award:'<circle cx="12" cy="9" r="6"/><path d="M9 14l-1 7 4-2 4 2-1-7"/>',
+  folder:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+  "user-check":'<circle cx="9" cy="8" r="4"/><path d="M3 21c0-4 3-6 6-6c1 0 2 .2 3 .6M16 16l2 2 4-4"/>',plus:'<path d="M12 5v14M5 12h14"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  "chevron-down":'<path d="M6 9l6 6 6-6"/>',"chevron-up":'<path d="M6 15l6-6 6 6"/>',pencil:'<path d="M4 20h4L18.5 9.5l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/>',
+  trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13M9 7V4h6v3"/>',"external-link":'<path d="M14 4h6v6M20 4l-9 9M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/>',
+  "calendar-event":'<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/>',"calendar-up":'<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M12 18v-4M10 16l2-2 2 2"/>',
+  cash:'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 10v4M18 10v4"/>',language:'<path d="M4 5h10M9 4v2c0 4-2 7-5 8M6 9c0 3 3 5 7 6M13 20l4-9 4 9M14.5 17h5"/>',
+  checklist:'<path d="M4 6l1.3 1.3L7 5M4 12.7l1.3 1.3L7 11.7M4 19l1.3 1.3L7 18M11 6h9M11 13h9M11 19h9"/>',"circle-check":'<circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/>',
+  "alert-triangle":'<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17.4v.1"/>',"target-arrow":'<circle cx="11" cy="13" r="8"/><circle cx="11" cy="13" r="3.5"/><path d="M11 13l8-8M16 5h4v4"/>',
+  send:'<path d="M10 14L21 3M21 3l-6.5 18-4-8-8-4z"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  "calendar-stats":'<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M8 14v3M12 13v4M16 15v2"/>',
+  "filter-off":'<path d="M4 5h16l-6 7M10 12v6l4 2M4 4l16 16"/>',download:'<path d="M12 4v10M8 11l4 4 4-4M5 20h14"/>',loader:'<path d="M12 4v4M12 16v4M4 12h4M16 12h4M6.3 6.3l2.8 2.8M14.9 14.9l2.8 2.8M17.7 6.3l-2.8 2.8M9.1 14.9l-2.8 2.8"/>',
+  id:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="9" cy="12" r="2"/><path d="M14 10h4M14 14h4M6.2 15.5c.5-1.4 2.1-1.4 2.6 0"/>',wallet:'<path d="M3 8a2 2 0 0 1 2-2h11v3M3 8v9a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1H5M16.5 13h1"/>',
+  writing:'<path d="M4 20h4L18.5 9.5l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4M3 20h.01"/>',users:'<circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 3-5 6-5s6 1.7 6 5M16 5.2a3.5 3.5 0 0 1 0 6.6M18.5 15c1.8.5 2.5 2 2.5 5"/>',
+  "file-cv":'<path d="M6 3h8l5 5v13H6z"/><path d="M14 3v5h5M9 13h6M9 17h6M9 9h2"/>',"file-certificate":'<path d="M6 3h8l5 5v10H6z"/><path d="M14 3v5h5M9 11h5"/><circle cx="12" cy="17" r="2.2"/><path d="M12 19.2V22l-1.5-1-1.5 1v-2.8"/>',
+  stamp:'<path d="M9 3h6a2 2 0 0 1 2 2c0 2-2 3-2 5H9c0-2-2-3-2-5a2 2 0 0 1 2-2zM4 21h16v-1.5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2z"/>',"info-circle":'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.1"/>',
+  "list-check":'<path d="M4 6l1.3 1.3L7 5M4 12.7l1.3 1.3L7 11.7M11 6h9M11 13h9M11 19h9M4 18.5l1.3 1.3L7 18"/>',
+  "star-nav":'<path d="M12 2.5l2.5 7 7 2.5-7 2.5-2.5 7-2.5-7-7-2.5 7-2.5z"/>',
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.6 3 14.4 0 18M12 3c-3 3.6-3 14.4 0 18"/>',
+  cap:'<path d="M12 4 2 9l10 5 10-5-10-5z"/><path d="M6 11.5V16c0 1.4 2.9 3 6 3s6-1.6 6-3v-4.5M21.5 9.5V15"/>',
+  compass:'<circle cx="12" cy="12" r="9"/><path d="M15.6 8.4l-2 5.2-5.2 2 2-5.2z"/><path d="M12 3v1M12 20v1M21 12h-1M4 12H3"/>',
+  peak:'<path d="M3 20h18L14 5l-4 8-2.5-3z"/><path d="M12.4 10.8 14 8"/>'
+};
+function svgFor(n){const p=ICONS[n];return p?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+"</svg>":"";}
+function renderIcons(root){(root||document).querySelectorAll("i.ti").forEach(el=>{if(el.firstElementChild&&el.firstElementChild.tagName==="svg")return;const cls=[...el.classList].find(c=>c.length>3&&c.indexOf("ti-")===0);const s=svgFor(cls?cls.slice(3):null);if(s)el.innerHTML=s;});}
+function setIcon(el,n){if(!el)return;el.className="ti ti-"+n;el.innerHTML=svgFor(n);}
+
+/* ============ theme ============ */
+(function(){let t=null;try{t=localStorage.getItem("st-theme")}catch(e){}if(t)document.documentElement.setAttribute("data-theme",t);syncThemeIcon();})();
+function syncThemeIcon(){const ex=document.documentElement.getAttribute("data-theme");const dark=ex?ex==="dark":matchMedia("(prefers-color-scheme:dark)").matches;setIcon($("#themeBtn").querySelector("i"),dark?"sun":"moon");}
+$("#themeBtn").onclick=()=>{const cur=document.documentElement.getAttribute("data-theme");const dark=cur?cur==="dark":matchMedia("(prefers-color-scheme:dark)").matches;const nx=dark?"light":"dark";document.documentElement.setAttribute("data-theme",nx);try{localStorage.setItem("st-theme",nx)}catch(e){}syncThemeIcon();};
+$("#refreshBtn").onclick=()=>{loadAll(true);};
+
+/* ============ toast ============ */
+let toastT;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2400);}
+
+/* ============ tabs ============ */
+$("#tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;tab=b.dataset.tab;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===b));["universities","scholarships","documents","profile"].forEach(p=>{$("#panel-"+p).hidden=p!==tab;});});
+
+/* ============ filters ============ */
+$("#degSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;fDeg=b.dataset.deg;document.querySelectorAll("#degSeg button").forEach(x=>x.classList.toggle("on",x===b));renderUnis();});
+["#fCountry","#fIntake","#fStatus","#fSort"].forEach(s=>$(s).addEventListener("change",renderUnis));
+["#fSchCountry","#fSchStatus"].forEach(s=>$(s).addEventListener("change",renderSchols));
+
+/* ============ data layer (Supabase) ============ */
+async function loadAll(isManual){
+  if(!sb){showNote("Supabase client couldn't load. Check your internet connection and refresh.",true);renderAll();return;}
+  if(isManual)toast("Refreshing…");
+  try{
+    const [p,s,pr]=await Promise.all([
+      sb.from("programs").select("*"),
+      sb.from("scholarships").select("*"),
+      sb.from("profile").select("*").eq("id","me").maybeSingle(),
+    ]);
+    if(p.error)throw p.error;
+    if(s.error)throw s.error;
+    unis=p.data||[]; schols=s.data||[]; profile=(pr&&pr.data)?pr.data.data:null;
+    loaded=true; hideNote(); renderAll();
+    if(profile&&profile.name){$("#userName").textContent=String(profile.name).split(" ")[0];$("#userAv").textContent=(profile.name[0]||"A").toUpperCase();$("#userChip").hidden=false;}
+    if(isManual)toast("Up to date");
+  }catch(err){
+    loaded=true;
+    const m=(err&&err.message)||"unknown error";
+    if(/relation|does not exist|schema cache|not find the table/i.test(m)) showNote("Database tables not found. Run supabase_setup.sql in your Supabase SQL editor, then refresh.",true);
+    else showNote("Couldn't reach the database: "+m,true);
+    renderAll();
+  }
+}
+function showNote(m,isErr){$("#noteBarTxt").textContent=m;$("#noteBar").className="note-bar"+(isErr?" err":"");$("#noteBar").hidden=false;}
+function hideNote(){$("#noteBar").hidden=true;}
+
+async function writeUni(id,patch){
+  const u=unis.find(x=>x.id===id); if(u)Object.assign(u,patch);
+  renderUnis();updateStats();renderDocs();
+  if(!sb)return;
+  const{error}=await sb.from("programs").update(Object.assign({updated_at:new Date().toISOString()},patch)).eq("id",id);
+  if(error)toast("Couldn't save: "+error.message);
+}
+async function delUni(id){
+  const u=unis.find(x=>x.id===id);
+  unis=unis.filter(x=>x.id!==id);renderUnis();updateStats();renderDocs();syncFilters();
+  if(!sb)return;
+  const{error}=await sb.from("programs").delete().eq("id",id);
+  if(error)toast("Couldn't remove: "+error.message);else toast("Removed "+(u?u.name:"program"));
+}
+async function writeSch(id,patch){
+  const s=schols.find(x=>x.id===id); if(s)Object.assign(s,patch);
+  renderSchols();updateStats();
+  if(!sb)return;
+  const{error}=await sb.from("scholarships").update(Object.assign({updated_at:new Date().toISOString()},patch)).eq("id",id);
+  if(error)toast("Couldn't save: "+error.message);
+}
+async function delSch(id){
+  schols=schols.filter(x=>x.id!==id);renderSchols();updateStats();
+  if(!sb)return;const{error}=await sb.from("scholarships").delete().eq("id",id);
+  if(error)toast("Couldn't remove: "+error.message);else toast("Removed");
+}
+async function importCatalog(){
+  if(!sb){toast("Database not connected");return;}
+  const btn=$("#importBtn");if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader"></i>Importing…';renderIcons(btn);}
+  const rows=CATALOG.map((c,i)=>Object.assign({status:"not_started",notes:"",docs:{},req_done:{},created_at:Date.now()+i},c));
+  const{error}=await sb.from("programs").upsert(rows,{onConflict:"id"});
+  if(error){toast("Import failed: "+error.message);if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-download"></i>Import recommended programs';renderIcons(btn);}}
+  else{toast("Imported "+rows.length+" programs");await loadAll();}
+}
+async function importSchCatalog(){
+  if(!sb){toast("Database not connected");return;}
+  const btn=$("#importSchBtn");if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader"></i>Importing…';renderIcons(btn);}
+  const rows=SCH_CATALOG.map((c,i)=>Object.assign({status:"not_started",notes:"",created_at:Date.now()+i},c));
+  const{error}=await sb.from("scholarships").upsert(rows,{onConflict:"id"});
+  if(error){toast("Import failed: "+error.message);if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-download"></i>Import recommended scholarships';renderIcons(btn);}}
+  else{toast("Imported "+rows.length+" scholarships");await loadAll();}
+}
+async function seedProfileIfEmpty(){
+  if(!sb||profile)return;
+  const data={name:"Mohammed Asfakul Ghani",degreeTarget:"Masters (open to PhD)",field:"Computer Science / Software Engineering",gpa:"3.44 / 4.00",ielts:"6.5",experience:"5+ yrs · Software Engineer (Lead)",countries:["Austria","Netherlands","Finland","Sweden","USA","Canada","Hungary"],summary:"Backend engineer with 5+ years in Java, Spring Boot and microservices, leading a team of 6 and shipping systems at scale. ICPC regional finalist with strong competitive-programming ratings. For master's admissions this industry depth and algorithmic background are real differentiators; the 3.44 GPA is solid but not exceptional, so let the experience and ICPC record carry the statement."};
+  await sb.from("profile").upsert({id:"me",data}).then(()=>{profile=data;renderProfile();});
+}
+
+/* ============ helpers ============ */
+function daysLeft(d){if(!d)return null;const t=new Date(d+"T00:00:00");const n=new Date();n.setHours(0,0,0,0);return Math.round((t-n)/864e5);}
+function fmtDate(d){if(!d)return "—";const dt=new Date(d+"T00:00:00");if(isNaN(dt))return "—";return dt.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});}
+function closeClass(n){if(n==null)return "dl-ok";if(n<0)return "dl-soon";if(n<=30)return "dl-soon";if(n<=75)return "dl-near";return "dl-ok";}
+function closeText(n){if(n==null)return "No date";if(n<0)return "Closed";if(n===0)return "Closes today";return "Closes in "+n+"d";}
+function openText(n){if(n==null)return "";if(n>0)return "Opens in "+n+"d";return "Open now";}
+
+/* ============ render ============ */
+function renderAll(){renderUnis();renderSchols();renderDocs();renderProfile();updateStats();syncFilters();renderIcons();}
+
+function syncFilters(){
+  const cs=[...new Set(unis.map(u=>u.country).filter(Boolean))].sort();
+  setOpts("#fCountry","All countries",cs);
+  const its=[...new Set(unis.map(u=>u.intake).filter(Boolean))].sort();
+  setOpts("#fIntake","All intakes",its);
+  const scs=[...new Set(schols.map(s=>s.country).filter(Boolean))].sort();
+  setOpts("#fSchCountry","All countries",scs);
+}
+function setOpts(sel,allLabel,vals){const el=$(sel);const cur=el.value;el.innerHTML='<option value="all">'+allLabel+"</option>"+vals.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");el.value=vals.includes(cur)?cur:"all";}
+
+function updateStats(){
+  $("#cUni").textContent=unis.length; $("#cSch").textContent=schols.length;
+  const applied=unis.filter(u=>["applied","admitted","waitlisted","rejected"].includes(u.status)).length;
+  const admitted=unis.filter(u=>u.status==="admitted").length;
+  const eligible=unis.filter(u=>u.eligibility==="match").length;
+  const schApplied=schols.filter(s=>["applied","awarded"].includes(s.status)).length;
+  const upcoming=unis.map(u=>({u,n:daysLeft(u.close_date)})).filter(x=>x.n!=null&&x.n>=0&&!["applied","admitted","rejected","waitlisted"].includes(x.u.status)).sort((a,b)=>a.n-b.n);
+  const next=upcoming[0];
+  const tiles=[
+    {k:"Programs",ti:"building-bank",v:unis.length,sub:`${unis.filter(u=>u.degree==="Masters").length} MSc · ${unis.filter(u=>u.degree==="PhD").length} PhD`},
+    {k:"Applied",ti:"send",v:applied,sub:`of ${unis.length}`},
+    {k:"Admitted",ti:"circle-check",v:admitted,sub:admitted?"congratulations!":"in progress"},
+    {k:"Eligible",ti:"user-check",v:eligible,sub:"clear matches"},
+    {k:"Scholarships",ti:"award",v:`${schApplied}/${schols.length}`,sub:"applied"},
+    {k:"Next to close",ti:"clock",v:next?(next.n+"d"):"—",sub:next?esc(next.u.name):"nothing pending",hl:true},
+  ];
+  $("#statGrid").innerHTML=tiles.map(t=>`<div class="stat${t.hl?" hl":""}"><div class="k"><i class="ti ti-${t.ti}"></i>${t.k}</div><div class="v tnum">${t.v}</div><div class="vsub">${t.sub}</div></div>`).join("");
+  renderIcons($("#statGrid"));
+}
+
+function sortUnis(list){
+  const s=$("#fSort").value,arr=[...list];
+  const byDate=f=>(a,b)=>{const x=daysLeft(a[f]),y=daysLeft(b[f]);if(x==null)return 1;if(y==null)return -1;return x-y;};
+  if(s==="deadline")arr.sort(byDate("close_date"));
+  else if(s==="opening")arr.sort(byDate("open_date"));
+  else if(s==="priority"){const o={high:0,medium:1,low:2};arr.sort((a,b)=>(o[a.priority]??3)-(o[b.priority]??3));}
+  else if(s==="country")arr.sort((a,b)=>(a.country||"").localeCompare(b.country||"")||(a.name||"").localeCompare(b.name||""));
+  else if(s==="status")arr.sort((a,b)=>UNI_STATUS_ORDER.indexOf(a.status)-UNI_STATUS_ORDER.indexOf(b.status));
+  else if(s==="name")arr.sort((a,b)=>(a.name||"").localeCompare(b.name||""));
+  return arr;
+}
+function renderUnis(){
+  const host=$("#uniHost");
+  if(!loaded){host.innerHTML='<div class="grid">'+Array(6).fill('<div class="skel"></div>').join("")+"</div>";return;}
+  if(!unis.length){
+    host.innerHTML=`<div class="empty"><i class="ti ti-building-bank"></i><h3>No programs yet</h3><p>Start with a curated set of Computer Science master's and PhD programs across your target countries — opening &amp; closing dates, intake, tuition, eligibility and full requirements pre-filled. Edit or remove any of them.</p><button class="btn primary" id="importBtn"><i class="ti ti-download"></i>Import recommended programs</button></div>`;
+    const ib=$("#importBtn");if(ib)ib.onclick=importCatalog;renderIcons(host);return;
+  }
+  const cQ=$("#fCountry").value,iQ=$("#fIntake").value,sQ=$("#fStatus").value;
+  let list=unis.filter(u=>(fDeg==="all"||u.degree===fDeg)&&(cQ==="all"||u.country===cQ)&&(iQ==="all"||u.intake===iQ)&&(sQ==="all"||u.status===sQ));
+  list=sortUnis(list);
+  if(!list.length){host.innerHTML=`<div class="empty"><i class="ti ti-filter-off"></i><h3>Nothing matches</h3><p>No programs match these filters. Try widening them.</p></div>`;renderIcons(host);return;}
+  host.innerHTML='<div class="grid">'+list.map(uniCard).join("")+"</div>";renderIcons(host);
+}
+function uniCard(u){
+  const st=STATUS[u.status]||STATUS.not_started, el=ELIG[u.eligibility]||ELIG.match;
+  const nc=daysLeft(u.close_date), no=daysLeft(u.open_date);
+  const docs=u.docs||{}, reqDone=u.req_done||{}, reqs=Array.isArray(u.requirements)?u.requirements:[];
+  const done=DOC_KEYS.filter(([k])=>docs[k]).length;
+  const reqMet=reqs.filter((_,i)=>reqDone[i]).length;
+  const statusOpts=UNI_STATUS_ORDER.map(k=>`<option value="${k}"${u.status===k?" selected":""}>${STATUS[k].label}</option>`).join("");
+  const openInfo=(no!=null&&no>0)?`<span class="meta dl-open" style="font-weight:600"><i class="ti ti-calendar-up"></i>${openText(no)}</span>`:"";
+  return `<div class="uni" data-id="${esc(u.id)}">
+    <div class="uni-top">
+      <div class="uni-head">
+        <div style="min-width:0">
+          <div class="flag"><span class="dot"></span>${esc(u.country||"")}${u.intake?` · ${esc(u.intake)}`:""}${u.verify?' <span class="verify">verify</span>':""}</div>
+          <h3>${esc(u.name||"Untitled")}</h3><div class="prog">${esc(u.program||"")}</div>
+        </div>
+        <span class="bdg ${st.cls}">${st.label}</span>
+      </div>
+      <div class="badges">
+        <span class="bdg ${el.cls}"><i class="ti ti-${el.ti}"></i>${el.label}</span>
+        <span class="bdg ${(PRIO[u.priority]||PRIO.medium).cls}">${(PRIO[u.priority]||PRIO.medium).label} priority</span>
+        <span class="bdg pill-slate">${esc(u.degree||"Masters")}</span>
+      </div>
+    </div>
+    <div class="win">
+      <div class="win-cell"><div class="wl"><i class="ti ti-calendar-up"></i>Opens</div><div class="wv tnum">${fmtDate(u.open_date)}</div></div>
+      <div class="win-div"></div>
+      <div class="win-cell"><div class="wl"><i class="ti ti-calendar-event"></i>Closes</div><div class="wv tnum ${closeClass(nc)}">${fmtDate(u.close_date)}</div></div>
+    </div>
+    <div class="metarow">
+      <span class="meta ${closeClass(nc)}" style="font-weight:600"><i class="ti ti-clock"></i>${closeText(nc)}</span>
+      ${openInfo}
+      <span class="meta"><i class="ti ti-cash"></i><b>${esc(u.tuition||"—")}</b></span>
+      <span class="meta"><i class="ti ti-language"></i>IELTS <b>${esc(u.ielts||"—")}</b></span>
+      <span class="meta"><i class="ti ti-list-check"></i>Reqs <b>${reqMet}/${reqs.length||0}</b></span>
+      <span class="meta"><i class="ti ti-checklist"></i>Docs <b>${done}/${DOC_KEYS.length}</b></span>
+    </div>
+    <div class="detail" id="det-${esc(u.id)}">
+      ${u.elig_note?`<div class="detail-grid"><span class="lbl-mini">Why this fit</span><div class="elig-note">${esc(u.elig_note)}</div></div>`:""}
+      ${reqs.length?`<div class="detail-grid"><span class="lbl-mini">Requirements — tick what you've met</span><div class="reqs">${reqs.map((r,i)=>`<label class="reqitem${reqDone[i]?" met":""}"><input type="checkbox" data-req="${i}"${reqDone[i]?" checked":""}><span>${esc(r)}</span></label>`).join("")}</div></div>`:""}
+      <div class="detail-grid"><span class="lbl-mini">Documents for this program</span><div class="docs-row">${DOC_KEYS.map(([k,lb])=>`<label class="docchk${docs[k]?" done":""}"><input type="checkbox" data-doc="${k}"${docs[k]?" checked":""}>${lb}</label>`).join("")}</div></div>
+      <div class="detail-grid"><span class="lbl-mini">Notes</span><textarea class="note-area" data-note placeholder="Portal login, supervisor emails, to-dos…">${esc(u.notes||"")}</textarea></div>
+      ${u.link?`<a class="applink" href="${esc(u.link)}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i>Open application page</a>`:""}
+    </div>
+    <div class="uni-foot">
+      <select data-status title="Application status">${statusOpts}</select>
+      <button class="foot-btn" data-expand title="Requirements, documents & notes"><i class="ti ti-chevron-down"></i></button>
+      <button class="foot-btn" data-edit title="Edit"><i class="ti ti-pencil"></i></button>
+      <button class="foot-btn danger" data-del title="Remove"><i class="ti ti-trash"></i></button>
+    </div>
+  </div>`;
+}
+$("#uniHost").addEventListener("click",e=>{const card=e.target.closest(".uni");if(!card)return;const id=card.dataset.id;
+  if(e.target.closest("[data-expand]")){const d=$("#det-"+CSS.escape(id));const open=d.classList.toggle("open");setIcon(e.target.closest("[data-expand]").querySelector("i"),open?"chevron-up":"chevron-down");return;}
+  if(e.target.closest("[data-edit]")){openUniModal(unis.find(u=>u.id===id));return;}
+  if(e.target.closest("[data-del]")){delUni(id);return;}});
+$("#uniHost").addEventListener("change",e=>{const card=e.target.closest(".uni");if(!card)return;const id=card.dataset.id;const u=unis.find(x=>x.id===id)||{};
+  if(e.target.matches("[data-status]")){const v=e.target.value;writeUni(id,{status:v,applied_date:(v==="applied"&&!u.applied_date)?new Date().toISOString().slice(0,10):(u.applied_date||null)});toast("Status updated");return;}
+  if(e.target.matches("[data-doc]")){const docs=Object.assign({},u.docs,{[e.target.dataset.doc]:e.target.checked});writeUni(id,{docs});return;}
+  if(e.target.matches("[data-req]")){const rd=Object.assign({},u.req_done,{[e.target.dataset.req]:e.target.checked});writeUni(id,{req_done:rd});return;}});
+$("#uniHost").addEventListener("input",e=>{if(!e.target.matches("[data-note]"))return;const id=e.target.closest(".uni").dataset.id,val=e.target.value;clearTimeout(noteTimers[id]);noteTimers[id]=setTimeout(()=>{writeUni(id,{notes:val});toast("Notes saved");},700);});
+
+/* ============ scholarships ============ */
+function renderSchols(){
+  const host=$("#schHost");
+  if(!loaded){host.innerHTML='<div class="grid">'+Array(3).fill('<div class="skel"></div>').join("")+"</div>";return;}
+  if(!schols.length){host.innerHTML=`<div class="empty"><i class="ti ti-award"></i><h3>No scholarships yet</h3><p>Load a starter set matched to your target countries — OeAD, Erasmus Mundus, Stipendium Hungaricum and more.</p><button class="btn primary" id="importSchBtn"><i class="ti ti-download"></i>Import recommended scholarships</button></div>`;const b=$("#importSchBtn");if(b)b.onclick=importSchCatalog;renderIcons(host);return;}
+  const cQ=$("#fSchCountry").value,sQ=$("#fSchStatus").value;
+  let list=schols.filter(s=>(cQ==="all"||s.country===cQ)&&(sQ==="all"||(s.status||"not_started")===sQ));
+  list.sort((a,b)=>{const x=daysLeft(a.deadline),y=daysLeft(b.deadline);if(x==null)return 1;if(y==null)return -1;return x-y;});
+  if(!list.length){host.innerHTML=`<div class="empty"><i class="ti ti-filter-off"></i><h3>Nothing matches</h3><p>No scholarships match these filters.</p></div>`;renderIcons(host);return;}
+  host.innerHTML='<div class="grid">'+list.map(schCard).join("")+"</div>";renderIcons(host);
+}
+function schCard(s){
+  const st=SCH_STATUS[s.status||"not_started"],nc=daysLeft(s.deadline),no=daysLeft(s.open_date);
+  const opts=Object.keys(SCH_STATUS).map(k=>`<option value="${k}"${(s.status||"not_started")===k?" selected":""}>${SCH_STATUS[k].label}</option>`).join("");
+  return `<div class="sch" data-id="${esc(s.id)}">
+    <div class="uni-head"><div style="min-width:0"><div class="flag"><span class="dot"></span>${esc(s.country||"")}${s.verify?' <span class="verify">verify</span>':""}</div><h3 style="font-size:15.5px;margin-top:4px">${esc(s.name||"")}</h3></div><span class="bdg ${st.cls}">${st.label}</span></div>
+    <div class="sch-cover">${esc(s.cover||"")}</div>
+    <div class="win">
+      <div class="win-cell"><div class="wl"><i class="ti ti-calendar-up"></i>Opens</div><div class="wv tnum">${fmtDate(s.open_date)}</div></div>
+      <div class="win-div"></div>
+      <div class="win-cell"><div class="wl"><i class="ti ti-calendar-event"></i>Deadline</div><div class="wv tnum ${closeClass(nc)}">${fmtDate(s.deadline)}</div></div>
+    </div>
+    <span class="meta ${closeClass(nc)}" style="font-weight:600"><i class="ti ti-clock"></i>${closeText(nc)}</span>
+    ${s.link?`<a class="applink" href="${esc(s.link)}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i>Scholarship page</a>`:""}
+    <div class="sch-foot"><select data-sstatus>${opts}</select><button class="foot-btn danger" data-sdel title="Remove" style="border:1px solid var(--border);border-radius:8px;height:34px;width:38px"><i class="ti ti-trash"></i></button></div>
+  </div>`;
+}
+$("#schHost").addEventListener("change",e=>{const card=e.target.closest(".sch");if(!card)return;if(e.target.matches("[data-sstatus]")){writeSch(card.dataset.id,{status:e.target.value});toast("Updated");}});
+$("#schHost").addEventListener("click",e=>{const card=e.target.closest(".sch");if(!card)return;if(e.target.closest("[data-sdel]"))delSch(card.dataset.id);});
+
+/* ============ documents ============ */
+function renderDocs(){
+  $("#docHost").innerHTML=DOC_MASTER.map(d=>{const total=unis.length,have=unis.filter(u=>(u.docs||{})[d.id]).length,pct=total?Math.round(have/total*100):0;
+    return `<div class="doccard"><h3><i class="ti ti-${d.icon}" style="color:var(--accent)"></i>${esc(d.name)}</h3><p>${esc(d.desc)}</p><div class="status"><span class="bdg ${pct===100&&total?"pill-ok":pct>0?"pill-warn":"pill-slate"}">${total?`Ready for ${have}/${total} programs`:"Add programs first"}</span></div></div>`;}).join("");
+  renderIcons($("#docHost"));
+}
+
+/* ============ profile ============ */
+function renderProfile(){
+  const p=profile||{};const countries=p.countries&&p.countries.length?p.countries:["Austria","Netherlands","Finland","Sweden","USA","Canada","Hungary"];
+  $("#profHost").innerHTML=`
+    <div class="card"><h3>Applicant profile</h3>
+      <div class="prow"><span class="pl">Name</span><span class="pv">${esc(p.name||"Mohammed Asfakul Ghani")}</span></div>
+      <div class="prow"><span class="pl">Degree target</span><span class="pv">${esc(p.degreeTarget||"Masters (open to PhD)")}</span></div>
+      <div class="prow"><span class="pl">Field</span><span class="pv">${esc(p.field||"Computer Science / Software Engineering")}</span></div>
+      <div class="prow"><span class="pl">Bachelor's GPA</span><span class="pv tnum">${esc(p.gpa||"3.44 / 4.00")}</span></div>
+      <div class="prow"><span class="pl">IELTS</span><span class="pv tnum">${esc(p.ielts||"6.5")}</span></div>
+      <div class="prow"><span class="pl">Experience</span><span class="pv">${esc(p.experience||"5+ yrs · Software Engineer (Lead)")}</span></div>
+      <div style="margin-top:16px"><span class="lbl-mini">Target countries</span><div class="taglist" style="margin-top:9px">${countries.map(c=>`<span class="ctag">${esc(c)}</span>`).join("")}</div></div>
+    </div>
+    <div class="card"><h3>How your profile reads to admissions</h3>
+      <div class="summary">${esc(p.summary||"Backend engineer with 5+ years in Java, Spring Boot and microservices, leading a team of 6 and shipping systems at scale. ICPC regional finalist with strong competitive-programming ratings. This industry depth and algorithmic background are real differentiators for master's admissions; the 3.44 GPA is solid but not exceptional, so let the experience and ICPC record carry the statement. For funded PhD routes, a research fit with specific faculty matters more than coursework grades.")}</div>
+      <div style="margin-top:16px"><span class="lbl-mini">Strengths to lead with</span><div class="taglist" style="margin-top:9px"><span class="ctag">5+ yrs industry</span><span class="ctag">ICPC finalist</span><span class="ctag">System design at scale</span><span class="ctag">Team leadership</span><span class="ctag">CI/CD &amp; cloud</span></div></div>
+    </div>`;
+  renderIcons($("#profHost"));
+}
+
+/* ============ uni modal ============ */
+let editId=null;
+function openUniModal(u){
+  editId=u?u.id:null;$("#uniModalTitle").textContent=u?"Edit program":"Add program";
+  $("#mName").value=u?u.name||"":"";$("#mProg").value=u?u.program||"":"";$("#mCountry").value=u?u.country||"":"";
+  $("#mDeg").value=u?u.degree||"Masters":"Masters";$("#mOpen").value=u?u.open_date||"":"";$("#mClose").value=u?u.close_date||"":"";
+  $("#mIntake").value=u?u.intake||"":"";$("#mTuition").value=u?u.tuition||"":"";$("#mIelts").value=u?u.ielts||"":"";
+  $("#mPrio").value=u?u.priority||"medium":"medium";$("#mElig").value=u?u.eligibility||"match":"match";
+  $("#mReqs").value=u&&Array.isArray(u.requirements)?u.requirements.join("\n"):"";$("#mLink").value=u?u.link||"":"";
+  $("#uniOverlay").classList.add("open");
+}
+function closeUni(){$("#uniOverlay").classList.remove("open");}
+$("#addUniBtn").onclick=()=>openUniModal(null);$("#uniClose").onclick=closeUni;$("#uniCancel").onclick=closeUni;
+$("#uniOverlay").addEventListener("click",e=>{if(e.target===$("#uniOverlay"))closeUni();});
+$("#uniSave").onclick=async()=>{
+  if(!sb){toast("Database not connected");return;}
+  const name=$("#mName").value.trim();if(!name){toast("University name is required");return;}
+  const reqs=$("#mReqs").value.split("\n").map(x=>x.trim()).filter(Boolean);
+  const data={name,program:$("#mProg").value.trim(),country:$("#mCountry").value.trim(),degree:$("#mDeg").value,open_date:$("#mOpen").value||null,close_date:$("#mClose").value||null,intake:$("#mIntake").value.trim(),tuition:$("#mTuition").value.trim(),ielts:$("#mIelts").value.trim(),priority:$("#mPrio").value,eligibility:$("#mElig").value,requirements:reqs,link:$("#mLink").value.trim(),updated_at:new Date().toISOString()};
+  if(editId){const u=unis.find(x=>x.id===editId);Object.assign(u,data);renderUnis();updateStats();const{error}=await sb.from("programs").update(data).eq("id",editId);if(error){toast("Couldn't save: "+error.message);return;}toast("Program updated");}
+  else{const row=Object.assign({id:"u-"+Date.now().toString(36),status:"not_started",notes:"",docs:{},req_done:{},verify:false,created_at:Date.now()},data);const{error}=await sb.from("programs").insert(row);if(error){toast("Couldn't save: "+error.message);return;}unis.push(row);renderAll();toast("Program added");}
+  closeUni();
+};
+
+/* ============ sch modal ============ */
+function openSchModal(){["#sName","#sCountry","#sCover","#sOpen","#sDeadline","#sLink"].forEach(id=>$(id).value="");$("#schOverlay").classList.add("open");}
+function closeSch(){$("#schOverlay").classList.remove("open");}
+$("#addSchBtn").onclick=openSchModal;$("#schClose").onclick=closeSch;$("#schCancel").onclick=closeSch;
+$("#schOverlay").addEventListener("click",e=>{if(e.target===$("#schOverlay"))closeSch();});
+$("#schSave").onclick=async()=>{
+  if(!sb){toast("Database not connected");return;}
+  const name=$("#sName").value.trim();if(!name){toast("Scholarship name is required");return;}
+  const row={id:"s-"+Date.now().toString(36),name,country:$("#sCountry").value.trim(),cover:$("#sCover").value.trim(),open_date:$("#sOpen").value||null,deadline:$("#sDeadline").value||null,link:$("#sLink").value.trim(),status:"not_started",verify:false,created_at:Date.now()};
+  const{error}=await sb.from("scholarships").insert(row);if(error){toast("Couldn't save: "+error.message);return;}schols.push(row);renderAll();toast("Scholarship added");closeSch();
+};
+
+/* ============ realtime (optional) ============ */
+function startRealtime(){
+  if(!sb||!sb.channel)return;
+  try{
+    sb.channel("st-rt")
+      .on("postgres_changes",{event:"*",schema:"public",table:"programs"},()=>refetch("programs"))
+      .on("postgres_changes",{event:"*",schema:"public",table:"scholarships"},()=>refetch("scholarships"))
+      .subscribe();
+  }catch(e){}
+}
+let rtT;
+function refetch(){clearTimeout(rtT);rtT=setTimeout(()=>loadAll(),400);}
+
+/* ============ boot ============ */
+renderAll();renderIcons();
+loadAll().then(()=>{seedProfileIfEmpty();startRealtime();});
+</script>
+</body>
+</html>
