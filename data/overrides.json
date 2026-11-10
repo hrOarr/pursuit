@@ -48,6 +48,87 @@
         "Transcripts + degree",
         "CV / motivation letter"
       ]
+    },
+    "nl-tudelft-cs": {
+      "open_date": "2026-10-01",
+      "close_date": "2027-01-15",
+      "intake": "Fall 2027",
+      "verify": false,
+      "ai_source": "https://www.tudelft.nl/en/education/programmes/masters/cs/msc-computer-science/admission-and-application/non-eu-efta-applicants-with-an-international-bachelor-degree",
+      "elig_note": "Verified Nov 2026: non-EU/EFTA deadline 15 Jan 2027 (23:59 CEST) for the Sep 2027 start - much earlier than typical Dutch deadlines. Apply via Studielink + the TU Delft portal. High non-EU tuition.",
+      "requirements": [
+        "Bachelor's in CS (strong maths/programming)",
+        "IELTS 6.5 (writing 6.0+)",
+        "Apply via Studielink + TU Delft portal",
+        "Non-EU deadline: 15 Jan 2027 (23:59 CEST)",
+        "Transcripts + grade list",
+        "Statement of Purpose, 2 recommendation letters"
+      ]
+    },
+    "nl-tue-cse": {
+      "open_date": "2026-10-01",
+      "close_date": "2027-05-01",
+      "intake": "Fall 2027",
+      "verify": false,
+      "ai_source": "https://www.studyinnl.org/dutch-education/studies/computer-science-and-engineering-856-eindhoven-university-of-technology",
+      "elig_note": "Verified Nov 2026 (Nuffic/StudyinNL): non-EU/EEA deadline 1 May 2027 for the 1 Sep 2027 start. Apply via Studielink + the TU/e portal.",
+      "requirements": [
+        "Bachelor's in CS or a related field",
+        "IELTS 6.5",
+        "Apply via Studielink + TU/e portal",
+        "Non-EU deadline: 1 May 2027",
+        "Transcripts",
+        "Motivation letter, CV"
+      ]
+    },
+    "nl-uva-se": {
+      "open_date": "2026-10-01",
+      "close_date": "2027-02-01",
+      "intake": "Fall 2027",
+      "tuition": "EUR 34,200 (1-year)",
+      "verify": false,
+      "ai_source": "https://www.studyinnl.org/dutch-education/studies/software-engineering-1124-university-of-amsterdam",
+      "elig_note": "Verified Nov 2026 (Nuffic/StudyinNL): non-EU/EEA deadline 1 Feb 2027 for the 1 Sep 2027 start; tuition EUR 34,200 for the one-year programme. Apply via Studielink + the UvA portal.",
+      "requirements": [
+        "Bachelor's in CS/SWE with strong programming",
+        "IELTS 6.5",
+        "Apply via Studielink + UvA portal",
+        "Non-EU deadline: 1 Feb 2027",
+        "One-year programme; tuition EUR 34,200",
+        "Motivation letter, CV"
+      ]
+    },
+    "hu-bme-cse": {
+      "open_date": "2026-11-14",
+      "close_date": "2027-01-15",
+      "intake": "Fall 2027",
+      "verify": true,
+      "ai_source": "https://stipendiumhungaricum.hu/",
+      "elig_note": "Estimate (Nov 2026): the 2027/28 Stipendium Hungaricum call is expected to open ~mid-Nov 2026 with a ~15 Jan 2027 deadline (the 2026/27 cycle ran 14 Nov 2025 - 15 Jan 2026). Confirm exact dates in the official Call for Applications. Full scholarship: tuition + stipend + housing.",
+      "requirements": [
+        "Bachelor's in CS/engineering",
+        "IELTS 6.0+",
+        "Apply via the Stipendium Hungaricum (Tempus) portal",
+        "Deadline ~15 Jan 2027 (confirm official call)",
+        "Transcripts + degree, motivation letter",
+        "Medical certificate; online entrance interview"
+      ]
+    },
+    "hu-elte-cs": {
+      "open_date": "2026-11-14",
+      "close_date": "2027-01-15",
+      "intake": "Fall 2027",
+      "verify": true,
+      "ai_source": "https://stipendiumhungaricum.hu/",
+      "elig_note": "Estimate (Nov 2026): eligible via Stipendium Hungaricum 2027/28, expected to open ~mid-Nov 2026 with a ~15 Jan 2027 deadline (2026/27 ran 14 Nov 2025 - 15 Jan 2026). Confirm exact dates in the official Call for Applications. Budapest, low living cost.",
+      "requirements": [
+        "Bachelor's in CS or a related field",
+        "IELTS 6.0+",
+        "Apply via Stipendium Hungaricum portal (or self-financed track)",
+        "Deadline ~15 Jan 2027 (confirm official call)",
+        "Transcripts, motivation letter",
+        "Online entrance interview"
+      ]
     }
   },
   "scholarships": {}
