@@ -548,7 +548,19 @@ const BASE_REQ=["Bachelor's in CS / SWE or related","Official transcripts + degr
 const DEFAULT_PIPELINE=[["Gather requirements",["IELTS / English score","Transcripts","Degree certificate","Apostille / legalisation","Statement of Purpose","Academic CV","Recommendation letters","Passport","Proof of funds"]],["Upload to portal",["Create portal account","Fill application form","Upload all documents"]],["Pay application fee",["Fee paid","Save payment receipt"]],["Submit application",["Final review","Submit application","Confirmation received"]],["Interview / entrance test",["Scheduled","Completed"]],["Decision",["Decision received","Respond to offer"]]];
 let __uid=0;function uid(){return "s"+Date.now().toString(36)+(__uid++);}
 function defaultPipeline(){return DEFAULT_PIPELINE.map(([t,items])=>({id:uid(),t,items:items.map(x=>({id:uid(),t:x,done:false}))}));}
-function getPipeline(u){return (Array.isArray(u.pipeline)&&u.pipeline.length)?u.pipeline:defaultPipeline();}
+function storedPipeline(u){
+  if(u&&u.docs&&typeof u.docs==="object"&&Array.isArray(u.docs.pipeline)&&u.docs.pipeline.length)return u.docs.pipeline;
+  if(u&&Array.isArray(u.pipeline)&&u.pipeline.length)return u.pipeline;
+  return null;
+}
+function getPipeline(u){return storedPipeline(u)||defaultPipeline();}
+/* Persist the pipeline inside the always-present `docs` jsonb column, so progress
+   survives a refresh even when the optional standalone `pipeline` column was never added. */
+function savePipeline(id,pl,extra){
+  const u=unis.find(x=>x.id===id)||{};
+  const docs=Object.assign({},(u.docs&&typeof u.docs==="object")?u.docs:{},{pipeline:pl});
+  writeUni(id,Object.assign({docs},extra||{}));
+}
 function stageDone(st){return st.items.length>0&&st.items.every(i=>i.done);}
 function stageAny(st){return st.items.some(i=>i.done);}
 function firstIncomplete(pl){const i=pl.findIndex(st=>!stageDone(st));return i<0?pl.length-1:i;}
@@ -688,7 +700,10 @@ async function writeUni(id,patch){
   renderActive();updateStats();renderDocs();
   if(!sb)return;
   const{error}=await sb.from("programs").update(Object.assign({updated_at:new Date().toISOString()},patch)).eq("id",id);
-  if(error)toast("Couldn't save: "+error.message);
+  if(error){
+    toast("Couldn't save: "+error.message);
+    if(/column|schema cache|could not find/i.test(error.message||"")) showNote("Changes aren't being saved: "+error.message+" — re-run supabase_setup.sql in your Supabase SQL editor.",true);
+  }
 }
 async function delUni(id){
   const u=unis.find(x=>x.id===id);
@@ -755,7 +770,7 @@ function winProgress(p){
 }
 
 /* ============ render ============ */
-function renderAll(){renderUnis();renderSchols();renderDocs();renderProfile();updateStats();syncFilters();renderAnalysis();renderIcons();}
+function renderAll(){renderActive();renderSchols();renderDocs();renderProfile();updateStats();syncFilters();renderAnalysis();renderIcons();}
 
 function relTime(iso){if(!iso)return "";const t=new Date(iso).getTime();if(isNaN(t))return "";const s=Math.max(0,Math.round((Date.now()-t)/1000));if(s<90)return "just now";const m=Math.round(s/60);if(m<60)return m+"m ago";const h=Math.round(m/60);if(h<24)return h+"h ago";const d=Math.round(h/24);return d+"d ago";}
 function renderAnalysis(){
@@ -870,11 +885,11 @@ function onCardClick(e){const card=e.target.closest(".uni");if(!card)return;cons
   if(e.target.closest("[data-back]")){closeDetail();return;}
   if(e.target.closest("[data-open]")){openDetail(id);return;}
   if((t=e.target.closest("[data-pnode]"))){selStage[id]=+t.dataset.pnode;renderActive();return;}
-  if(e.target.closest("[data-addstage]")){const pl=clonePipeline(u);pl.push({id:uid(),t:"New stage",items:[]});selStage[id]=pl.length-1;writeUni(id,{pipeline:pl});return;}
-  if((t=e.target.closest("[data-check]"))){const a=t.dataset.check.split(":").map(Number);const pl=clonePipeline(u);if(pl[a[0]]&&pl[a[0]].items[a[1]])pl[a[0]].items[a[1]].done=!pl[a[0]].items[a[1]].done;const patch={pipeline:pl};const sub=pl.find(x=>/submit/i.test(x.t));if(sub&&stageDone(sub)&&!["applied","admitted","rejected","waitlisted"].includes(u.status)){patch.status="applied";patch.applied_date=u.applied_date||new Date().toISOString().slice(0,10);}writeUni(id,patch);return;}
-  if((t=e.target.closest("[data-delitem]"))){const a=t.dataset.delitem.split(":").map(Number);const pl=clonePipeline(u);if(pl[a[0]])pl[a[0]].items.splice(a[1],1);writeUni(id,{pipeline:pl});return;}
+  if(e.target.closest("[data-addstage]")){const pl=clonePipeline(u);pl.push({id:uid(),t:"New stage",items:[]});selStage[id]=pl.length-1;savePipeline(id,pl);return;}
+  if((t=e.target.closest("[data-check]"))){const a=t.dataset.check.split(":").map(Number);const pl=clonePipeline(u);if(pl[a[0]]&&pl[a[0]].items[a[1]])pl[a[0]].items[a[1]].done=!pl[a[0]].items[a[1]].done;const extra={};const sub=pl.find(x=>/submit/i.test(x.t));if(sub&&stageDone(sub)&&!["applied","admitted","rejected","waitlisted"].includes(u.status)){extra.status="applied";extra.applied_date=u.applied_date||new Date().toISOString().slice(0,10);}savePipeline(id,pl,extra);return;}
+  if((t=e.target.closest("[data-delitem]"))){const a=t.dataset.delitem.split(":").map(Number);const pl=clonePipeline(u);if(pl[a[0]])pl[a[0]].items.splice(a[1],1);savePipeline(id,pl);return;}
   if((t=e.target.closest("[data-additembtn]"))){addCriterion(card,id,u,+t.dataset.additembtn);return;}
-  if((t=e.target.closest("[data-delstage]"))){const si=+t.dataset.delstage;const pl=clonePipeline(u);pl.splice(si,1);selStage[id]=Math.max(0,si-1);writeUni(id,{pipeline:pl});return;}
+  if((t=e.target.closest("[data-delstage]"))){const si=+t.dataset.delstage;const pl=clonePipeline(u);pl.splice(si,1);selStage[id]=Math.max(0,si-1);savePipeline(id,pl);return;}
   if((t=e.target.closest("[data-rename]"))){inlineRename(t,id,"item");return;}
   if((t=e.target.closest("[data-renamestage]"))){inlineRename(t,id,"stage");return;}
   if(e.target.closest("[data-edit]")){openUniModal(u);return;}
@@ -883,11 +898,11 @@ function onCardKeydown(e){if(e.key==="Enter"&&e.target.matches("[data-additem]")
 function onCardChange(e){const card=e.target.closest(".uni");if(!card)return;const id=card.dataset.id;const u=unis.find(x=>x.id===id)||{};
   if(e.target.matches("[data-status]")){const v=e.target.value;writeUni(id,{status:v,applied_date:(v==="applied"&&!u.applied_date)?new Date().toISOString().slice(0,10):(u.applied_date||null)});toast("Status updated");return;}}
 function onCardInput(e){if(!e.target.matches("[data-note]"))return;const card=e.target.closest(".uni");const id=card.dataset.id,val=e.target.value;clearTimeout(noteTimers[id]);noteTimers[id]=setTimeout(()=>{writeUni(id,{notes:val});toast("Notes saved");},700);}
-function addCriterion(card,id,u,si){const inp=card.querySelector('[data-additem="'+si+'"]');const v=(inp&&inp.value||"").trim();if(!v)return;const pl=clonePipeline(u);if(pl[si])pl[si].items.push({id:uid(),t:v,done:false});writeUni(id,{pipeline:pl});}
+function addCriterion(card,id,u,si){const inp=card.querySelector('[data-additem="'+si+'"]');const v=(inp&&inp.value||"").trim();if(!v)return;const pl=clonePipeline(u);if(pl[si])pl[si].items.push({id:uid(),t:v,done:false});savePipeline(id,pl);}
 function inlineRename(spanEl,id,kind){const u=unis.find(x=>x.id===id)||{};const ds=spanEl.dataset;const input=document.createElement("input");input.className="inline-edit";input.value=spanEl.textContent;spanEl.replaceWith(input);input.focus();input.select();let fin=false;
   const save=(commit)=>{if(fin)return;fin=true;const v=input.value.trim();if(!commit||!v){renderActive();return;}const pl=clonePipeline(u);
     if(kind==="stage"){const si=+ds.renamestage;if(pl[si])pl[si].t=v;}else{const a=ds.rename.split(":").map(Number);if(pl[a[0]]&&pl[a[0]].items[a[1]])pl[a[0]].items[a[1]].t=v;}
-    writeUni(id,{pipeline:pl});};
+    savePipeline(id,pl);};
   input.addEventListener("blur",()=>save(true));
   input.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();save(true);}else if(ev.key==="Escape"){save(false);}});}
 function reopenCards(){}
