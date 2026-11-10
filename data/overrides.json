@@ -1,5 +1,54 @@
 {
   "_note": "Verified field overrides applied to the DB by the daily Action. Claude updates this on demand from chat (e.g. 'refresh the Finland deadlines'); the next Action run (daily, or Actions -> Run workflow) syncs it to Supabase and the app updates. Keys are program/scholarship ids; values are only the fields to change. User-only fields (status, notes, docs) are never touched.",
-  "programs": {},
+  "programs": {
+    "fi-aalto-cs": {
+      "open_date": "2026-12-07",
+      "close_date": "2027-01-05",
+      "intake": "Autumn 2027",
+      "verify": false,
+      "ai_source": "https://www.aalto.fi/en/admission-services/apply-to-masters-programmes",
+      "elig_note": "Verified Nov 2026: apply via Studyinfo.fi 7 Dec 2026 - 5 Jan 2027 (supporting documents by 12 Jan). EUR 100 application fee (non-EU/EEA). Excellence Scholarship (tuition waiver) by selecting it on the application form.",
+      "requirements": [
+        "Bachelor's in CS or a closely related field",
+        "IELTS 6.5 (writing at least 5.5)",
+        "Apply via Studyinfo.fi during 7 Dec 2026 - 5 Jan 2027",
+        "EUR 100 application fee (non-EU/EEA)",
+        "Supporting documents uploaded by 12 Jan 2027",
+        "Excellence Scholarship: select 'yes' on the application form"
+      ]
+    },
+    "se-kth-dist": {
+      "open_date": "2026-10-16",
+      "close_date": "2027-01-15",
+      "intake": "Autumn 2027",
+      "verify": false,
+      "ai_source": "https://www.universityadmissions.se/en/key-dates-and-deadlines/autumn-semester-dates/",
+      "elig_note": "Verified Nov 2026: Sweden autumn 2027 round opens 16 Oct 2026, deadline 15 Jan 2027; application fee and supporting documents due 1 Feb 2027. Apply via universityadmissions.se (SEK 900 fee). Swedish Institute scholarships are applied for separately.",
+      "requirements": [
+        "Bachelor's in CS/EE (approx 180 ECTS)",
+        "IELTS 6.5 (each part at least 5.5)",
+        "Apply via universityadmissions.se (16 Oct 2026 - 15 Jan 2027)",
+        "SEK 900 application fee",
+        "Fee and supporting documents by 1 Feb 2027",
+        "Transcripts + degree, CV, motivation letter"
+      ]
+    },
+    "se-chalmers-se": {
+      "open_date": "2026-10-16",
+      "close_date": "2027-01-15",
+      "intake": "Autumn 2027",
+      "verify": false,
+      "ai_source": "https://www.universityadmissions.se/en/key-dates-and-deadlines/autumn-semester-dates/",
+      "elig_note": "Verified Nov 2026: Sweden autumn 2027 round via universityadmissions.se opens 16 Oct 2026, deadline 15 Jan 2027; fee and documents due 1 Feb 2027.",
+      "requirements": [
+        "Bachelor's in CS/SWE",
+        "IELTS 6.5",
+        "Apply via universityadmissions.se (16 Oct 2026 - 15 Jan 2027)",
+        "SEK 900 application fee; documents by 1 Feb 2027",
+        "Transcripts + degree",
+        "CV / motivation letter"
+      ]
+    }
+  },
   "scholarships": {}
 }
