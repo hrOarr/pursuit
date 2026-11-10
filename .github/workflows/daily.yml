@@ -1,0 +1,36 @@
+name: Daily analysis
+
+on:
+  schedule:
+    # 02:00 UTC daily  ==  08:00 Asia/Dhaka. Change the time by editing this.
+    - cron: "0 2 * * *"
+  workflow_dispatch: {}   # lets you run it on demand from the Actions tab
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-analysis
+  cancel-in-progress: false
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependency
+        run: npm install --no-save @supabase/supabase-js@2.45.4
+
+      - name: Run daily analysis
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ANALYZE_MODEL: claude-sonnet-5-5
+        run: node scheduler/analyze.mjs

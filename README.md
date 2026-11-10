@@ -68,3 +68,28 @@ Ask and I can wire the login screen in for you.
 The starter catalog lives in `index.html` in the `CATALOG` and `SCH_CATALOG` arrays — edit there, then use the import button (it upserts by id, so it won't duplicate).
 
 > Non-Austria dates and fees are **estimates** (flagged with a *verify* chip). Confirm each on the university's own admissions page before you rely on them.
+
+---
+
+## Daily analysis (automated scheduler)
+
+A GitHub Actions job (`.github/workflows/daily.yml`) runs **once a day** and:
+
+1. **Maintenance** — recomputes each program's `window_state` (upcoming / open / closing_soon / closed).
+2. **AI research** — uses Claude + web search to verify each program's open/close dates, tuition, IELTS and requirements against official sources, and applies updates. Every change is recorded in the `analysis_log` table **with its previous value**, so any auto-overwrite is recoverable. Curated values are only overwritten on high confidence.
+3. Writes a daily **summary** the app shows as a strip on the dashboard.
+
+Because the app reads live from Supabase, DB updates appear in the app automatically.
+
+### One-time setup
+1. Run **`scheduler_setup.sql`** in the pursuit project's SQL editor (adds columns + the `analysis_log` table).
+2. In GitHub → repo **Settings → Secrets and variables → Actions → New repository secret**, add three secrets:
+   - `SUPABASE_URL` = `https://hrmdbjperwyjeaqnebdv.supabase.co`
+   - `SUPABASE_SECRET_KEY` = a **fresh** Supabase secret key (`sb_secret_…`, from Project Settings → API Keys). This stays in GitHub Secrets only — never in the site.
+   - `ANTHROPIC_API_KEY` = your Anthropic API key (from console.anthropic.com). Omit this one to run **maintenance only**, no AI.
+3. GitHub → **Actions** tab → enable workflows if prompted → open **Daily analysis** → **Run workflow** to test it immediately (don't wait for the cron).
+
+### Notes
+- Schedule is `0 2 * * *` (02:00 UTC ≈ 08:00 Dhaka). Edit the cron line to change it.
+- Cost: ~one Claude request per country per day with web search enabled. Keep an eye on your Anthropic usage.
+- The secret key is used **only** by the Action (server-side) and bypasses RLS; the website keeps using the public `sb_publishable_…` key.
