@@ -13,6 +13,7 @@
   --border:#e2e7ee; --border-strong:#ccd4df;
   --fg:#181d26; --fg-2:#56606f; --muted:#8a93a2;
   --accent:#4f5bd5; --accent-fg:#ffffff; --accent-soft:rgba(79,91,213,.10);
+  --accent-2:#dd8f33; --accent-2-bg:rgba(221,143,51,.14);
   --ok:#1f9d6b; --ok-bg:rgba(31,157,107,.12);
   --warn:#bd7710; --warn-bg:rgba(189,119,16,.13);
   --bad:#d2483f; --bad-bg:rgba(210,72,63,.12);
@@ -32,6 +33,7 @@
   --border:#262d39; --border-strong:#39424f;
   --fg:#e9ecf1; --fg-2:#a6afbd; --muted:#717b8a;
   --accent:#8b95f0; --accent-fg:#13151f; --accent-soft:rgba(139,149,240,.15);
+  --accent-2:#f0b45e; --accent-2-bg:rgba(240,180,94,.16);
   --ok:#3bbd87; --ok-bg:rgba(59,189,135,.15);
   --warn:#e0a44a; --warn-bg:rgba(224,164,74,.15);
   --bad:#ef6b61; --bad-bg:rgba(239,107,97,.15);
@@ -48,6 +50,7 @@
   --border:#262d39; --border-strong:#39424f;
   --fg:#e9ecf1; --fg-2:#a6afbd; --muted:#717b8a;
   --accent:#8b95f0; --accent-fg:#13151f; --accent-soft:rgba(139,149,240,.15);
+  --accent-2:#f0b45e; --accent-2-bg:rgba(240,180,94,.16);
   --ok:#3bbd87; --ok-bg:rgba(59,189,135,.15);
   --warn:#e0a44a; --warn-bg:rgba(224,164,74,.15);
   --bad:#ef6b61; --bad-bg:rgba(239,107,97,.15);
@@ -77,7 +80,7 @@ button{font-family:inherit;cursor:pointer}
 .top{position:sticky;top:0;z-index:30;background:var(--surface);border-bottom:1px solid var(--border)}
 .top-in{display:flex;align-items:center;gap:14px;padding-block:12px}
 .brand{display:flex;align-items:center;gap:10px;min-width:0}
-.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--applied));display:grid;place-items:center;flex-shrink:0;color:#fff;font-size:19px}
+.logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(140deg,var(--accent),var(--applied));display:grid;place-items:center;flex-shrink:0;color:#fff;font-size:19px;box-shadow:0 3px 10px color-mix(in srgb,var(--accent) 45%,transparent)}
 .brand h1{font-size:18px;font-weight:600;white-space:nowrap}
 .brand .sub{font-size:11.5px;color:var(--muted);white-space:nowrap}
 .top-sp{flex:1}
@@ -88,11 +91,15 @@ button{font-family:inherit;cursor:pointer}
 
 .dash{padding-top:18px}
 .stat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:8px}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:13px 15px;box-shadow:var(--shadow);min-width:0}
-.stat .k{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:5px}
-.stat .v{font-family:var(--font-head);font-size:26px;font-weight:600;margin-top:6px;letter-spacing:-.02em}
-.stat .vsub{font-size:11.5px;color:var(--fg-2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.stat.hl{background:linear-gradient(150deg,var(--accent-soft),transparent);border-color:color-mix(in srgb,var(--accent) 30%,var(--border))}
+.stat{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);min-width:0;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+.stat .chip{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:16px}
+.stat .chip .ti{font-size:16px}
+.stat .v{font-family:var(--font-head);font-size:25px;font-weight:600;letter-spacing:-.02em;line-height:1}
+.stat .k{font-size:11.5px;font-weight:500;color:var(--fg-2)}
+.stat .vsub{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:-5px}
+.stat.hl{background:radial-gradient(130% 120% at 100% 0,var(--accent-2-bg),transparent 55%);border-color:color-mix(in srgb,var(--accent-2) 38%,var(--border))}
+.stat.hl .chip{background:var(--accent-2-bg);color:var(--accent-2)}
+.stat.hl .v{color:var(--accent-2)}
 
 .tabs{display:flex;gap:4px;margin:18px 0 0;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
@@ -118,7 +125,9 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
 .btn .ti{font-size:16px}
 
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:13px}
-.uni{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+.uni{position:relative;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--rail,var(--accent));border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .18s ease,transform .18s ease}
+.uni:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+@media (prefers-reduced-motion:reduce){.uni{transition:none}.uni:hover{transform:none}}
 .uni-top{padding:14px 15px 12px;display:flex;flex-direction:column;gap:9px}
 .uni-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .flag{font-size:12px;font-weight:600;color:var(--fg-2);display:flex;align-items:center;gap:6px;letter-spacing:.02em;flex-wrap:wrap}
@@ -136,6 +145,20 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
 .win-cell .wl{font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:4px}
 .win-cell .wv{font-size:13px;font-weight:600;margin-top:2px}
 .win-div{width:1px;background:var(--border);margin:2px 14px}
+.flagchip{font-size:15px;line-height:1}
+.runway-wrap{padding:3px 15px 13px;display:flex;flex-direction:column;gap:7px}
+.runway-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.rw-date{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.rw-status{font-size:12px;font-weight:600;white-space:nowrap}
+.runway{position:relative;height:6px;border-radius:999px;background:var(--surface-3);overflow:hidden}
+.runway-fill{position:absolute;top:0;bottom:0;left:0;border-radius:999px;min-width:3px;transition:width .4s ease}
+@media (prefers-reduced-motion:reduce){.runway-fill{transition:none}}
+.rw-urgent .rw-status{color:var(--bad)} .rw-urgent .runway-fill{background:var(--bad)}
+.rw-soon .rw-status{color:var(--warn)} .rw-soon .runway-fill{background:var(--warn)}
+.rw-open .rw-status{color:var(--ok)} .rw-open .runway-fill{background:var(--ok)}
+.rw-upcoming .rw-status{color:var(--info)} .rw-upcoming .runway-fill{background:var(--info);opacity:.55}
+.rw-closed .rw-status{color:var(--muted)} .rw-closed .runway-fill{background:var(--muted)}
+.rw-none .rw-status{color:var(--muted)} .rw-none .runway-fill{background:transparent}
 .metarow{display:flex;flex-wrap:wrap;gap:4px 16px;padding:0 15px 13px}
 .meta{font-size:12px;color:var(--fg-2);display:flex;align-items:center;gap:5px}
 .meta .ti{font-size:14px;color:var(--muted)}
@@ -182,7 +205,9 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
 @keyframes sh{to{background-position:-200% 0}}
 @media (prefers-reduced-motion:reduce){.skel{animation:none}}
 
-.sch{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 15px;display:flex;flex-direction:column;gap:9px}
+.sch{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--rail,var(--accent));border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 15px;display:flex;flex-direction:column;gap:9px;transition:box-shadow .18s ease,transform .18s ease}
+.sch:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+@media (prefers-reduced-motion:reduce){.sch{transition:none}.sch:hover{transform:none}}
 .sch-cover{font-size:12.5px;color:var(--fg-2);line-height:1.5}
 .sch-foot{display:flex;align-items:center;gap:8px;margin-top:2px}
 .sch-foot select{flex:1;font-family:inherit;font-size:12.5px;font-weight:600;padding:7px 10px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg);border-radius:8px}
@@ -562,6 +587,22 @@ function fmtDate(d){if(!d)return "—";const dt=new Date(d+"T00:00:00");if(isNaN
 function closeClass(n){if(n==null)return "dl-ok";if(n<0)return "dl-soon";if(n<=30)return "dl-soon";if(n<=75)return "dl-near";return "dl-ok";}
 function closeText(n){if(n==null)return "No date";if(n<0)return "Closed";if(n===0)return "Closes today";return "Closes in "+n+"d";}
 function openText(n){if(n==null)return "";if(n>0)return "Opens in "+n+"d";return "Open now";}
+const COUNTRY={"Austria":{f:"🇦🇹",c:"#d6453f"},"Netherlands":{f:"🇳🇱",c:"#e8820c"},"Finland":{f:"🇫🇮",c:"#4a7fe0"},"Sweden":{f:"🇸🇪",c:"#d9a521"},"USA":{f:"🇺🇸",c:"#3b5bd0"},"Canada":{f:"🇨🇦",c:"#e0564f"},"Hungary":{f:"🇭🇺",c:"#2f9e6b"},"EU-wide":{f:"🇪🇺",c:"#6366e0"},"Germany":{f:"🇩🇪",c:"#556070"}};
+function countryMeta(name){return COUNTRY[name]||{f:"🌍",c:"var(--accent)"};}
+function winProgress(p){
+  const o=daysLeft(p.open_date),c=daysLeft(p.close_date);
+  if(c==null)return{pct:0,state:"none",label:"No deadline set"};
+  if(c<0)return{pct:100,state:"closed",label:"Closed"};
+  if(o!=null&&o>0)return{pct:4,state:"upcoming",label:"Opens in "+o+"d"};
+  let pct;
+  if(p.open_date&&p.close_date){
+    const ot=new Date(p.open_date+"T00:00:00").getTime(),ct=new Date(p.close_date+"T00:00:00").getTime(),now=Date.now();
+    pct=ct>ot?Math.round(((now-ot)/(ct-ot))*100):60;
+  }else{ pct=c<=7?90:c<=30?72:c<=75?46:24; }
+  pct=Math.max(5,Math.min(97,pct));
+  const state=c<=14?"urgent":c<=45?"soon":"open";
+  return{pct,state,label:(c===0?"Closes today":"Closes in "+c+"d")};
+}
 
 /* ============ render ============ */
 function renderAll(){renderUnis();renderSchols();renderDocs();renderProfile();updateStats();syncFilters();renderAnalysis();renderIcons();}
@@ -597,14 +638,18 @@ function updateStats(){
   const upcoming=unis.map(u=>({u,n:daysLeft(u.close_date)})).filter(x=>x.n!=null&&x.n>=0&&!["applied","admitted","rejected","waitlisted"].includes(x.u.status)).sort((a,b)=>a.n-b.n);
   const next=upcoming[0];
   const tiles=[
-    {k:"Programs",ti:"building-bank",v:unis.length,sub:`${unis.filter(u=>u.degree==="Masters").length} MSc · ${unis.filter(u=>u.degree==="PhD").length} PhD`},
-    {k:"Applied",ti:"send",v:applied,sub:`of ${unis.length}`},
-    {k:"Admitted",ti:"circle-check",v:admitted,sub:admitted?"congratulations!":"in progress"},
-    {k:"Eligible",ti:"user-check",v:eligible,sub:"clear matches"},
-    {k:"Scholarships",ti:"award",v:`${schApplied}/${schols.length}`,sub:"applied"},
+    {k:"Programs",ti:"building-bank",v:unis.length,sub:`${unis.filter(u=>u.degree==="Masters").length} MSc · ${unis.filter(u=>u.degree==="PhD").length} PhD`,tone:"accent"},
+    {k:"Applied",ti:"send",v:applied,sub:`of ${unis.length}`,tone:"applied"},
+    {k:"Admitted",ti:"circle-check",v:admitted,sub:admitted?"congratulations":"in progress",tone:"ok"},
+    {k:"Eligible",ti:"user-check",v:eligible,sub:"clear matches",tone:"info"},
+    {k:"Scholarships",ti:"award",v:`${schApplied}/${schols.length}`,sub:"applied",tone:"accent2"},
     {k:"Next to close",ti:"clock",v:next?(next.n+"d"):"—",sub:next?esc(next.u.name):"nothing pending",hl:true},
   ];
-  $("#statGrid").innerHTML=tiles.map(t=>`<div class="stat${t.hl?" hl":""}"><div class="k"><i class="ti ti-${t.ti}"></i>${t.k}</div><div class="v tnum">${t.v}</div><div class="vsub">${t.sub}</div></div>`).join("");
+  const TONE={accent:["var(--accent-soft)","var(--accent)"],applied:["var(--applied-bg)","var(--applied)"],ok:["var(--ok-bg)","var(--ok)"],info:["var(--info-bg)","var(--info)"],accent2:["var(--accent-2-bg)","var(--accent-2)"]};
+  $("#statGrid").innerHTML=tiles.map(t=>{
+    const chipStyle=t.hl?"":(TONE[t.tone]?`style="background:${TONE[t.tone][0]};color:${TONE[t.tone][1]}"`:"");
+    return `<div class="stat${t.hl?" hl":""}"><div class="chip" ${chipStyle}><i class="ti ti-${t.ti}"></i></div><div class="v tnum">${t.v}</div><div class="k">${t.k}</div><div class="vsub">${t.sub}</div></div>`;
+  }).join("");
   renderIcons($("#statGrid"));
 }
 
@@ -639,12 +684,12 @@ function uniCard(u){
   const done=DOC_KEYS.filter(([k])=>docs[k]).length;
   const reqMet=reqs.filter((_,i)=>reqDone[i]).length;
   const statusOpts=UNI_STATUS_ORDER.map(k=>`<option value="${k}"${u.status===k?" selected":""}>${STATUS[k].label}</option>`).join("");
-  const openInfo=(no!=null&&no>0)?`<span class="meta dl-open" style="font-weight:600"><i class="ti ti-calendar-up"></i>${openText(no)}</span>`:"";
-  return `<div class="uni" data-id="${esc(u.id)}">
+  const cm=countryMeta(u.country), wp=winProgress(u);
+  return `<div class="uni" data-id="${esc(u.id)}" style="--rail:${cm.c}">
     <div class="uni-top">
       <div class="uni-head">
         <div style="min-width:0">
-          <div class="flag"><span class="dot"></span>${esc(u.country||"")}${u.intake?` · ${esc(u.intake)}`:""}${u.verify?' <span class="verify">verify</span>':""}</div>
+          <div class="flag"><span class="flagchip">${cm.f}</span>${esc(u.country||"")}${u.intake?` · ${esc(u.intake)}`:""}${u.verify?' <span class="verify">verify</span>':""}</div>
           <h3>${esc(u.name||"Untitled")}</h3><div class="prog">${esc(u.program||"")}</div>
         </div>
         <span class="bdg ${st.cls}">${st.label}</span>
@@ -655,14 +700,15 @@ function uniCard(u){
         <span class="bdg pill-slate">${esc(u.degree||"Masters")}</span>
       </div>
     </div>
-    <div class="win">
-      <div class="win-cell"><div class="wl"><i class="ti ti-calendar-up"></i>Opens</div><div class="wv tnum">${fmtDate(u.open_date)}</div></div>
-      <div class="win-div"></div>
-      <div class="win-cell"><div class="wl"><i class="ti ti-calendar-event"></i>Closes</div><div class="wv tnum ${closeClass(nc)}">${fmtDate(u.close_date)}</div></div>
+    <div class="runway-wrap rw-${wp.state}">
+      <div class="runway-head">
+        <span class="rw-date">${u.open_date?("Opens "+fmtDate(u.open_date)):" "}</span>
+        <span class="rw-status">${wp.label}</span>
+        <span class="rw-date">${u.close_date?("Closes "+fmtDate(u.close_date)):""}</span>
+      </div>
+      <div class="runway"><div class="runway-fill" style="width:${wp.pct}%"></div></div>
     </div>
     <div class="metarow">
-      <span class="meta ${closeClass(nc)}" style="font-weight:600"><i class="ti ti-clock"></i>${closeText(nc)}</span>
-      ${openInfo}
       <span class="meta"><i class="ti ti-cash"></i><b>${esc(u.tuition||"—")}</b></span>
       <span class="meta"><i class="ti ti-language"></i>IELTS <b>${esc(u.ielts||"—")}</b></span>
       <span class="meta"><i class="ti ti-list-check"></i>Reqs <b>${reqMet}/${reqs.length||0}</b></span>
@@ -705,17 +751,20 @@ function renderSchols(){
   host.innerHTML='<div class="grid">'+list.map(schCard).join("")+"</div>";renderIcons(host);
 }
 function schCard(s){
-  const st=SCH_STATUS[s.status||"not_started"],nc=daysLeft(s.deadline),no=daysLeft(s.open_date);
+  const st=SCH_STATUS[s.status||"not_started"];
+  const cm=countryMeta(s.country), wp=winProgress({open_date:s.open_date,close_date:s.deadline});
   const opts=Object.keys(SCH_STATUS).map(k=>`<option value="${k}"${(s.status||"not_started")===k?" selected":""}>${SCH_STATUS[k].label}</option>`).join("");
-  return `<div class="sch" data-id="${esc(s.id)}">
-    <div class="uni-head"><div style="min-width:0"><div class="flag"><span class="dot"></span>${esc(s.country||"")}${s.verify?' <span class="verify">verify</span>':""}</div><h3 style="font-size:15.5px;margin-top:4px">${esc(s.name||"")}</h3></div><span class="bdg ${st.cls}">${st.label}</span></div>
+  return `<div class="sch" data-id="${esc(s.id)}" style="--rail:${cm.c}">
+    <div class="uni-head"><div style="min-width:0"><div class="flag"><span class="flagchip">${cm.f}</span>${esc(s.country||"")}${s.verify?' <span class="verify">verify</span>':""}</div><h3 style="font-size:15.5px;margin-top:4px">${esc(s.name||"")}</h3></div><span class="bdg ${st.cls}">${st.label}</span></div>
     <div class="sch-cover">${esc(s.cover||"")}</div>
-    <div class="win">
-      <div class="win-cell"><div class="wl"><i class="ti ti-calendar-up"></i>Opens</div><div class="wv tnum">${fmtDate(s.open_date)}</div></div>
-      <div class="win-div"></div>
-      <div class="win-cell"><div class="wl"><i class="ti ti-calendar-event"></i>Deadline</div><div class="wv tnum ${closeClass(nc)}">${fmtDate(s.deadline)}</div></div>
+    <div class="runway-wrap rw-${wp.state}" style="padding-left:0;padding-right:0">
+      <div class="runway-head">
+        <span class="rw-date">${s.open_date?("Opens "+fmtDate(s.open_date)):" "}</span>
+        <span class="rw-status">${wp.label}</span>
+        <span class="rw-date">${s.deadline?("Deadline "+fmtDate(s.deadline)):""}</span>
+      </div>
+      <div class="runway"><div class="runway-fill" style="width:${wp.pct}%"></div></div>
     </div>
-    <span class="meta ${closeClass(nc)}" style="font-weight:600"><i class="ti ti-clock"></i>${closeText(nc)}</span>
     ${s.link?`<a class="applink" href="${esc(s.link)}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i>Scholarship page</a>`:""}
     <div class="sch-foot"><select data-sstatus>${opts}</select><button class="foot-btn danger" data-sdel title="Remove" style="border:1px solid var(--border);border-radius:8px;height:34px;width:38px"><i class="ti ti-trash"></i></button></div>
   </div>`;
