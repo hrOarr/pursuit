@@ -253,6 +253,38 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
 .sitem.on .sitem-box .ti{opacity:1}
 .sitem.on{color:var(--fg)}
 .sitem input:focus-visible+.sitem-box{outline:2px solid var(--accent-soft);outline-offset:2px}
+.sitem-box{cursor:pointer;padding:0}
+.sitem-t{flex:1;min-width:0;cursor:text}
+.sitem.on .sitem-t{text-decoration:line-through;text-decoration-color:var(--border-strong)}
+.sitem-x{background:none;border:none;color:var(--muted);cursor:pointer;opacity:0;padding:2px;border-radius:5px;flex-shrink:0;display:inline-flex}
+.sitem:hover .sitem-x{opacity:1}
+.sitem-x:hover{color:var(--bad)}
+.pipeline{display:flex;align-items:stretch;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:thin}
+.pnode{flex:0 0 auto;min-width:118px;max-width:150px;display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 12px;border:1px solid var(--border);border-radius:11px;background:var(--surface-2);color:var(--fg-2);cursor:pointer;text-align:center}
+.pnode:hover{border-color:var(--border-strong)}
+.pnode.sel{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.pn-ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--surface-3);color:var(--muted)}
+.pn-ic .ti{font-size:15px}
+.pn-t{font-size:12px;font-weight:600;color:var(--fg);line-height:1.2}
+.pn-x{font-size:11px;color:var(--fg-2);font-variant-numeric:tabular-nums}
+.pnode.done{background:var(--ok-bg);border-color:transparent} .pnode.done .pn-ic{background:var(--ok);color:#fff} .pnode.done .pn-x{color:var(--ok)}
+.pnode.run .pn-ic{background:var(--accent-soft);color:var(--accent)}
+.pnode.addstage{min-width:92px;border-style:dashed;color:var(--muted);justify-content:center}
+.pnode.addstage .pn-ic{background:transparent}
+.pconn{flex:0 0 16px;align-self:center;height:2px;background:var(--border)}
+.pconn.on{background:var(--ok)}
+.pcrit{margin-top:10px;border:1px solid var(--border);border-radius:12px;background:var(--surface-2);padding:12px}
+.pcrit-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.pcrit-t{font-size:14px;font-weight:600;color:var(--fg);cursor:text;flex:1;min-width:0}
+.pcrit-del{background:none;border:none;color:var(--muted);cursor:pointer;padding:5px;border-radius:7px;display:inline-flex}
+.pcrit-del:hover{color:var(--bad);background:var(--bad-bg)}
+.pitems{display:flex;flex-direction:column;gap:2px;margin-bottom:8px}
+.pitems-empty{font-size:12.5px;color:var(--muted);padding:6px 4px}
+.additem{display:flex;gap:8px}
+.additem-in{flex:1;min-width:0;font-family:inherit;font-size:13px;padding:8px 10px;border:1px solid var(--border);background:var(--surface);color:var(--fg);border-radius:8px}
+.additem-in:focus{outline:2px solid var(--accent-soft);border-color:var(--accent)}
+.additem-btn{padding:7px 12px;white-space:nowrap}
+.inline-edit{font-family:inherit;font-size:13px;padding:3px 7px;border:1px solid var(--accent);background:var(--surface);color:var(--fg);border-radius:6px;min-width:120px}
 .reqs{display:flex;flex-direction:column;gap:4px}
 .reqitem{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:var(--fg);padding:5px 8px;border-radius:8px;background:var(--surface-2);line-height:1.45}
 .reqitem input{accent-color:var(--accent);width:15px;height:15px;margin:2px 0 0;flex-shrink:0}
@@ -492,16 +524,15 @@ const DOC_MASTER=[
   {id:"funds",icon:"wallet",name:"Proof of funds",desc:"Bank statements for the residence-permit/visa stage. Austria (over 24): ~€15,300/yr. Amounts vary by country."},
 ];
 const BASE_REQ=["Bachelor's in CS / SWE or related","Official transcripts + degree certificate","Statement of Purpose","Academic CV","2–3 recommendation letters","Passport copy"];
-const STAGES=[
-  {k:"gather",t:"Gather requirements",ic:"folder",items:[["ielts","IELTS / English score"],["transcript","Transcripts"],["degree","Degree certificate"],["apostille","Apostille / legalisation"],["sop","Statement of Purpose"],["cv","Academic CV"],["lor","Recommendation letters"],["passport","Passport"],["funds","Proof of funds"]]},
-  {k:"upload",t:"Upload to portal",ic:"upload",items:[["account","Create portal account"],["form","Fill application form"],["docs","Upload all documents"]]},
-  {k:"pay",t:"Pay application fee",ic:"cash",items:[["paid","Fee paid"],["receipt","Save payment receipt"]]},
-  {k:"submit",t:"Submit application",ic:"send",items:[["review","Final review"],["submit","Submit application"],["confirm","Confirmation received"]]},
-  {k:"interview",t:"Interview / entrance test",ic:"users",items:[["scheduled","Scheduled"],["done","Completed"]]},
-  {k:"decision",t:"Decision",ic:"flag",items:[["received","Decision received"],["respond","Respond to offer"]]}
-];
-function stageState(u,stg){const s=(u.steps&&u.steps[stg.k])||{};const done=stg.items.filter(([ik])=>s[ik]).length;return{done,total:stg.items.length,complete:done===stg.items.length&&stg.items.length>0,any:done>0};}
-function appProgress(u){let done=0,current="",found=false;for(const stg of STAGES){const ss=stageState(u,stg);if(ss.complete)done++;else if(!found){current=stg.t;found=true;}}return{done,total:STAGES.length,current:found?current:"All stages complete"};}
+const DEFAULT_PIPELINE=[["Gather requirements",["IELTS / English score","Transcripts","Degree certificate","Apostille / legalisation","Statement of Purpose","Academic CV","Recommendation letters","Passport","Proof of funds"]],["Upload to portal",["Create portal account","Fill application form","Upload all documents"]],["Pay application fee",["Fee paid","Save payment receipt"]],["Submit application",["Final review","Submit application","Confirmation received"]],["Interview / entrance test",["Scheduled","Completed"]],["Decision",["Decision received","Respond to offer"]]];
+let __uid=0;function uid(){return "s"+Date.now().toString(36)+(__uid++);}
+function defaultPipeline(){return DEFAULT_PIPELINE.map(([t,items])=>({id:uid(),t,items:items.map(x=>({id:uid(),t:x,done:false}))}));}
+function getPipeline(u){return (Array.isArray(u.pipeline)&&u.pipeline.length)?u.pipeline:defaultPipeline();}
+function stageDone(st){return st.items.length>0&&st.items.every(i=>i.done);}
+function stageAny(st){return st.items.some(i=>i.done);}
+function firstIncomplete(pl){const i=pl.findIndex(st=>!stageDone(st));return i<0?pl.length-1:i;}
+function clonePipeline(u){return getPipeline(u).map(st=>({id:st.id,t:st.t,items:st.items.map(it=>({id:it.id,t:it.t,done:!!it.done}))}));}
+function appProgress(u){const pl=getPipeline(u);let done=0,current="",found=false;for(const st of pl){if(stageDone(st))done++;else if(!found){current=st.t;found=true;}}return{done,total:pl.length,current:found?current:"All stages complete"};}
 
 /* ============ recommended catalog ============ */
 const CATALOG=[
@@ -542,6 +573,7 @@ let loaded=false;
 let tab="universities",fDeg="all",noteTimers={};
 let openCards=new Set();
 let openStages=new Set();
+let selStage={};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
@@ -568,6 +600,7 @@ const ICONS={
   "list-check":'<path d="M4 6l1.3 1.3L7 5M4 12.7l1.3 1.3L7 11.7M11 6h9M11 13h9M11 19h9M4 18.5l1.3 1.3L7 18"/>',
   radar:'<circle cx="12" cy="12" r="9"/><path d="M12 12l5.5-3.2M12 12a5 5 0 1 0 4.6 3"/>',
   upload:'<path d="M12 15V4M8 8l4-4 4 4M5 15v4a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-4"/>',
+  circle:'<circle cx="12" cy="12" r="8"/>',
   flag:'<path d="M5 21V4M5 4h11l-1.5 4L16 12H5"/>',
   "star-nav":'<path d="M12 2.5l2.5 7 7 2.5-7 2.5-2.5 7-2.5-7-7-2.5 7-2.5z"/>',
   globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.6 3 14.4 0 18M12 3c-3 3.6-3 14.4 0 18"/>',
@@ -773,8 +806,10 @@ function renderUnis(){
 function uniCard(u){
   const st=STATUS[u.status]||STATUS.not_started, el=ELIG[u.eligibility]||ELIG.match;
   const statusOpts=UNI_STATUS_ORDER.map(k=>`<option value="${k}"${u.status===k?" selected":""}>${STATUS[k].label}</option>`).join("");
-  const cm=countryMeta(u.country), wp=winProgress(u), ap=appProgress(u);
+  const cm=countryMeta(u.country), wp=winProgress(u), ap=appProgress(u), pl=getPipeline(u);
   const dateline=u.close_date?`${wp.label} <span class="dsep">·</span> ${fmtDate(u.close_date)}`:wp.label;
+  const sel=(selStage[u.id]!=null&&selStage[u.id]<pl.length)?selStage[u.id]:firstIncomplete(pl);
+  const cur=pl[sel]||pl[0]||{t:"",items:[]};
   return `<div class="uni" data-id="${esc(u.id)}" style="--rail:${cm.c}">
     <div class="uni-top">
       <div class="uni-head">
@@ -789,19 +824,30 @@ function uniCard(u){
         <span class="bdg ${(PRIO[u.priority]||PRIO.medium).cls}">${(PRIO[u.priority]||PRIO.medium).label} priority</span>
         <span class="bdg pill-slate">${esc(u.degree||"Masters")}</span>
       </div>
+      <div class="uni-meta">
+        <span class="dmeta urg-${wp.state}"><span class="ddot"></span>${dateline}</span>
+        <span class="dmeta"><i class="ti ti-cash"></i>${esc(u.tuition||"—")}</span>
+        <span class="dmeta"><i class="ti ti-language"></i>IELTS ${esc(u.ielts||"—")}</span>
+      </div>
       <div class="apptrack">
-        <div class="segs">${STAGES.map(stg=>{const ss=stageState(u,stg);return `<span class="seg${ss.complete?" on":ss.any?" part":""}"></span>`;}).join("")}</div>
+        <div class="segs">${pl.map(s2=>`<span class="seg${stageDone(s2)?" on":stageAny(s2)?" part":""}"></span>`).join("")}</div>
         <span class="apptrack-lbl">${ap.done}/${ap.total} stages${ap.done===ap.total?"":" · "+esc(ap.current)}</span>
       </div>
     </div>
-    <div class="uni-meta">
-      <span class="dmeta urg-${wp.state}"><span class="ddot"></span>${dateline}</span>
-      <span class="dmeta"><i class="ti ti-cash"></i>${esc(u.tuition||"—")}</span>
-      <span class="dmeta"><i class="ti ti-language"></i>IELTS ${esc(u.ielts||"—")}</span>
-    </div>
     <div class="detail" id="det-${esc(u.id)}">
       <div class="detail-grid"><span class="lbl-mini">Application pipeline</span>
-        <div class="stages">${STAGES.map(stg=>{const ss=stageState(u,stg);const sopen=openStages.has(u.id+"|"+stg.k);const s=(u.steps&&u.steps[stg.k])||{};return `<div class="stg${ss.complete?" done":ss.any?" part":""}"><button class="stg-h" data-stagetoggle="${stg.k}"><span class="stg-ic"><i class="ti ti-${ss.complete?"check":stg.ic}"></i></span><span class="stg-t">${esc(stg.t)}</span><span class="stg-x">${ss.done}/${ss.total}</span><span class="stg-chev"><i class="ti ti-chevron-${sopen?"up":"down"}"></i></span></button><div class="stg-items${sopen?" open":""}" id="stg-${esc(u.id)}-${stg.k}">${stg.items.map(([ik,il])=>`<label class="sitem${s[ik]?" on":""}"><input type="checkbox" data-sitem="${stg.k}:${ik}"${s[ik]?" checked":""}><span class="sitem-box"><i class="ti ti-check"></i></span><span class="sitem-t">${esc(il)}</span></label>`).join("")}</div></div>`;}).join("")}</div>
+        <div class="pipeline">
+          ${pl.map((s2,si)=>{const d=stageDone(s2),a=stageAny(s2);return `${si?'<span class="pconn'+(d?" on":"")+'"></span>':""}<button class="pnode ${d?"done":a?"run":"pend"}${si===sel?" sel":""}" data-pnode="${si}"><span class="pn-ic"><i class="ti ti-${d?"check":a?"loader":"circle"}"></i></span><span class="pn-t">${esc(s2.t)}</span><span class="pn-x">${s2.items.filter(i=>i.done).length}/${s2.items.length}</span></button>`;}).join("")}
+          <button class="pnode addstage" data-addstage title="Add stage"><span class="pn-ic"><i class="ti ti-plus"></i></span><span class="pn-t">Add stage</span></button>
+        </div>
+        <div class="pcrit">
+          <div class="pcrit-head"><span class="pcrit-t" data-renamestage="${sel}" title="Click to rename">${esc(cur.t)}</span><button class="pcrit-del" data-delstage="${sel}" title="Delete stage"><i class="ti ti-trash"></i></button></div>
+          <div class="pitems">
+            ${cur.items.map((it,ii)=>`<div class="sitem${it.done?" on":""}"><button class="sitem-box" data-check="${sel}:${ii}"><i class="ti ti-check"></i></button><span class="sitem-t" data-rename="${sel}:${ii}" title="Click to rename">${esc(it.t)}</span><button class="sitem-x" data-delitem="${sel}:${ii}" title="Remove"><i class="ti ti-x"></i></button></div>`).join("")}
+            ${cur.items.length?"":'<div class="pitems-empty">No criteria yet — add the first one below.</div>'}
+          </div>
+          <div class="additem"><input class="additem-in" data-additem="${sel}" placeholder="Add a criterion…" autocomplete="off"><button class="btn additem-btn" data-additembtn="${sel}"><i class="ti ti-plus"></i>Add</button></div>
+        </div>
       </div>
       ${u.elig_note?`<div class="detail-grid"><span class="lbl-mini">Why this fit</span><div class="elig-note">${esc(u.elig_note)}</div></div>`:""}
       <div class="detail-grid"><span class="lbl-mini">Notes</span><textarea class="note-area" data-note placeholder="Portal login, supervisor emails, to-dos…">${esc(u.notes||"")}</textarea></div>
@@ -809,24 +855,35 @@ function uniCard(u){
     </div>
     <div class="uni-foot">
       <select data-status title="Application status">${statusOpts}</select>
-      <button class="foot-btn" data-expand title="Requirements, documents & notes"><i class="ti ti-chevron-down"></i></button>
+      <button class="foot-btn" data-expand title="Application pipeline & notes"><i class="ti ti-chevron-down"></i></button>
       <button class="foot-btn" data-edit title="Edit"><i class="ti ti-pencil"></i></button>
       <button class="foot-btn danger" data-del title="Remove"><i class="ti ti-trash"></i></button>
     </div>
   </div>`;
 }
-$("#uniHost").addEventListener("click",e=>{const card=e.target.closest(".uni");if(!card)return;const id=card.dataset.id;
-  if(e.target.closest("[data-stagetoggle]")){const b=e.target.closest("[data-stagetoggle]");const k=b.dataset.stagetoggle;const box=document.getElementById("stg-"+id+"-"+k);if(!box)return;const open=box.classList.toggle("open");if(open)openStages.add(id+"|"+k);else openStages.delete(id+"|"+k);const ci=b.querySelector(".stg-chev i");if(ci)setIcon(ci,open?"chevron-up":"chevron-down");return;}
+$("#uniHost").addEventListener("click",e=>{const card=e.target.closest(".uni");if(!card)return;const id=card.dataset.id;const u=unis.find(x=>x.id===id)||{};let t;
+  if((t=e.target.closest("[data-pnode]"))){selStage[id]=+t.dataset.pnode;renderUnis();return;}
+  if(e.target.closest("[data-addstage]")){const pl=clonePipeline(u);pl.push({id:uid(),t:"New stage",items:[]});selStage[id]=pl.length-1;writeUni(id,{pipeline:pl});return;}
+  if((t=e.target.closest("[data-check]"))){const a=t.dataset.check.split(":").map(Number);const pl=clonePipeline(u);if(pl[a[0]]&&pl[a[0]].items[a[1]])pl[a[0]].items[a[1]].done=!pl[a[0]].items[a[1]].done;const patch={pipeline:pl};const sub=pl.find(s=>/submit/i.test(s.t));if(sub&&stageDone(sub)&&!["applied","admitted","rejected","waitlisted"].includes(u.status)){patch.status="applied";patch.applied_date=u.applied_date||new Date().toISOString().slice(0,10);}writeUni(id,patch);return;}
+  if((t=e.target.closest("[data-delitem]"))){const a=t.dataset.delitem.split(":").map(Number);const pl=clonePipeline(u);if(pl[a[0]])pl[a[0]].items.splice(a[1],1);writeUni(id,{pipeline:pl});return;}
+  if((t=e.target.closest("[data-additembtn]"))){addCriterion(card,id,u,+t.dataset.additembtn);return;}
+  if((t=e.target.closest("[data-delstage]"))){const si=+t.dataset.delstage;const pl=clonePipeline(u);pl.splice(si,1);selStage[id]=Math.max(0,si-1);writeUni(id,{pipeline:pl});return;}
+  if((t=e.target.closest("[data-rename]"))){inlineRename(t,id,"item");return;}
+  if((t=e.target.closest("[data-renamestage]"))){inlineRename(t,id,"stage");return;}
   if(e.target.closest("[data-expand]")){const d=$("#det-"+CSS.escape(id));const open=d.classList.toggle("open");if(open)openCards.add(id);else openCards.delete(id);setIcon(e.target.closest("[data-expand]").querySelector("i"),open?"chevron-up":"chevron-down");return;}
-  if(e.target.closest("[data-edit]")){openUniModal(unis.find(u=>u.id===id));return;}
+  if(e.target.closest("[data-edit]")){openUniModal(u);return;}
   if(e.target.closest("[data-del]")){delUni(id);return;}});
-function reopenCards(){
-  openCards.forEach(id=>{const d=document.getElementById("det-"+id);if(!d){openCards.delete(id);return;}d.classList.add("open");const card=d.closest(".uni");const i=card?card.querySelector("[data-expand] i"):null;if(i)setIcon(i,"chevron-up");});
-  openStages.forEach(key=>{const p=key.split("|"),id=p[0],k=p[1];const box=document.getElementById("stg-"+id+"-"+k);if(!box){openStages.delete(key);return;}box.classList.add("open");const h=box.previousElementSibling;const ci=h?h.querySelector(".stg-chev i"):null;if(ci)setIcon(ci,"chevron-up");});
-}
+$("#uniHost").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches("[data-additem]")){e.preventDefault();const card=e.target.closest(".uni");const id=card.dataset.id;const u=unis.find(x=>x.id===id)||{};addCriterion(card,id,u,+e.target.dataset.additem);}});
+function addCriterion(card,id,u,si){const inp=card.querySelector('[data-additem="'+si+'"]');const v=(inp&&inp.value||"").trim();if(!v)return;const pl=clonePipeline(u);if(pl[si])pl[si].items.push({id:uid(),t:v,done:false});writeUni(id,{pipeline:pl});}
+function inlineRename(spanEl,id,kind){const u=unis.find(x=>x.id===id)||{};const ds=spanEl.dataset;const input=document.createElement("input");input.className="inline-edit";input.value=spanEl.textContent;spanEl.replaceWith(input);input.focus();input.select();let fin=false;
+  const save=(commit)=>{if(fin)return;fin=true;const v=input.value.trim();if(!commit||!v){renderUnis();return;}const pl=clonePipeline(u);
+    if(kind==="stage"){const si=+ds.renamestage;if(pl[si])pl[si].t=v;}else{const a=ds.rename.split(":").map(Number);if(pl[a[0]]&&pl[a[0]].items[a[1]])pl[a[0]].items[a[1]].t=v;}
+    writeUni(id,{pipeline:pl});};
+  input.addEventListener("blur",()=>save(true));
+  input.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();save(true);}else if(ev.key==="Escape"){save(false);}});}
+function reopenCards(){openCards.forEach(id=>{const d=document.getElementById("det-"+id);if(!d){openCards.delete(id);return;}d.classList.add("open");const card=d.closest(".uni");const i=card?card.querySelector("[data-expand] i"):null;if(i)setIcon(i,"chevron-up");});}
 $("#uniHost").addEventListener("change",e=>{const card=e.target.closest(".uni");if(!card)return;const id=card.dataset.id;const u=unis.find(x=>x.id===id)||{};
-  if(e.target.matches("[data-status]")){const v=e.target.value;writeUni(id,{status:v,applied_date:(v==="applied"&&!u.applied_date)?new Date().toISOString().slice(0,10):(u.applied_date||null)});toast("Status updated");return;}
-  if(e.target.matches("[data-sitem]")){const parts=e.target.dataset.sitem.split(":"),k=parts[0],ik=parts[1];const steps=Object.assign({},u.steps);steps[k]=Object.assign({},steps[k],{[ik]:e.target.checked});const patch={steps};const sub=STAGES.find(x=>x.k==="submit");if(sub&&sub.items.every(([i2])=>(steps.submit||{})[i2])&&!["applied","admitted","rejected","waitlisted"].includes(u.status)){patch.status="applied";patch.applied_date=u.applied_date||new Date().toISOString().slice(0,10);}writeUni(id,patch);return;}});
+  if(e.target.matches("[data-status]")){const v=e.target.value;writeUni(id,{status:v,applied_date:(v==="applied"&&!u.applied_date)?new Date().toISOString().slice(0,10):(u.applied_date||null)});toast("Status updated");return;}});
 $("#uniHost").addEventListener("input",e=>{if(!e.target.matches("[data-note]"))return;const id=e.target.closest(".uni").dataset.id,val=e.target.value;clearTimeout(noteTimers[id]);noteTimers[id]=setTimeout(()=>{writeUni(id,{notes:val});toast("Notes saved");},700);});
 
 /* ============ scholarships ============ */
@@ -864,8 +921,7 @@ $("#schHost").addEventListener("click",e=>{const card=e.target.closest(".sch");i
 
 /* ============ documents ============ */
 function renderDocs(){
-  $("#docHost").innerHTML=DOC_MASTER.map(d=>{const total=unis.length,have=unis.filter(u=>((u.steps&&u.steps.gather)||{})[d.id]).length,pct=total?Math.round(have/total*100):0;
-    return `<div class="doccard"><h3><i class="ti ti-${d.icon}" style="color:var(--accent)"></i>${esc(d.name)}</h3><p>${esc(d.desc)}</p><div class="status"><span class="bdg ${pct===100&&total?"pill-ok":pct>0?"pill-warn":"pill-slate"}">${total?`Ready for ${have}/${total} programs`:"Add programs first"}</span></div></div>`;}).join("");
+  $("#docHost").innerHTML=DOC_MASTER.map(d=>`<div class="doccard"><h3><i class="ti ti-${d.icon}" style="color:var(--accent)"></i>${esc(d.name)}</h3><p>${esc(d.desc)}</p></div>`).join("");
   renderIcons($("#docHost"));
 }
 
