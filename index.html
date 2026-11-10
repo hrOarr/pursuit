@@ -12,7 +12,7 @@
   --bg:#f5f7fa; --surface:#ffffff; --surface-2:#eef1f6; --surface-3:#e7ebf1;
   --border:#e2e7ee; --border-strong:#ccd4df;
   --fg:#181d26; --fg-2:#56606f; --muted:#8a93a2;
-  --accent:#4f5bd5; --accent-fg:#ffffff; --accent-soft:rgba(79,91,213,.10);
+  --accent:#1e64f0; --accent-fg:#ffffff; --accent-soft:rgba(30,100,240,.10);
   --accent-2:#dd8f33; --accent-2-bg:rgba(221,143,51,.14);
   --ok:#1f9d6b; --ok-bg:rgba(31,157,107,.12);
   --warn:#bd7710; --warn-bg:rgba(189,119,16,.13);
@@ -32,7 +32,7 @@
   --bg:#0e1218; --surface:#161b23; --surface-2:#1d232d; --surface-3:#242b36;
   --border:#262d39; --border-strong:#39424f;
   --fg:#e9ecf1; --fg-2:#a6afbd; --muted:#717b8a;
-  --accent:#8b95f0; --accent-fg:#13151f; --accent-soft:rgba(139,149,240,.15);
+  --accent:#6f9bff; --accent-fg:#0b1220; --accent-soft:rgba(111,155,255,.16);
   --accent-2:#f0b45e; --accent-2-bg:rgba(240,180,94,.16);
   --ok:#3bbd87; --ok-bg:rgba(59,189,135,.15);
   --warn:#e0a44a; --warn-bg:rgba(224,164,74,.15);
@@ -49,7 +49,7 @@
   --bg:#0e1218; --surface:#161b23; --surface-2:#1d232d; --surface-3:#242b36;
   --border:#262d39; --border-strong:#39424f;
   --fg:#e9ecf1; --fg-2:#a6afbd; --muted:#717b8a;
-  --accent:#8b95f0; --accent-fg:#13151f; --accent-soft:rgba(139,149,240,.15);
+  --accent:#6f9bff; --accent-fg:#0b1220; --accent-soft:rgba(111,155,255,.16);
   --accent-2:#f0b45e; --accent-2-bg:rgba(240,180,94,.16);
   --ok:#3bbd87; --ok-bg:rgba(59,189,135,.15);
   --warn:#e0a44a; --warn-bg:rgba(224,164,74,.15);
@@ -70,6 +70,34 @@ img{max-width:100%}
 h1,h2,h3{font-family:var(--font-head);margin:0;text-wrap:balance;letter-spacing:-.01em}
 button{font-family:inherit;cursor:pointer}
 .wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));max-width:1180px;margin:0 auto}
+/* IH-style sidebar shell */
+.app{display:flex;align-items:flex-start;min-height:100vh}
+.side{width:234px;flex-shrink:0;align-self:stretch;border-right:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding:16px 12px;gap:6px;z-index:20}
+.side-brand{display:flex;align-items:center;gap:10px;padding:4px 8px 12px}
+.side-brand h1{font-size:19px;font-weight:600}
+.side-nav{display:flex;flex-direction:column;gap:3px}
+.side-nav .tab{display:flex;align-items:center;gap:11px;padding:9px 11px;border:none;border-bottom:none;background:none;color:var(--fg-2);font-size:14px;font-weight:500;text-align:left;width:100%;border-radius:9px;margin:0;white-space:nowrap}
+.side-nav .tab .ti{font-size:18px}
+.side-nav .tab:hover{background:var(--surface-2);color:var(--fg)}
+.side-nav .tab.on{background:var(--accent-soft);color:var(--accent);font-weight:600;border-bottom:none}
+.side-nav .tab .cnt{margin-left:auto;font-size:11px;background:var(--surface-3);color:var(--fg-2);border-radius:999px;padding:1px 8px;font-weight:600}
+.side-nav .tab.on .cnt{background:var(--accent);color:var(--accent-fg);margin-left:auto}
+.side-foot{margin-top:auto;display:flex;flex-direction:column;gap:10px;padding-top:12px;border-top:1px solid var(--border)}
+.side-foot .chip-user{width:100%}
+.side-foot-btns{display:flex;gap:8px}
+.main{flex:1;min-width:0}
+.main .wrap{max-width:1040px;margin:0;padding-top:6px}
+@media (max-width:860px){
+  .app{flex-direction:column}
+  .side{width:auto;height:auto;position:sticky;top:0;flex-direction:row;align-items:center;gap:8px;padding:9px 10px;border-right:none;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+  .side::-webkit-scrollbar{display:none}
+  .side-brand{padding:0;flex-shrink:0}
+  .side-brand h1{display:none}
+  .side-nav{flex-direction:row;gap:4px}
+  .side-nav .tab{width:auto;padding:7px 11px}
+  .side-foot{margin-top:0;flex-direction:row;border-top:none;padding-top:0;margin-left:auto;flex-shrink:0}
+  .side-foot .chip-user{display:none!important}
+}
 .tnum{font-variant-numeric:tabular-nums}
 .ti{display:inline-flex;align-items:center;justify-content:center;width:1em;height:1em;line-height:1;flex-shrink:0;vertical-align:-.125em}
 .ti svg{width:1em;height:1em;display:block}
@@ -177,6 +205,18 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
 .lbl-mini{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
 .detail-grid{display:flex;flex-direction:column;gap:7px}
 .elig-note{font-size:12.5px;color:var(--fg-2);line-height:1.5}
+.apptrack{display:flex;align-items:center;gap:10px;padding-top:1px}
+.segs{display:flex;gap:3px;flex:1;min-width:0}
+.seg{height:5px;flex:1;border-radius:999px;background:var(--surface-3);transition:background .2s ease}
+.seg.on{background:var(--accent)}
+.apptrack-lbl{font-size:11px;color:var(--fg-2);font-weight:600;white-space:nowrap}
+.steps{display:flex;flex-direction:column;gap:6px}
+.step{display:flex;align-items:center;gap:10px;padding:8px 11px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg-2);font-size:13px;font-weight:500;width:100%;text-align:left;cursor:pointer}
+.step:hover{border-color:var(--border-strong)}
+.step-ic{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--surface-3);color:var(--muted);font-size:13px;flex-shrink:0}
+.step-ic .ti{font-size:13px}
+.step.done{background:var(--ok-bg);border-color:transparent;color:var(--fg)}
+.step.done .step-ic{background:var(--ok);color:#fff}
 .reqs{display:flex;flex-direction:column;gap:4px}
 .reqitem{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:var(--fg);padding:5px 8px;border-radius:8px;background:var(--surface-2);line-height:1.45}
 .reqitem input{accent-color:var(--accent);width:15px;height:15px;margin:2px 0 0;flex-shrink:0}
@@ -252,31 +292,32 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
 </head>
 <body>
 
-<div class="top">
-  <div class="wrap top-in">
-    <div class="brand">
-      <div class="logo"><i class="ti ti-peak"></i></div>
-      <div style="min-width:0"><h1>Pursuit</h1><div class="sub">The pursuit of what's next — study, scholarships, career</div></div>
+<div class="app">
+  <aside class="side">
+    <div class="side-brand">
+      <div class="logo"><i class="ti ti-compass"></i></div>
+      <div style="min-width:0"><h1>Pursuit</h1></div>
     </div>
-    <div class="top-sp"></div>
-    <div id="userChip" class="chip-user" hidden><span class="av" id="userAv">A</span><span id="userName">You</span></div>
-    <button class="icon-btn" id="refreshBtn" title="Refresh from database" aria-label="Refresh"><i class="ti ti-refresh"></i></button>
-    <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme"><i class="ti ti-moon"></i></button>
-  </div>
-</div>
+    <nav class="side-nav" id="tabs">
+      <button class="tab on" data-tab="universities"><i class="ti ti-building-bank"></i><span>Universities</span><span class="cnt" id="cUni">0</span></button>
+      <button class="tab" data-tab="scholarships"><i class="ti ti-award"></i><span>Scholarships</span><span class="cnt" id="cSch">0</span></button>
+      <button class="tab" data-tab="documents"><i class="ti ti-folder"></i><span>Documents</span></button>
+      <button class="tab" data-tab="profile"><i class="ti ti-user"></i><span>Profile</span></button>
+    </nav>
+    <div class="side-foot">
+      <div id="userChip" class="chip-user" hidden><span class="av" id="userAv">A</span><span id="userName">You</span></div>
+      <div class="side-foot-btns">
+        <button class="icon-btn" id="refreshBtn" title="Refresh from database" aria-label="Refresh"><i class="ti ti-refresh"></i></button>
+        <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme"><i class="ti ti-moon"></i></button>
+      </div>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="wrap">
+      <div id="noteBar" class="note-bar" hidden><i class="ti ti-info-circle"></i><span id="noteBarTxt"></span></div>
+      <div id="analysisStrip" class="astrip" hidden></div>
 
-<div class="wrap">
-  <div id="noteBar" class="note-bar" hidden><i class="ti ti-info-circle"></i><span id="noteBarTxt"></span></div>
-  <div id="analysisStrip" class="astrip" hidden></div>
-
-  <div class="dash"><div class="stat-grid" id="statGrid"></div></div>
-
-  <div class="tabs" id="tabs">
-    <button class="tab on" data-tab="universities"><i class="ti ti-building-bank"></i><span>Universities</span><span class="cnt" id="cUni">0</span></button>
-    <button class="tab" data-tab="scholarships"><i class="ti ti-award"></i><span>Scholarships</span><span class="cnt" id="cSch">0</span></button>
-    <button class="tab" data-tab="documents"><i class="ti ti-folder"></i><span>Documents</span></button>
-    <button class="tab" data-tab="profile"><i class="ti ti-user"></i><span>Profile</span></button>
-  </div>
+      <div class="dash"><div class="stat-grid" id="statGrid"></div></div>
 
   <div class="panel" id="panel-universities">
     <div class="controls">
@@ -334,6 +375,8 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
   </div>
 
   <div class="panel" id="panel-profile" hidden><div class="prof" id="profHost"></div></div>
+    </div>
+  </main>
 </div>
 
 <div class="overlay" id="uniOverlay">
@@ -413,6 +456,8 @@ const DOC_MASTER=[
   {id:"funds",icon:"wallet",name:"Proof of funds",desc:"Bank statements for the residence-permit/visa stage. Austria (over 24): ~€15,300/yr. Amounts vary by country."},
 ];
 const BASE_REQ=["Bachelor's in CS / SWE or related","Official transcripts + degree certificate","Statement of Purpose","Academic CV","2–3 recommendation letters","Passport copy"];
+const STEPS=[["gathered","Requirements gathered","folder"],["uploaded","Documents uploaded","upload"],["paid","Application fee paid","cash"],["submitted","Application submitted","send"],["interview","Interview / test done","users"],["decision","Decision received","flag"]];
+function appProgress(u){const s=u.steps||{};const done=STEPS.filter(([k])=>s[k]).length;const next=STEPS.find(([k])=>!s[k]);return{done,total:STEPS.length,pct:Math.round(done/STEPS.length*100),current:next?next[1]:"Complete"};}
 
 /* ============ recommended catalog ============ */
 const CATALOG=[
@@ -451,6 +496,7 @@ const SCH_CATALOG=[
 let unis=[],schols=[],profile=null,analysis=null;
 let loaded=false;
 let tab="universities",fDeg="all",noteTimers={};
+let openCards=new Set();
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
@@ -476,6 +522,8 @@ const ICONS={
   stamp:'<path d="M9 3h6a2 2 0 0 1 2 2c0 2-2 3-2 5H9c0-2-2-3-2-5a2 2 0 0 1 2-2zM4 21h16v-1.5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2z"/>',"info-circle":'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.1"/>',
   "list-check":'<path d="M4 6l1.3 1.3L7 5M4 12.7l1.3 1.3L7 11.7M11 6h9M11 13h9M11 19h9M4 18.5l1.3 1.3L7 18"/>',
   radar:'<circle cx="12" cy="12" r="9"/><path d="M12 12l5.5-3.2M12 12a5 5 0 1 0 4.6 3"/>',
+  upload:'<path d="M12 15V4M8 8l4-4 4 4M5 15v4a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-4"/>',
+  flag:'<path d="M5 21V4M5 4h11l-1.5 4L16 12H5"/>',
   "star-nav":'<path d="M12 2.5l2.5 7 7 2.5-7 2.5-2.5 7-2.5-7-7-2.5 7-2.5z"/>',
   globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.6 3 14.4 0 18M12 3c-3 3.6-3 14.4 0 18"/>',
   cap:'<path d="M12 4 2 9l10 5 10-5-10-5z"/><path d="M6 11.5V16c0 1.4 2.9 3 6 3s6-1.6 6-3v-4.5M21.5 9.5V15"/>',
@@ -675,7 +723,7 @@ function renderUnis(){
   let list=unis.filter(u=>(fDeg==="all"||u.degree===fDeg)&&(cQ==="all"||u.country===cQ)&&(iQ==="all"||u.intake===iQ)&&(sQ==="all"||u.status===sQ));
   list=sortUnis(list);
   if(!list.length){host.innerHTML=`<div class="empty"><i class="ti ti-filter-off"></i><h3>Nothing matches</h3><p>No programs match these filters. Try widening them.</p></div>`;renderIcons(host);return;}
-  host.innerHTML='<div class="grid">'+list.map(uniCard).join("")+"</div>";renderIcons(host);
+  host.innerHTML='<div class="grid">'+list.map(uniCard).join("")+"</div>";renderIcons(host);reopenCards();
 }
 function uniCard(u){
   const st=STATUS[u.status]||STATUS.not_started, el=ELIG[u.eligibility]||ELIG.match;
@@ -684,7 +732,7 @@ function uniCard(u){
   const done=DOC_KEYS.filter(([k])=>docs[k]).length;
   const reqMet=reqs.filter((_,i)=>reqDone[i]).length;
   const statusOpts=UNI_STATUS_ORDER.map(k=>`<option value="${k}"${u.status===k?" selected":""}>${STATUS[k].label}</option>`).join("");
-  const cm=countryMeta(u.country), wp=winProgress(u);
+  const cm=countryMeta(u.country), wp=winProgress(u), ap=appProgress(u);
   return `<div class="uni" data-id="${esc(u.id)}" style="--rail:${cm.c}">
     <div class="uni-top">
       <div class="uni-head">
@@ -698,6 +746,10 @@ function uniCard(u){
         <span class="bdg ${el.cls}"><i class="ti ti-${el.ti}"></i>${el.label}</span>
         <span class="bdg ${(PRIO[u.priority]||PRIO.medium).cls}">${(PRIO[u.priority]||PRIO.medium).label} priority</span>
         <span class="bdg pill-slate">${esc(u.degree||"Masters")}</span>
+      </div>
+      <div class="apptrack">
+        <div class="segs">${STEPS.map(([k])=>`<span class="seg${(u.steps||{})[k]?" on":""}"></span>`).join("")}</div>
+        <span class="apptrack-lbl">${ap.done}/${ap.total} · ${ap.done===ap.total?"Complete":esc(ap.current)}</span>
       </div>
     </div>
     <div class="runway-wrap rw-${wp.state}">
@@ -715,6 +767,9 @@ function uniCard(u){
       <span class="meta"><i class="ti ti-checklist"></i>Docs <b>${done}/${DOC_KEYS.length}</b></span>
     </div>
     <div class="detail" id="det-${esc(u.id)}">
+      <div class="detail-grid"><span class="lbl-mini">Application progress</span>
+        <div class="steps">${STEPS.map(([k,label,icon])=>{const on=(u.steps||{})[k];return `<button class="step${on?" done":""}" data-step="${k}"><span class="step-ic"><i class="ti ti-${on?"check":icon}"></i></span><span class="step-lbl">${esc(label)}</span></button>`;}).join("")}</div>
+      </div>
       ${u.elig_note?`<div class="detail-grid"><span class="lbl-mini">Why this fit</span><div class="elig-note">${esc(u.elig_note)}</div></div>`:""}
       ${reqs.length?`<div class="detail-grid"><span class="lbl-mini">Requirements — tick what you've met</span><div class="reqs">${reqs.map((r,i)=>`<label class="reqitem${reqDone[i]?" met":""}"><input type="checkbox" data-req="${i}"${reqDone[i]?" checked":""}><span>${esc(r)}</span></label>`).join("")}</div></div>`:""}
       <div class="detail-grid"><span class="lbl-mini">Documents for this program</span><div class="docs-row">${DOC_KEYS.map(([k,lb])=>`<label class="docchk${docs[k]?" done":""}"><input type="checkbox" data-doc="${k}"${docs[k]?" checked":""}>${lb}</label>`).join("")}</div></div>
@@ -730,9 +785,11 @@ function uniCard(u){
   </div>`;
 }
 $("#uniHost").addEventListener("click",e=>{const card=e.target.closest(".uni");if(!card)return;const id=card.dataset.id;
-  if(e.target.closest("[data-expand]")){const d=$("#det-"+CSS.escape(id));const open=d.classList.toggle("open");setIcon(e.target.closest("[data-expand]").querySelector("i"),open?"chevron-up":"chevron-down");return;}
+  if(e.target.closest("[data-step]")){const key=e.target.closest("[data-step]").dataset.step;const u=unis.find(x=>x.id===id)||{};const cur=(u.steps||{})[key];const steps=Object.assign({},u.steps,{[key]:!cur});const patch={steps};if(key==="submitted"&&!cur&&!["applied","admitted","rejected","waitlisted"].includes(u.status)){patch.status="applied";patch.applied_date=u.applied_date||new Date().toISOString().slice(0,10);}writeUni(id,patch);return;}
+  if(e.target.closest("[data-expand]")){const d=$("#det-"+CSS.escape(id));const open=d.classList.toggle("open");if(open)openCards.add(id);else openCards.delete(id);setIcon(e.target.closest("[data-expand]").querySelector("i"),open?"chevron-up":"chevron-down");return;}
   if(e.target.closest("[data-edit]")){openUniModal(unis.find(u=>u.id===id));return;}
   if(e.target.closest("[data-del]")){delUni(id);return;}});
+function reopenCards(){openCards.forEach(id=>{const d=document.getElementById("det-"+id);if(!d){openCards.delete(id);return;}d.classList.add("open");const card=d.closest(".uni");const i=card?card.querySelector("[data-expand] i"):null;if(i)setIcon(i,"chevron-up");});}
 $("#uniHost").addEventListener("change",e=>{const card=e.target.closest(".uni");if(!card)return;const id=card.dataset.id;const u=unis.find(x=>x.id===id)||{};
   if(e.target.matches("[data-status]")){const v=e.target.value;writeUni(id,{status:v,applied_date:(v==="applied"&&!u.applied_date)?new Date().toISOString().slice(0,10):(u.applied_date||null)});toast("Status updated");return;}
   if(e.target.matches("[data-doc]")){const docs=Object.assign({},u.docs,{[e.target.dataset.doc]:e.target.checked});writeUni(id,{docs});return;}

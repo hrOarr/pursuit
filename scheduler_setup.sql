@@ -8,6 +8,7 @@
 alter table public.programs add column if not exists window_state text;    -- upcoming | open | closing_soon | closed | no_date
 alter table public.programs add column if not exists last_analyzed timestamptz;
 alter table public.programs add column if not exists ai_source text;
+alter table public.programs add column if not exists steps jsonb default '{}'::jsonb;  -- per-application progress: gathered/uploaded/paid/submitted/interview/decision
 
 -- audit log: every auto-applied change keeps its previous value here,
 -- so any overwrite is recoverable.
