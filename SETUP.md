@@ -12,10 +12,9 @@ Everything needed to get the app **and** the daily analysis scheduler running. D
 | 2 | **Project URL** — `https://hrmdbjperwyjeaqnebdv.supabase.co` | Supabase → Project Settings → API | app (already in `index.html`) + scheduler secret | no (public) |
 | 3 | **Publishable key** — `sb_publishable_…` | Supabase → Project Settings → API Keys | the website (already in `index.html`) | no (public) |
 | 4 | **Secret key** — `sb_secret_…` (generate a **fresh** one) | Supabase → Project Settings → API Keys | scheduler only (GitHub Secret) | **YES — never in the site/repo** |
-| 5 | **Anthropic API key** — `sk-ant-…` *(optional)* | console.anthropic.com → API Keys | scheduler AI research (GitHub Secret) | **YES** |
-| 6 | **GitHub repo** — `hrOarr/pursuit` | github.com | hosting + scheduler | — |
+| 5 | **GitHub repo** — `hrOarr/pursuit` | github.com | hosting + scheduler | — |
 
-> Items 2 and 3 are public by design and already live in the site. Items 4 and 5 are secrets and go **only** into GitHub Actions Secrets.
+> Items 2 and 3 are public by design and already live in the site. Item 4 is a secret and goes **only** into GitHub Actions Secrets. **No Anthropic/LLM key is needed** — data research is done on demand by Claude in chat and synced by the free daily job (see §4).
 
 ---
 
@@ -50,22 +49,31 @@ Open the site → **Universities** tab → **Import recommended programs** (load
 
 ---
 
-## 4. The daily scheduler (GitHub Actions)
+## 4. The daily sync job (GitHub Actions) — free, no LLM
+
+The job does two cost-free things each day: **maintenance** (recompute each program's window state) and **overrides sync** (apply any verified data in `data/overrides.json` to the DB), then writes the dashboard summary. No Anthropic/OpenAI key, no per-token cost.
 
 ### 4a. Add the secrets
-Repo → **Settings → Secrets and variables → Actions → New repository secret**. Add:
+Repo → **Settings → Secrets and variables → Actions → New repository secret**. Add just two:
 
 | Secret name | Value |
 |-------------|-------|
 | `SUPABASE_URL` | `https://hrmdbjperwyjeaqnebdv.supabase.co` |
 | `SUPABASE_SECRET_KEY` | a **fresh** `sb_secret_…` key (Supabase → API Keys) |
-| `ANTHROPIC_API_KEY` | your `sk-ant-…` key *(skip to run maintenance only, no AI, no cost)* |
 
-### 4b. Test it
-Repo → **Actions** tab → enable workflows if prompted → **Daily analysis** → **Run workflow**. Open the run and read the log. Then refresh the app — the dashboard strip should show "Daily analysis · updated just now · …".
+### 4b. How data gets refreshed (on demand, by Claude — free)
+Deadlines change a few times a year, not daily, so research is on demand:
+1. In chat, ask Claude e.g. **"refresh the Finland & Sweden deadlines."**
+2. Claude searches the web, then commits the verified fields to **`data/overrides.json`** in this repo.
+3. The change reaches the app one of two ways:
+   - wait for the next daily run, **or**
+   - apply it now: repo → **Actions → Daily sync → Run workflow**.
+4. The app updates automatically (it reads Supabase live). Every change is logged to `analysis_log` with its previous value.
 
-### 4c. Schedule
-It runs automatically every day at **02:00 UTC (08:00 Dhaka)**. Change the time by editing the `cron` line in `.github/workflows/daily.yml`.
+This uses only your existing Claude chat (your Pro plan already covers it) — no API key, no billing.
+
+### 4c. Test / schedule
+Repo → **Actions** → enable workflows if prompted → **Daily sync** → **Run workflow** to test now. It also runs automatically every day at **02:00 UTC (08:00 Dhaka)** — edit the `cron` line in `.github/workflows/daily.yml` to change the time.
 
 ---
 
@@ -98,6 +106,6 @@ These are the real-world documents your *study applications* need — tracked pe
 - [ ] `scheduler_setup.sql` run in **pursuit** project
 - [ ] GitHub Pages on → site loads at `hroarr.github.io/pursuit/`
 - [ ] Imported programs + scholarships
-- [ ] 3 Actions secrets added (`SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `ANTHROPIC_API_KEY`)
-- [ ] "Daily analysis" workflow run once manually and succeeded
+- [ ] 2 Actions secrets added (`SUPABASE_URL`, `SUPABASE_SECRET_KEY`)
+- [ ] "Daily sync" workflow run once manually and succeeded
 - [ ] Old shared `sb_secret_…` key rotated

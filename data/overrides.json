@@ -1,0 +1,5 @@
+{
+  "_note": "Verified field overrides applied to the DB by the daily Action. Claude updates this on demand from chat (e.g. 'refresh the Finland deadlines'); the next Action run (daily, or Actions -> Run workflow) syncs it to Supabase and the app updates. Keys are program/scholarship ids; values are only the fields to change. User-only fields (status, notes, docs) are never touched.",
+  "programs": {},
+  "scholarships": {}
+}
