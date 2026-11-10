@@ -86,7 +86,25 @@ button{font-family:inherit;cursor:pointer}
 .side-foot .chip-user{width:100%}
 .side-foot-btns{display:flex;gap:8px}
 .main{flex:1;min-width:0}
-.main .wrap{max-width:1040px;margin:0;padding-top:6px}
+.main .wrap{max-width:1280px;margin:0;padding-top:6px}
+#detailView{padding-top:4px}
+.uni.dv{border-left-width:4px;padding:16px 18px;overflow:visible;cursor:default}
+.uni.dv:hover{transform:none;box-shadow:var(--shadow)}
+.dv-back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer;padding:4px 0;margin-bottom:8px}
+.dv-head{display:flex;flex-direction:column;gap:7px;margin-bottom:16px}
+.dv-title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dv-title h2{font-size:22px;font-weight:600;letter-spacing:-.01em}
+.dv-grid{display:grid;grid-template-columns:1fr 320px;gap:18px;align-items:start}
+.dv-main{min-width:0}
+.dv-side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.dv-card{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.dv-meta{font-size:13px}
+.dv-status{font-family:inherit;font-size:13px;padding:8px 10px;border:1px solid var(--border);background:var(--surface);color:var(--fg);border-radius:8px;font-weight:600;margin-top:4px}
+.dv-actions{display:flex;gap:8px}
+.dv-actions .btn{flex:1;justify-content:center}
+.danger-btn{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 30%,var(--border))}
+.danger-btn:hover{background:var(--bad-bg)}
+@media (max-width:760px){.dv-grid{grid-template-columns:1fr}}
 @media (max-width:860px){
   .app{flex-direction:column}
   .side{width:auto;height:auto;position:sticky;top:0;flex-direction:row;align-items:center;gap:8px;padding:9px 10px;border-right:none;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
@@ -382,6 +400,8 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
   </aside>
   <main class="main">
     <div class="wrap">
+      <div id="detailView" hidden></div>
+      <div id="listRoot">
       <div id="noteBar" class="note-bar" hidden><i class="ti ti-info-circle"></i><span id="noteBarTxt"></span></div>
       <div id="analysisStrip" class="astrip" hidden></div>
 
@@ -443,6 +463,7 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
   </div>
 
   <div class="panel" id="panel-profile" hidden><div class="prof" id="profHost"></div></div>
+      </div>
     </div>
   </main>
 </div>
@@ -574,6 +595,7 @@ let tab="universities",fDeg="all",noteTimers={};
 let openCards=new Set();
 let openStages=new Set();
 let selStage={};
+let view="list",detailId=null;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
@@ -601,6 +623,8 @@ const ICONS={
   radar:'<circle cx="12" cy="12" r="9"/><path d="M12 12l5.5-3.2M12 12a5 5 0 1 0 4.6 3"/>',
   upload:'<path d="M12 15V4M8 8l4-4 4 4M5 15v4a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-4"/>',
   circle:'<circle cx="12" cy="12" r="8"/>',
+  "arrow-left":'<path d="M19 12H5M11 6l-6 6 6 6"/>',
+  "arrow-up-right":'<path d="M7 17L17 7M8 7h9v9"/>',
   flag:'<path d="M5 21V4M5 4h11l-1.5 4L16 12H5"/>',
   "star-nav":'<path d="M12 2.5l2.5 7 7 2.5-7 2.5-2.5 7-2.5-7-7-2.5 7-2.5z"/>',
   globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.6 3 14.4 0 18M12 3c-3 3.6-3 14.4 0 18"/>',
@@ -622,7 +646,7 @@ $("#refreshBtn").onclick=()=>{loadAll(true);};
 let toastT;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2400);}
 
 /* ============ tabs ============ */
-$("#tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;tab=b.dataset.tab;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===b));["universities","scholarships","documents","profile"].forEach(p=>{$("#panel-"+p).hidden=p!==tab;});});
+$("#tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;closeDetail();tab=b.dataset.tab;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===b));["universities","scholarships","documents","profile"].forEach(p=>{$("#panel-"+p).hidden=p!==tab;});});
 
 /* ============ filters ============ */
 $("#degSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;fDeg=b.dataset.deg;document.querySelectorAll("#degSeg button").forEach(x=>x.classList.toggle("on",x===b));renderUnis();});
@@ -661,7 +685,7 @@ function hideNote(){$("#noteBar").hidden=true;}
 
 async function writeUni(id,patch){
   const u=unis.find(x=>x.id===id); if(u)Object.assign(u,patch);
-  renderUnis();updateStats();renderDocs();
+  renderActive();updateStats();renderDocs();
   if(!sb)return;
   const{error}=await sb.from("programs").update(Object.assign({updated_at:new Date().toISOString()},patch)).eq("id",id);
   if(error)toast("Couldn't save: "+error.message);
@@ -812,7 +836,7 @@ function uniCard(u){
   const cur=pl[sel]||pl[0]||{t:"",items:[]};
   return `<div class="uni" data-id="${esc(u.id)}" style="--rail:${cm.c}">
     <div class="uni-top">
-      <div class="uni-head">
+      <div class="uni-head" data-open>
         <div style="min-width:0">
           <div class="flag"><span class="flagchip">${cm.f}</span>${esc(u.country||"")}${u.intake?` · ${esc(u.intake)}`:""}${u.verify?' <span class="verify">verify</span>':""}</div>
           <h3>${esc(u.name||"Untitled")}</h3><div class="prog">${esc(u.program||"")}</div>
@@ -834,57 +858,85 @@ function uniCard(u){
         <span class="apptrack-lbl">${ap.done}/${ap.total} stages${ap.done===ap.total?"":" · "+esc(ap.current)}</span>
       </div>
     </div>
-    <div class="detail" id="det-${esc(u.id)}">
-      <div class="detail-grid"><span class="lbl-mini">Application pipeline</span>
-        <div class="pipeline">
-          ${pl.map((s2,si)=>{const d=stageDone(s2),a=stageAny(s2);return `${si?'<span class="pconn'+(d?" on":"")+'"></span>':""}<button class="pnode ${d?"done":a?"run":"pend"}${si===sel?" sel":""}" data-pnode="${si}"><span class="pn-ic"><i class="ti ti-${d?"check":a?"loader":"circle"}"></i></span><span class="pn-t">${esc(s2.t)}</span><span class="pn-x">${s2.items.filter(i=>i.done).length}/${s2.items.length}</span></button>`;}).join("")}
-          <button class="pnode addstage" data-addstage title="Add stage"><span class="pn-ic"><i class="ti ti-plus"></i></span><span class="pn-t">Add stage</span></button>
-        </div>
-        <div class="pcrit">
-          <div class="pcrit-head"><span class="pcrit-t" data-renamestage="${sel}" title="Click to rename">${esc(cur.t)}</span><button class="pcrit-del" data-delstage="${sel}" title="Delete stage"><i class="ti ti-trash"></i></button></div>
-          <div class="pitems">
-            ${cur.items.map((it,ii)=>`<div class="sitem${it.done?" on":""}"><button class="sitem-box" data-check="${sel}:${ii}"><i class="ti ti-check"></i></button><span class="sitem-t" data-rename="${sel}:${ii}" title="Click to rename">${esc(it.t)}</span><button class="sitem-x" data-delitem="${sel}:${ii}" title="Remove"><i class="ti ti-x"></i></button></div>`).join("")}
-            ${cur.items.length?"":'<div class="pitems-empty">No criteria yet — add the first one below.</div>'}
-          </div>
-          <div class="additem"><input class="additem-in" data-additem="${sel}" placeholder="Add a criterion…" autocomplete="off"><button class="btn additem-btn" data-additembtn="${sel}"><i class="ti ti-plus"></i>Add</button></div>
-        </div>
-      </div>
-      ${u.elig_note?`<div class="detail-grid"><span class="lbl-mini">Why this fit</span><div class="elig-note">${esc(u.elig_note)}</div></div>`:""}
-      <div class="detail-grid"><span class="lbl-mini">Notes</span><textarea class="note-area" data-note placeholder="Portal login, supervisor emails, to-dos…">${esc(u.notes||"")}</textarea></div>
-      ${u.link?`<a class="applink" href="${esc(u.link)}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i>Open application page</a>`:""}
-    </div>
     <div class="uni-foot">
       <select data-status title="Application status">${statusOpts}</select>
-      <button class="foot-btn" data-expand title="Application pipeline & notes"><i class="ti ti-chevron-down"></i></button>
+      <button class="foot-btn" data-open title="Open program"><i class="ti ti-arrow-up-right"></i></button>
       <button class="foot-btn" data-edit title="Edit"><i class="ti ti-pencil"></i></button>
       <button class="foot-btn danger" data-del title="Remove"><i class="ti ti-trash"></i></button>
     </div>
   </div>`;
 }
-$("#uniHost").addEventListener("click",e=>{const card=e.target.closest(".uni");if(!card)return;const id=card.dataset.id;const u=unis.find(x=>x.id===id)||{};let t;
-  if((t=e.target.closest("[data-pnode]"))){selStage[id]=+t.dataset.pnode;renderUnis();return;}
+function onCardClick(e){const card=e.target.closest(".uni");if(!card)return;const id=card.dataset.id;const u=unis.find(x=>x.id===id)||{};let t;
+  if(e.target.closest("[data-back]")){closeDetail();return;}
+  if(e.target.closest("[data-open]")){openDetail(id);return;}
+  if((t=e.target.closest("[data-pnode]"))){selStage[id]=+t.dataset.pnode;renderActive();return;}
   if(e.target.closest("[data-addstage]")){const pl=clonePipeline(u);pl.push({id:uid(),t:"New stage",items:[]});selStage[id]=pl.length-1;writeUni(id,{pipeline:pl});return;}
-  if((t=e.target.closest("[data-check]"))){const a=t.dataset.check.split(":").map(Number);const pl=clonePipeline(u);if(pl[a[0]]&&pl[a[0]].items[a[1]])pl[a[0]].items[a[1]].done=!pl[a[0]].items[a[1]].done;const patch={pipeline:pl};const sub=pl.find(s=>/submit/i.test(s.t));if(sub&&stageDone(sub)&&!["applied","admitted","rejected","waitlisted"].includes(u.status)){patch.status="applied";patch.applied_date=u.applied_date||new Date().toISOString().slice(0,10);}writeUni(id,patch);return;}
+  if((t=e.target.closest("[data-check]"))){const a=t.dataset.check.split(":").map(Number);const pl=clonePipeline(u);if(pl[a[0]]&&pl[a[0]].items[a[1]])pl[a[0]].items[a[1]].done=!pl[a[0]].items[a[1]].done;const patch={pipeline:pl};const sub=pl.find(x=>/submit/i.test(x.t));if(sub&&stageDone(sub)&&!["applied","admitted","rejected","waitlisted"].includes(u.status)){patch.status="applied";patch.applied_date=u.applied_date||new Date().toISOString().slice(0,10);}writeUni(id,patch);return;}
   if((t=e.target.closest("[data-delitem]"))){const a=t.dataset.delitem.split(":").map(Number);const pl=clonePipeline(u);if(pl[a[0]])pl[a[0]].items.splice(a[1],1);writeUni(id,{pipeline:pl});return;}
   if((t=e.target.closest("[data-additembtn]"))){addCriterion(card,id,u,+t.dataset.additembtn);return;}
   if((t=e.target.closest("[data-delstage]"))){const si=+t.dataset.delstage;const pl=clonePipeline(u);pl.splice(si,1);selStage[id]=Math.max(0,si-1);writeUni(id,{pipeline:pl});return;}
   if((t=e.target.closest("[data-rename]"))){inlineRename(t,id,"item");return;}
   if((t=e.target.closest("[data-renamestage]"))){inlineRename(t,id,"stage");return;}
-  if(e.target.closest("[data-expand]")){const d=$("#det-"+CSS.escape(id));const open=d.classList.toggle("open");if(open)openCards.add(id);else openCards.delete(id);setIcon(e.target.closest("[data-expand]").querySelector("i"),open?"chevron-up":"chevron-down");return;}
   if(e.target.closest("[data-edit]")){openUniModal(u);return;}
-  if(e.target.closest("[data-del]")){delUni(id);return;}});
-$("#uniHost").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.matches("[data-additem]")){e.preventDefault();const card=e.target.closest(".uni");const id=card.dataset.id;const u=unis.find(x=>x.id===id)||{};addCriterion(card,id,u,+e.target.dataset.additem);}});
+  if(e.target.closest("[data-del]")){const wasDetail=(view==="detail"&&detailId===id);delUni(id);if(wasDetail)closeDetail();return;}}
+function onCardKeydown(e){if(e.key==="Enter"&&e.target.matches("[data-additem]")){e.preventDefault();const card=e.target.closest(".uni");const id=card.dataset.id;const u=unis.find(x=>x.id===id)||{};addCriterion(card,id,u,+e.target.dataset.additem);}}
+function onCardChange(e){const card=e.target.closest(".uni");if(!card)return;const id=card.dataset.id;const u=unis.find(x=>x.id===id)||{};
+  if(e.target.matches("[data-status]")){const v=e.target.value;writeUni(id,{status:v,applied_date:(v==="applied"&&!u.applied_date)?new Date().toISOString().slice(0,10):(u.applied_date||null)});toast("Status updated");return;}}
+function onCardInput(e){if(!e.target.matches("[data-note]"))return;const card=e.target.closest(".uni");const id=card.dataset.id,val=e.target.value;clearTimeout(noteTimers[id]);noteTimers[id]=setTimeout(()=>{writeUni(id,{notes:val});toast("Notes saved");},700);}
 function addCriterion(card,id,u,si){const inp=card.querySelector('[data-additem="'+si+'"]');const v=(inp&&inp.value||"").trim();if(!v)return;const pl=clonePipeline(u);if(pl[si])pl[si].items.push({id:uid(),t:v,done:false});writeUni(id,{pipeline:pl});}
 function inlineRename(spanEl,id,kind){const u=unis.find(x=>x.id===id)||{};const ds=spanEl.dataset;const input=document.createElement("input");input.className="inline-edit";input.value=spanEl.textContent;spanEl.replaceWith(input);input.focus();input.select();let fin=false;
-  const save=(commit)=>{if(fin)return;fin=true;const v=input.value.trim();if(!commit||!v){renderUnis();return;}const pl=clonePipeline(u);
+  const save=(commit)=>{if(fin)return;fin=true;const v=input.value.trim();if(!commit||!v){renderActive();return;}const pl=clonePipeline(u);
     if(kind==="stage"){const si=+ds.renamestage;if(pl[si])pl[si].t=v;}else{const a=ds.rename.split(":").map(Number);if(pl[a[0]]&&pl[a[0]].items[a[1]])pl[a[0]].items[a[1]].t=v;}
     writeUni(id,{pipeline:pl});};
   input.addEventListener("blur",()=>save(true));
   input.addEventListener("keydown",ev=>{if(ev.key==="Enter"){ev.preventDefault();save(true);}else if(ev.key==="Escape"){save(false);}});}
-function reopenCards(){openCards.forEach(id=>{const d=document.getElementById("det-"+id);if(!d){openCards.delete(id);return;}d.classList.add("open");const card=d.closest(".uni");const i=card?card.querySelector("[data-expand] i"):null;if(i)setIcon(i,"chevron-up");});}
-$("#uniHost").addEventListener("change",e=>{const card=e.target.closest(".uni");if(!card)return;const id=card.dataset.id;const u=unis.find(x=>x.id===id)||{};
-  if(e.target.matches("[data-status]")){const v=e.target.value;writeUni(id,{status:v,applied_date:(v==="applied"&&!u.applied_date)?new Date().toISOString().slice(0,10):(u.applied_date||null)});toast("Status updated");return;}});
-$("#uniHost").addEventListener("input",e=>{if(!e.target.matches("[data-note]"))return;const id=e.target.closest(".uni").dataset.id,val=e.target.value;clearTimeout(noteTimers[id]);noteTimers[id]=setTimeout(()=>{writeUni(id,{notes:val});toast("Notes saved");},700);});
+function reopenCards(){}
+function renderActive(){if(view==="detail"&&detailId&&unis.find(u=>u.id===detailId)){renderDetail();}else{renderUnis();}}
+function openDetail(id){detailId=id;view="list";view="detail";$("#listRoot").hidden=true;$("#detailView").hidden=false;window.scrollTo(0,0);renderDetail();}
+function closeDetail(){view="list";detailId=null;$("#detailView").hidden=true;$("#detailView").innerHTML="";$("#listRoot").hidden=false;}
+function pipeNodes(u,pl,sel){return pl.map((s2,si)=>{const d=stageDone(s2),a=stageAny(s2);return `${si?'<span class="pconn'+(d?" on":"")+'"></span>':""}<button class="pnode ${d?"done":a?"run":"pend"}${si===sel?" sel":""}" data-pnode="${si}"><span class="pn-ic"><i class="ti ti-${d?"check":a?"loader":"circle"}"></i></span><span class="pn-t">${esc(s2.t)}</span><span class="pn-x">${s2.items.filter(i=>i.done).length}/${s2.items.length}</span></button>`;}).join("")+'<button class="pnode addstage" data-addstage title="Add stage"><span class="pn-ic"><i class="ti ti-plus"></i></span><span class="pn-t">Add stage</span></button>';}
+function pcritHtml(cur,sel){return `<div class="pcrit"><div class="pcrit-head"><span class="pcrit-t" data-renamestage="${sel}" title="Click to rename">${esc(cur.t)}</span><button class="pcrit-del" data-delstage="${sel}" title="Delete stage"><i class="ti ti-trash"></i></button></div><div class="pitems">${cur.items.map((it,ii)=>`<div class="sitem${it.done?" on":""}"><button class="sitem-box" data-check="${sel}:${ii}"><i class="ti ti-check"></i></button><span class="sitem-t" data-rename="${sel}:${ii}" title="Click to rename">${esc(it.t)}</span><button class="sitem-x" data-delitem="${sel}:${ii}" title="Remove"><i class="ti ti-x"></i></button></div>`).join("")}${cur.items.length?"":'<div class="pitems-empty">No criteria yet — add the first one below.</div>'}</div><div class="additem"><input class="additem-in" data-additem="${sel}" placeholder="Add a criterion…" autocomplete="off"><button class="btn additem-btn" data-additembtn="${sel}"><i class="ti ti-plus"></i>Add</button></div></div>`;}
+function renderDetail(){
+  const u=unis.find(x=>x.id===detailId);if(!u){closeDetail();renderUnis();return;}
+  const cm=countryMeta(u.country), wp=winProgress(u), ap=appProgress(u), pl=getPipeline(u);
+  const st=STATUS[u.status]||STATUS.not_started, el=ELIG[u.eligibility]||ELIG.match;
+  const statusOpts=UNI_STATUS_ORDER.map(k=>`<option value="${k}"${u.status===k?" selected":""}>${STATUS[k].label}</option>`).join("");
+  const sel=(selStage[u.id]!=null&&selStage[u.id]<pl.length)?selStage[u.id]:firstIncomplete(pl);
+  const cur=pl[sel]||pl[0]||{t:"",items:[]};
+  const dateline=u.close_date?`${wp.label} <span class="dsep">·</span> ${fmtDate(u.close_date)}`:wp.label;
+  $("#detailView").innerHTML=`<div class="uni dv" data-id="${esc(u.id)}" style="--rail:${cm.c}">
+    <button class="dv-back" data-back><i class="ti ti-arrow-left"></i>All programs</button>
+    <div class="dv-head">
+      <div class="flag"><span class="flagchip">${cm.f}</span>${esc(u.country||"")}${u.intake?` · ${esc(u.intake)}`:""}${u.verify?' <span class="verify">verify</span>':""}</div>
+      <div class="dv-title"><h2>${esc(u.name||"")}</h2><span class="bdg ${st.cls}">${st.label}</span></div>
+      <div class="prog">${esc(u.program||"")}</div>
+      <div class="badges"><span class="bdg ${el.cls}"><i class="ti ti-${el.ti}"></i>${el.label}</span><span class="bdg ${(PRIO[u.priority]||PRIO.medium).cls}">${(PRIO[u.priority]||PRIO.medium).label} priority</span><span class="bdg pill-slate">${esc(u.degree||"Masters")}</span></div>
+    </div>
+    <div class="dv-grid">
+      <div class="dv-main">
+        <div class="apptrack" style="margin-bottom:14px"><div class="segs">${pl.map(s2=>`<span class="seg${stageDone(s2)?" on":stageAny(s2)?" part":""}"></span>`).join("")}</div><span class="apptrack-lbl">${ap.done}/${ap.total} stages${ap.done===ap.total?"":" · "+esc(ap.current)}</span></div>
+        <span class="lbl-mini">Application pipeline</span>
+        <div class="pipeline">${pipeNodes(u,pl,sel)}</div>
+        ${pcritHtml(cur,sel)}
+      </div>
+      <aside class="dv-side">
+        <div class="dv-card">
+          <div class="dv-meta"><span class="dmeta urg-${wp.state}"><span class="ddot"></span>${dateline}</span></div>
+          <div class="dv-meta"><span class="dmeta"><i class="ti ti-calendar-up"></i>Opens ${fmtDate(u.open_date)}</span></div>
+          <div class="dv-meta"><span class="dmeta"><i class="ti ti-cash"></i>${esc(u.tuition||"—")}</span></div>
+          <div class="dv-meta"><span class="dmeta"><i class="ti ti-language"></i>IELTS ${esc(u.ielts||"—")}</span></div>
+          <select class="dv-status" data-status>${statusOpts}</select>
+        </div>
+        ${u.elig_note?`<div class="dv-card"><span class="lbl-mini">Why this fit</span><div class="elig-note">${esc(u.elig_note)}</div></div>`:""}
+        <div class="dv-card"><span class="lbl-mini">Notes</span><textarea class="note-area" data-note placeholder="Portal login, supervisor emails, to-dos…">${esc(u.notes||"")}</textarea></div>
+        ${u.link?`<a class="applink" href="${esc(u.link)}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i>Open application page</a>`:""}
+        <div class="dv-actions"><button class="btn" data-edit><i class="ti ti-pencil"></i>Edit details</button><button class="btn danger-btn" data-del><i class="ti ti-trash"></i>Delete</button></div>
+      </aside>
+    </div>
+  </div>`;
+  renderIcons($("#detailView"));
+}
+["#uniHost","#detailView"].forEach(sel=>{const n=$(sel);if(!n)return;n.addEventListener("click",onCardClick);n.addEventListener("keydown",onCardKeydown);n.addEventListener("change",onCardChange);n.addEventListener("input",onCardInput);});
 
 /* ============ scholarships ============ */
 function renderSchols(){
