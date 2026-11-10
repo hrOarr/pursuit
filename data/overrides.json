@@ -1,6 +1,75 @@
 {
   "_note": "Verified field overrides applied to the DB by the daily Action. Claude updates this on demand from chat (e.g. 'refresh the Finland deadlines'); the next Action run (daily, or Actions -> Run workflow) syncs it to Supabase and the app updates. Keys are program/scholarship ids; values are only the fields to change. User-only fields (status, notes, docs) are never touched.",
   "programs": {
+    "at-jku-cs": {
+      "open_date": "2027-03-01",
+      "close_date": "2027-09-05",
+      "intake": "Winter 2027/28",
+      "verify": false,
+      "ai_source": "https://cs.jku.at/master/admissionFAQs.html",
+      "elig_note": "Verified Nov 2026: winter-semester application deadline is 5 September; non-EU review can exceed 6 months, so apply early. English B2+ (IELTS accepted); bachelor must cover ~80% of JKU's curriculum.",
+      "requirements": [
+        "Bachelor's in CS / Business Informatics or equivalent",
+        "English B2+ (IELTS 6.5 accepted)",
+        "Transcripts + degree",
+        "Apply by 5 Sept (winter); apply early - 6-month non-EU processing",
+        "Statement of Purpose",
+        "CV"
+      ]
+    },
+    "at-univie-cs": {
+      "open_date": "2027-03-02",
+      "close_date": "2027-04-07",
+      "intake": "Winter 2027/28",
+      "verify": false,
+      "ai_source": "https://studieren.univie.ac.at/en/admission/master-programmes/computer-science",
+      "elig_note": "Verified Nov 2026: selection procedure - register 2 Mar - 7 Apr (winter), written entrance exam in Vienna ~early July (invitation only). English B2; taught in English.",
+      "requirements": [
+        "Bachelor's in CS or related",
+        "Register in the selection window (2 Mar - 7 Apr 2027)",
+        "Pass the written entrance exam (~early July, invitation only)",
+        "English B2 (IELTS 6.5)",
+        "Transcripts + apostille"
+      ]
+    },
+    "us-neu-se": {
+      "close_date": "2027-04-15",
+      "verify": true,
+      "ai_source": "https://www.khoury.northeastern.edu/apply/masters-apply/",
+      "elig_note": "Verified Nov 2026: international Fall deadline ~15 Apr, rolling review - apply early. Strong co-op program; higher cost, check funding."
+    },
+    "ca-ualberta-cs": {
+      "open_date": "2026-10-15",
+      "close_date": "2026-12-15",
+      "intake": "Fall 2027",
+      "ielts": "7.0",
+      "verify": false,
+      "ai_source": "https://www.ualberta.ca/computing-science/graduate-studies/programs-and-admissions/applications-and-admissions/index.html",
+      "elig_note": "Verified Nov 2026: Fall 2027 applications 15 Oct - 15 Dec 2026 (documents by 15 Jan 2027). Admitted only if a professor agrees to supervise - contact supervisors first. IELTS 7.0 (6.5 each); GPA 3.0 min, competitive 3.5+.",
+      "requirements": [
+        "Name up to 3 potential supervisors (required to be admitted)",
+        "Bachelor's in CS",
+        "IELTS 7.0 (each band >= 6.5)",
+        "Apply 15 Oct - 15 Dec 2026; documents by 15 Jan 2027",
+        "Transcripts",
+        "Statement of purpose, 3 recommendation letters"
+      ]
+    },
+    "ca-ubc-cs": {
+      "open_date": "2026-10-01",
+      "close_date": "2026-12-15",
+      "intake": "Fall 2027",
+      "verify": false,
+      "ai_source": "https://www.cs.ubc.ca/students/grad/admissions",
+      "elig_note": "Verified Nov 2026: deadline 15 Dec 2026 for Sep 2027. Thesis-based; find a supervisor. Competitive (often 3.5+). Confirm CS English minimums."
+    },
+    "ca-waterloo-cs": {
+      "close_date": "2027-02-01",
+      "ielts": "7.0",
+      "verify": true,
+      "ai_source": "https://cs.uwaterloo.ca/computer-science/future-graduate-students/applying-admissions",
+      "elig_note": "Verified Nov 2026: research/thesis MMath. A supervisor isn't needed to apply but is required to be accepted. Min 78% (~ B+); IELTS 7.0. Fall deadline ~1 Feb - confirm on the program page."
+    },
     "fi-aalto-cs": {
       "open_date": "2026-12-07",
       "close_date": "2027-01-05",
