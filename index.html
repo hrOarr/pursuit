@@ -226,8 +226,8 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
 .elig-note{font-size:12.5px;color:var(--fg-2);line-height:1.5}
 .apptrack{display:flex;align-items:center;gap:10px;padding-top:1px}
 .segs{display:flex;gap:3px;flex:1;min-width:0}
-.seg{height:5px;flex:1;border-radius:999px;background:var(--surface-3);transition:background .2s ease}
-.seg.on{background:var(--accent)}
+.segs .seg{height:5px;flex:1;border-radius:999px;background:var(--surface-3);transition:background .2s ease}
+.segs .seg.on{background:var(--accent)}
 .apptrack-lbl{font-size:11px;color:var(--fg-2);font-weight:600;white-space:nowrap}
 .steps{display:flex;flex-direction:column;gap:6px}
 .step{display:flex;align-items:center;gap:10px;padding:8px 11px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg-2);font-size:13px;font-weight:500;width:100%;text-align:left;cursor:pointer}
@@ -236,7 +236,7 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
 .step-ic .ti{font-size:13px}
 .step.done{background:var(--ok-bg);border-color:transparent;color:var(--fg)}
 .step.done .step-ic{background:var(--ok);color:#fff}
-.seg.part{background:color-mix(in srgb,var(--accent) 45%,var(--surface-3))}
+.segs .seg.part{background:color-mix(in srgb,var(--accent) 45%,var(--surface-3))}
 .uni-meta{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}
 .dmeta{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--fg-2)}
 .dmeta .ti{font-size:14px;color:var(--muted)}
@@ -420,6 +420,18 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
 .tlm .dl{font-size:12.5px;display:flex;justify-content:space-between;gap:10px;padding:3px 0;color:var(--fg)}
 .tlm .dl span:last-child{color:var(--muted);white-space:nowrap}
 .tlm .lbl-mini{display:block;margin:8px 0 4px}
+
+.toolbar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px}
+.toolbar .controls{margin:0}
+.toolbar .chips{margin:0;padding-top:10px;border-top:1px solid var(--border)}
+.toolbar .seg{height:36px;align-items:stretch;flex:0 0 auto}
+.toolbar .seg button{padding:0 14px;font-size:13px;cursor:pointer}
+.toolbar select.ctl{height:36px;padding:0 10px;max-width:210px;cursor:pointer}
+.toolbar .btn{height:36px;padding:0 14px;cursor:pointer;white-space:nowrap}
+.toolbar .chips select.ctl{height:30px;font-size:12px;border-radius:999px;background:var(--surface)}
+.chips-lbl{font-size:11px;font-weight:600;color:var(--muted);margin-right:2px}
+#listCount{margin-left:auto}
+@media (max-width:860px){.toolbar .ctl-sp{display:none}.toolbar select.ctl{flex:1 1 140px;max-width:none}}
 </style>
 </head>
 <body>
@@ -457,6 +469,7 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
 
   <div class="panel" id="panel-universities">
     <div class="cstrip" id="countryStrip"></div>
+    <div class="toolbar">
     <div class="controls">
       <div class="seg" id="degSeg">
         <button data-deg="all" class="on">All</button>
@@ -488,6 +501,7 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
       <button class="btn primary" id="addUniBtn"><i class="ti ti-plus"></i>Add program</button>
     </div>
     <div class="chips" id="quickF">
+      <span class="chips-lbl">Show only</span>
       <button class="chipbtn" data-q="funded">Funding route</button>
       <button class="chipbtn" data-q="free">No tuition</button>
       <button class="chipbtn" data-q="nogre">No GRE needed</button>
@@ -497,6 +511,7 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
       <select class="ctl" id="fArea"><option value="all">All research areas</option></select>
       <select class="ctl" id="fFit"><option value="all">Any fit</option></select>
       <span class="facts" id="listCount"></span>
+    </div>
     </div>
     <div id="uniHost"></div>
   </div>
@@ -716,6 +731,11 @@ CATALOG.forEach(c=>{const p=PD.PATCH[c.id];if(!p)return;Object.keys(p).forEach(k
 PD.EXTRA.forEach(e=>{if(!CATALOG.some(c=>c.id===e.id))CATALOG.push(e);});
 SCH_CATALOG.forEach(c=>{const p=PD.SCH_PATCH[c.id];if(p)Object.assign(c,p);});
 PD.SCH_EXTRA.forEach(e=>{if(!SCH_CATALOG.some(c=>c.id===e.id))SCH_CATALOG.push(e);});
+function appliedDate(u){return (u&&u.docs&&u.docs.applied_date)||(u&&u.applied_date)||null;}
+const RETIRED=new Set(PD.RETIRE||[]),SCH_RETIRED=new Set(PD.SCH_RETIRE||[]);
+for(let i=CATALOG.length-1;i>=0;i--)if(RETIRED.has(CATALOG[i].id))CATALOG.splice(i,1);
+for(let i=SCH_CATALOG.length-1;i>=0;i--)if(SCH_RETIRED.has(SCH_CATALOG[i].id))SCH_CATALOG.splice(i,1);
+function hasProgress(u){if(!u)return false;if(u.status&&u.status!=="not_started")return true;if((u.notes||"").trim())return true;const pl=u.docs&&u.docs.pipeline;return Array.isArray(pl)&&pl.some(st=>(st.items||[]).some(i=>i.done));}
 function metaOf(u){return (u&&PD.META[u.id])||null;}
 const FUND={full:["Fully funded","pill-ok"],position:["Salaried position","pill-ok"],schol:["Full scholarship if awarded","pill-info"],competitive:["Funding competitive","pill-warn"],supervisor:["Supervisor-funded","pill-warn"],lowcost:["No tuition","pill-ok"],none:["Self-funded","pill-bad"]};
 const GRE={no:["No GRE","pill-ok"],opt:["GRE optional","pill-info"],req:["GRE required","pill-bad"]};
@@ -811,7 +831,7 @@ async function loadAll(isManual){
     ]);
     if(p.error)throw p.error;
     if(s.error)throw s.error;
-    unis=p.data||[]; schols=s.data||[];
+    unis=(p.data||[]).filter(u=>!(RETIRED.has(u.id)&&!hasProgress(u))); schols=(s.data||[]).filter(x=>!(SCH_RETIRED.has(x.id)&&(x.status||"not_started")==="not_started"&&!(x.notes||"").trim()));
     const prows=(pr&&pr.data)?pr.data:[];
     profile=(prows.find(r=>r.id==="me")||{}).data||null;
     analysis=(prows.find(r=>r.id==="analysis")||{}).data||null;
@@ -831,6 +851,7 @@ function showNote(m,isErr){$("#noteBarTxt").textContent=m;$("#noteBar").classNam
 function hideNote(){$("#noteBar").hidden=true;}
 
 async function writeUni(id,patch){
+  if(patch&&("applied_date" in patch)){const u0=unis.find(x=>x.id===id)||{};patch=Object.assign({},patch);patch.docs=Object.assign({},(u0.docs&&typeof u0.docs==="object")?u0.docs:{},patch.docs||{},{applied_date:patch.applied_date});delete patch.applied_date;}
   const u=unis.find(x=>x.id===id); if(u)Object.assign(u,patch);
   renderActive();updateStats();renderDocs();
   if(!sb)return;
@@ -873,7 +894,7 @@ async function importCatalog(){
   const{error}=await sb.from("programs").upsert(rows,{onConflict:"id"});
   btns.forEach(b=>{b.disabled=false;if(b.dataset._h){b.innerHTML=b.dataset._h;delete b.dataset._h;}renderIcons(b);});
   if(error){toast("Sync failed: "+error.message);}
-  else{const added=CATALOG.filter(c=>!existing.has(c.id)).length;toast(added?("Synced — "+added+" new program"+(added>1?"s":"")+" added"):"Synced — all programs up to date");await syncSchols(true);await loadAll();}
+  else{const added=CATALOG.filter(c=>!existing.has(c.id)).length;toast(added?("Synced — "+added+" new program"+(added>1?"s":"")+" added"):"Synced — all programs up to date");await syncSchols(true);await purgeRetired();await loadAll();}
 }
 // Scholarships sync the same way as programmes: only researched columns are
 // written, so your status and notes on existing rows are left alone.
@@ -886,6 +907,15 @@ async function syncSchols(quiet){
   if(error){toast("Scholarship sync failed: "+error.message);return false;}
   if(!quiet){const added=SCH_CATALOG.filter(c=>!existing.has(c.id)).length;toast(added?("Synced — "+added+" new scholarship"+(added>1?"s":"")+" added"):"Synced — scholarships up to date");}
   return true;
+}
+async function purgeRetired(){
+  if(!sb)return;
+  try{
+    const p=await sb.from("programs").select("*");const gone=(p.data||[]).filter(u=>RETIRED.has(u.id)&&!hasProgress(u)).map(u=>u.id);
+    if(gone.length)await sb.from("programs").delete().in("id",gone);
+    const q=await sb.from("scholarships").select("*");const sg=(q.data||[]).filter(x=>SCH_RETIRED.has(x.id)&&(x.status||"not_started")==="not_started"&&!(x.notes||"").trim()).map(x=>x.id);
+    if(sg.length)await sb.from("scholarships").delete().in("id",sg);
+  }catch(e){}
 }
 async function importSchCatalog(){const ok=await syncSchols(false);if(ok)await loadAll();}
 async function seedProfileIfEmpty(){
@@ -1032,7 +1062,7 @@ function onCardClick(e){const card=e.target.closest(".uni");if(!card)return;cons
   if(e.target.closest("[data-open]")){openDetail(id);return;}
   if((t=e.target.closest("[data-pnode]"))){selStage[id]=+t.dataset.pnode;renderActive();return;}
   if(e.target.closest("[data-addstage]")){const pl=clonePipeline(u);pl.push({id:uid(),t:"New stage",items:[]});selStage[id]=pl.length-1;savePipeline(id,pl);return;}
-  if((t=e.target.closest("[data-check]"))){const a=t.dataset.check.split(":").map(Number);const pl=clonePipeline(u);if(pl[a[0]]&&pl[a[0]].items[a[1]])pl[a[0]].items[a[1]].done=!pl[a[0]].items[a[1]].done;const extra={};const sub=pl.find(x=>/submit/i.test(x.t));if(sub&&stageDone(sub)&&!["applied","admitted","rejected","waitlisted"].includes(u.status)){extra.status="applied";extra.applied_date=u.applied_date||new Date().toISOString().slice(0,10);}savePipeline(id,pl,extra);return;}
+  if((t=e.target.closest("[data-check]"))){const a=t.dataset.check.split(":").map(Number);const pl=clonePipeline(u);if(pl[a[0]]&&pl[a[0]].items[a[1]])pl[a[0]].items[a[1]].done=!pl[a[0]].items[a[1]].done;const extra={};const sub=pl.find(x=>/submit/i.test(x.t));if(sub&&stageDone(sub)&&!["applied","admitted","rejected","waitlisted"].includes(u.status)){extra.status="applied";extra.applied_date=appliedDate(u)||new Date().toISOString().slice(0,10);}savePipeline(id,pl,extra);return;}
   if((t=e.target.closest("[data-delitem]"))){const a=t.dataset.delitem.split(":").map(Number);const pl=clonePipeline(u);if(pl[a[0]])pl[a[0]].items.splice(a[1],1);savePipeline(id,pl);return;}
   if((t=e.target.closest("[data-additembtn]"))){addCriterion(card,id,u,+t.dataset.additembtn);return;}
   if((t=e.target.closest("[data-delstage]"))){const si=+t.dataset.delstage;const pl=clonePipeline(u);pl.splice(si,1);selStage[id]=Math.max(0,si-1);savePipeline(id,pl);return;}
@@ -1042,7 +1072,7 @@ function onCardClick(e){const card=e.target.closest(".uni");if(!card)return;cons
   if(e.target.closest("[data-del]")){const wasDetail=(view==="detail"&&detailId===id);delUni(id);if(wasDetail)closeDetail();return;}}
 function onCardKeydown(e){if(e.key==="Enter"&&e.target.matches("[data-additem]")){e.preventDefault();const card=e.target.closest(".uni");const id=card.dataset.id;const u=unis.find(x=>x.id===id)||{};addCriterion(card,id,u,+e.target.dataset.additem);}}
 function onCardChange(e){const card=e.target.closest(".uni");if(!card)return;const id=card.dataset.id;const u=unis.find(x=>x.id===id)||{};
-  if(e.target.matches("[data-status]")){const v=e.target.value;writeUni(id,{status:v,applied_date:(v==="applied"&&!u.applied_date)?new Date().toISOString().slice(0,10):(u.applied_date||null)});toast("Status updated");return;}}
+  if(e.target.matches("[data-status]")){const v=e.target.value;writeUni(id,(v==="applied"&&!appliedDate(u))?{status:v,applied_date:new Date().toISOString().slice(0,10)}:{status:v});toast("Status updated");return;}}
 function onCardInput(e){if(!e.target.matches("[data-note]"))return;const card=e.target.closest(".uni");const id=card.dataset.id,val=e.target.value;clearTimeout(noteTimers[id]);noteTimers[id]=setTimeout(()=>{writeUni(id,{notes:val});toast("Notes saved");},700);}
 function addCriterion(card,id,u,si){const inp=card.querySelector('[data-additem="'+si+'"]');const v=(inp&&inp.value||"").trim();if(!v)return;const pl=clonePipeline(u);if(pl[si])pl[si].items.push({id:uid(),t:v,done:false});savePipeline(id,pl);}
 function inlineRename(spanEl,id,kind){const u=unis.find(x=>x.id===id)||{};const ds=spanEl.dataset;const input=document.createElement("input");input.className="inline-edit";input.value=spanEl.textContent;spanEl.replaceWith(input);input.focus();input.select();let fin=false;

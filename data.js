@@ -250,5 +250,9 @@ const TASKS={
  "2027-09":["JKU Linz deadline 5 Sep","Enrolment and arrival"]
 };
 
-window.PD={PATCH,EXTRA,META,PROFS,SCH_PATCH,SCH_EXTRA,SCH_META,GUIDE,NOT_DONE,TASKS};
+/* Programmes removed because you do not meet a stated requirement today
+   (English score above 6.5, or a Master's / honours research degree required). */
+const RETIRE=["us-asu-phd","us-gatech-phd","ca-waterloo-cs","ca-ualberta-cs","ca-ualberta-phd","ca-usask-cs","ca-ubc-cs","at-tugraz-se","at-phd-logics","at-uibk-phd","at-jku-litphd","nl-phd-cs","fi-aalto-phd","se-phd-cs","hu-sh-phd","hu-szeged-phd","au-rmit-phd","au-adelaide-phd","au-uts-phd"];
+const SCH_RETIRE=["sc-usask","sc-rtp","sc-uts-irs","sc-vanier","sc-oead","sc-mq-ivs"];
+window.PD={RETIRE,SCH_RETIRE,PATCH,EXTRA,META,PROFS,SCH_PATCH,SCH_EXTRA,SCH_META,GUIDE,NOT_DONE,TASKS};
 })();
