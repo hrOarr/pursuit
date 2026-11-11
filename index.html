@@ -737,7 +737,7 @@ for(let i=CATALOG.length-1;i>=0;i--)if(RETIRED.has(CATALOG[i].id))CATALOG.splice
 for(let i=SCH_CATALOG.length-1;i>=0;i--)if(SCH_RETIRED.has(SCH_CATALOG[i].id))SCH_CATALOG.splice(i,1);
 function hasProgress(u){if(!u)return false;if(u.status&&u.status!=="not_started")return true;if((u.notes||"").trim())return true;const pl=u.docs&&u.docs.pipeline;return Array.isArray(pl)&&pl.some(st=>(st.items||[]).some(i=>i.done));}
 function metaOf(u){return (u&&PD.META[u.id])||null;}
-const FUND={full:["Fully funded","pill-ok"],position:["Salaried position","pill-ok"],schol:["Full scholarship if awarded","pill-info"],competitive:["Funding competitive","pill-warn"],supervisor:["Supervisor-funded","pill-warn"],lowcost:["No tuition","pill-ok"],none:["Self-funded","pill-bad"]};
+const FUND={full:["Fully funded","pill-ok"],position:["Salaried position","pill-ok"],schol:["Full scholarship if awarded","pill-info"],competitive:["Funding competitive","pill-warn"],supervisor:["Supervisor-funded","pill-warn"],lowcost:["No tuition","pill-ok"],partial:["Partial scholarship","pill-warn"],none:["Self-funded","pill-bad"]};
 const GRE={no:["No GRE","pill-ok"],opt:["GRE optional","pill-info"],req:["GRE required","pill-bad"]};
 const DIRECT={yes:["Direct from bachelor's","pill-ok"],exc:["Bachelor's: exceptional only","pill-warn"],ms:["Master's required","pill-slate"],hon:["Honours / research Master's needed","pill-slate"]};
 const FIT={strong:["Strong fit","pill-ok"],good:["Good fit","pill-ok"],moderate:["Moderate fit","pill-warn"],reach:["Reach","pill-orange"],concern:["Eligibility concern","pill-bad"],later:["After a Master's","pill-slate"]};

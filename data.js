@@ -254,5 +254,155 @@ const TASKS={
    (English score above 6.5, or a Master's / honours research degree required). */
 const RETIRE=["us-asu-phd","us-gatech-phd","ca-waterloo-cs","ca-ualberta-cs","ca-ualberta-phd","ca-usask-cs","ca-ubc-cs","at-tugraz-se","at-phd-logics","at-uibk-phd","at-jku-litphd","nl-phd-cs","fi-aalto-phd","se-phd-cs","hu-sh-phd","hu-szeged-phd","au-rmit-phd","au-adelaide-phd","au-uts-phd"];
 const SCH_RETIRE=["sc-usask","sc-rtp","sc-uts-irs","sc-vanier","sc-oead","sc-mq-ivs"];
+/* ---- second research round (Nov 2026): more programmes you can apply to today ---- */
+RETIRE.push("at-tugraz-cs");
+const PROF_RETIRE=["p-roy","p-taylor","p-sharma","p-babar"];
+for(let i=PROFS.length-1;i>=0;i--)if(PROF_RETIRE.includes(PROFS[i].id))PROFS.splice(i,1);
+const TUW_EN=" English, checked Nov 2026: TU Wien asks for level B2, shown by IELTS Academic 6.5 overall. A degree taught in English in Bangladesh is not accepted as proof, so your IELTS certificate must still be valid (two years) when you apply.";
+Object.assign(PATCH["at-tuwien-se"],{_noteAdd:AT_NOTE+TUW_EN});
+Object.assign(PATCH["at-tuwien-ds"],{_noteAdd:AT_NOTE+TUW_EN});
+PATCH["hu-szeged-cs"]={ielts:"5.5",elig_note:"Good fit. Checked Nov 2026 on the Stipendium Hungaricum course page: taught in English, 4 semesters, IELTS 5.5 or better (B2), a BSc in computer science with at least 60 credits of mathematics and computing, and an oral interview. Fully funded if the scholarship is awarded. The course page showed 'not available for applying at the moment', so the 2027/28 call had not opened in the system when I looked.",requirements:["BSc in CS with 60+ credits of maths and computing","IELTS 5.5 or better (B2)","CV (max 2 pages) + motivation letter","Medical certificate","Oral interview","Apply through the Stipendium Hungaricum portal when the call opens"]};
+const FIX={
+ "at-tuwien-lc":{ielts:"6.5",eligibility:"match",elig_note:"Theory-leaning master's (logic, algorithms, knowledge-based AI), taught in English. Window follows TU Wien's non-EU pattern (16 Jan - 15 Jul); confirm for 2027."+TUW_EN+AT_NOTE},
+ "at-aau-ai":{open_date:"2027-01-11",close_date:"2027-02-28",verify:false,eligibility:"match",link:"https://www.aau.at/en/studien/master-artificial-intelligence-and-cybersecurity/",
+   elig_note:"Checked Nov 2026: taught in English; needs a bachelor's in computer science, mathematics, statistics or a related field and English at B2. Non-EU applicants apply 11 Jan - 28 Feb 2027 through a special procedure: online registration, a motivation video in English, transcript, degree certificate and passport."+AT_NOTE,
+   requirements:["Bachelor's in CS, maths, statistics or related","English B2 certificate at the time of application","Motivation video in English","Transcript + degree certificate + passport copy","Apply 11 Jan - 28 Feb 2027 (non-EU window)"]},
+ "at-uibk-cs":{link:"https://www.uibk.ac.at/en/programmes/ma-computer-science/2021w/",elig_note:"Checked Nov 2026: taught in English and open to holders of a relevant bachelor's degree with language certificates. The required English level and the non-EU deadline are on separate pages I have not read yet."+AT_NOTE}
+};
+EXTRA.forEach(e=>{if(FIX[e.id])Object.assign(e,FIX[e.id]);});
+
+function us(id,name,program,degree,o){return Object.assign({id,country:"USA",cc:"US",name,program,degree,intake:"Fall 2027",open_date:null,close_date:null,ielts:"",eligibility:"match",priority:"medium",verify:true,tuition:"Funded only with an assistantship or fellowship offer"},o);}
+function ca(id,name,program,o){return Object.assign({id,country:"Canada",cc:"CA",name,program,degree:"Masters",intake:"Fall 2027",open_date:null,close_date:null,ielts:"",eligibility:"match",priority:"medium",verify:true,tuition:"International tuition applies; see funding note"},o);}
+function se2(id,name,program,note,link,verified){return {id,country:"Sweden",cc:"SE",name,program,degree:"Masters",tuition:"Tuition applies to non-EU students; target the SI scholarship",open_date:SE_OPEN,close_date:SE_CLOSE,intake:"Autumn 2027",ielts:"6.5",eligibility:"match",elig_note:note+" Sweden's shared rules apply: one round on universityadmissions.se (16 Oct 2026 - 15 Jan 2027) and IELTS 6.5 with no section below 5.5."+(verified?"":" The programme is listed on the university's own site; I have not read its specific course prerequisites."),link,priority:"medium",verify:!verified,requirements:SE_REQ};}
+function hu(id,name,program,city,note,link,ielts,reqs){return {id,country:"Hungary",cc:"HU",name,program,degree:"Masters",tuition:"Free with Stipendium Hungaricum",open_date:"2026-11-14",close_date:"2027-01-15",intake:"Fall 2027",ielts:ielts||"",eligibility:"match",elig_note:note+" Listed on the Stipendium Hungaricum course finder (checked Nov 2026), which showed it as not yet open for applications; dates shown follow last year's call.",link,priority:"medium",verify:true,requirements:reqs||["Bachelor's in CS / computer engineering or related","English at B2","Motivation letter + CV","Medical certificate","Interview or entrance assessment","Apply through the Stipendium Hungaricum portal"]};}
+EXTRA.push(
+ us("us-iastate-phd","Iowa State University","PhD Computer Science","PhD",{open_date:"2026-08-26",close_date:"2026-12-15",priority:"high",verify:false,tuition:"Funded with admission: 2-year TA, full tuition, health insurance",link:"https://www.cs.iastate.edu/graduate-studies/phd-application-requirements",
+  elig_note:"Strong option, checked Nov 2026: the application is free, GRE is optional and not weighted, and admitted applicants receive a two-year teaching assistantship with a monthly stipend, a 100% tuition scholarship and free health insurance; later years are usually funded as a research assistant. Submit by 15 Dec 2026 and complete the file (including letters) by 10 Jan 2027. The English minimum is set by the Graduate College and is not on this page - confirm it accepts IELTS 6.5 - and the page does not say whether a bachelor's alone is enough.",
+  requirements:["Submit by 15 Dec 2026; file complete by 10 Jan 2027","No application fee","GRE optional","English test (confirm the Graduate College minimum)","Recommendation letters","Statement of purpose"]}),
+ us("us-buffalo-phd","University at Buffalo (SUNY)","PhD Computer Science and Engineering","PhD",{close_date:"2026-12-31",ielts:"6.5",priority:"high",verify:false,link:"https://engineering.buffalo.edu/computer-science-engineering/graduate/admissions/application-materials.html",
+  elig_note:"Checked Nov 2026: IELTS 6.5, and the GRE is not required for the MS or the PhD. Apply by 31 Dec for full consideration for funding and fellowships (10 Dec for special scholarships). Fee $100. The page does not state a GPA minimum or whether bachelor's-only applicants are admitted to the PhD; ask the department.",
+  requirements:["IELTS 6.5","No GRE","Apply by 31 Dec 2026 for funding","Application fee $100","Transcripts, SOP, recommendation letters","Ask whether direct entry from a bachelor's is accepted"]}),
+ us("us-buffalo-ms","University at Buffalo (SUNY)","MS Computer Science and Engineering","Masters",{close_date:"2026-12-31",ielts:"6.5",priority:"low",verify:false,tuition:"Self-funded (see the university fee page)",link:"https://engineering.buffalo.edu/computer-science-engineering/graduate/admissions/application-materials.html",
+  elig_note:"Checked Nov 2026: IELTS 6.5 and no GRE. A US master's is self-funded, so treat this as a fallback behind the funded PhD routes. Fee $100.",
+  requirements:["IELTS 6.5","No GRE","Application fee $100","Transcripts, SOP, recommendation letters","Budget for tuition and living costs"]}),
+ us("us-ttu-phd","Texas Tech University","PhD Computer Science","PhD",{ielts:"6.5",verify:false,tuition:"Funding not described on the admissions page",link:"https://www.depts.ttu.edu/cs/grad/admissions.php",
+  elig_note:"Checked Nov 2026: IELTS 6.5, GRE waived 'until further notice', and applicants with a CS bachelor's and a GPA above 3.0 are encouraged to apply. No application-fee waivers. The page gives no deadline and no funding terms, and does not say whether bachelor's-only applicants enter the PhD; confirm all three.",
+  requirements:["IELTS 6.5","GRE waived until further notice","GPA above 3.0 with a CS/CE bachelor's","No fee waiver","Confirm the Fall 2027 deadline","Ask about TA/RA funding"]}),
+ us("us-ttu-ms","Texas Tech University","MS Computer Science","Masters",{ielts:"6.5",priority:"low",verify:false,tuition:"Self-funded (see the university fee page)",link:"https://www.depts.ttu.edu/cs/grad/admissions.php",
+  elig_note:"Checked Nov 2026: IELTS 6.5, GRE waived until further notice, GPA above 3.0 encouraged. Self-funded; a fallback only.",
+  requirements:["IELTS 6.5","GRE waived until further notice","GPA above 3.0","Confirm the Fall 2027 deadline","Budget for tuition and living costs"]}),
+ us("us-fiu-phd","Florida International University","PhD Computer Science","PhD",{close_date:"2027-02-15",link:"https://www.cis.fiu.edu/degree/doctor-of-philosophy-in-computer-science/",
+  elig_note:"Checked Nov 2026: Fall deadline 15 Feb, but apply by 15 Jan to be considered for fellowships. A teaching assistantship, if awarded, is guaranteed for one year; the Director's Fellowship pays USD 30,000 a year for three years with a tuition waiver and subsidised health insurance. The page does not give the English score or GRE rule - confirm both.",
+  requirements:["Apply by 15 Jan 2027 for fellowships (final date 15 Feb)","English test (confirm minimum)","GRE: confirm","Transcripts, SOP, recommendation letters","Funding is awarded, not automatic"]}),
+ us("us-gmu-phd","George Mason University","PhD Computer Science","PhD",{close_date:"2026-12-01",link:"https://itsapps.gmu.edu/graduate-deadlines-and-requirements/Programs/Details/a3L1I0000002hg6UAA",
+  elig_note:"Checked Nov 2026: GRE is not required (recommended for applicants educated outside the US). The last posted cycle had a funding deadline of 1 Dec and a standard deadline of 15 Mar; the date shown here is the funding date and is not confirmed for 2027. English scores and the minimum degree are not on the page.",
+  requirements:["Apply by the funding deadline (1 Dec in the last posted cycle)","GRE not required","English test (confirm minimum)","Transcripts, SOP, recommendation letters","Ask for GRA/GTA consideration"]}),
+ us("us-binghamton-phd","Binghamton University (SUNY)","PhD Computer Science","PhD",{link:"https://www.binghamton.edu/apps/catalog/application-requirement/view/R92",
+  elig_note:"Checked Nov 2026: rolling admission, a bachelor's degree is accepted, GPA 3.0 (overall or in the last 60 credits), and GRE is recommended but not required. Apply early for priority funding and fee-waiver consideration. English minimums are in the university standards, which I have not read.",
+  requirements:["Bachelor's or Master's, GPA 3.0+","GRE recommended, not required","English test (confirm minimum)","Apply early for funding","Transcripts, SOP, recommendation letters"]}),
+ us("us-ull-phd","University of Louisiana at Lafayette","PhD Computer Science","PhD",{priority:"low",link:"https://computing.louisiana.edu/node/174",
+  elig_note:"Checked Nov 2026: GRE is not required. The school says financial support goes only to first-year international students with exceptional academic records, so funding is uncertain with a 3.44 GPA. English score and deadline are not on the page.",
+  requirements:["GRE not required","English test (confirm minimum)","Confirm the deadline","Funding only for exceptional records","Transcripts, SOP, recommendation letters"]}),
+ ca("ca-guelph-cs","University of Guelph","MSc Computer Science (Thesis)",{close_date:"2027-03-01",priority:"high",tuition:"Guaranteed minimum stipend CAD 20,000/yr for 2 years",link:"https://www.uoguelph.ca/programs/msc-computer-science/",
+  elig_note:"Strong option, checked Nov 2026: the school guarantees a minimum stipend of CAD 20,000 a year for up to two years to international MSc students who secure an advisor and admission. Needs a four-year CS degree with a 75% (B) average over the last two years; finding a faculty advisor is mandatory and is your job. Fall 2027 international deadline 1 Mar 2027. The English score is not on this page - confirm it.",
+  requirements:["Secure a faculty advisor (mandatory)","75% (B) average in the last two years","Apply by 1 Mar 2027","English test (confirm minimum)","Transcripts, statement, referees"]}),
+ ca("ca-regina-cs","University of Regina","MSc Computer Science (Thesis)",{close_date:"2027-02-15",ielts:"6.5",verify:false,link:"https://www.uregina.ca/science/computer-science/graduate-programs/application-process.html",
+  elig_note:"Checked Nov 2026: IELTS 6.5; a four-year CS bachelor's with 70% overall and 75% in computer science; you must find a supervisor who is accepting students before you submit. Fall deadline 15 Feb. The page states no funding.",
+  requirements:["Find a supervisor before applying","IELTS 6.5","70% overall, 75% in CS","Apply by 15 Feb 2027","Transcripts, statement, referees"]}),
+ ca("ca-windsor-cs","University of Windsor","MSc Computer Science (Thesis)",{close_date:"2027-04-15",ielts:"6.5",verify:false,link:"https://www.uwindsor.ca/graduate-studies/494/computer-science",
+  elig_note:"Checked Nov 2026: IELTS 6.5 with no band below 6.0 and at most one band at 6.0 - check your individual band scores. Fall deadline 15 Apr. Needs a 500-word research statement naming possible supervisors and two academic referees. No funding amount is stated.",
+  requirements:["IELTS 6.5; no band below 6.0, at most one at 6.0","Research statement naming supervisors (500 words)","Two academic referees","Apply by 15 Apr 2027","CV + transcripts"]}),
+ ca("ca-mun-cs","Memorial University of Newfoundland","MSc Computer Science (Thesis)",{close_date:"2026-12-01",tuition:"Funding listed as CAD 20,000",link:"https://www.mun.ca/become/graduate/programs-and-courses/computer-science/",
+  elig_note:"Checked Nov 2026: needs a CS or computer engineering bachelor's with at least 75%; Fall deadline 1 Dec; the programme page lists funding of CAD 20,000. International applicants are 'strongly encouraged' to send a GRE score, and contacting a supervisor is encouraged. The English score is not on the page.",
+  requirements:["75% average in a CS / computer engineering bachelor's","Apply by 1 Dec 2026","GRE encouraged, not required","English test (confirm minimum)","Contact a possible supervisor"]}),
+ ca("ca-uvic-cs","University of Victoria","MSc Computer Science",{close_date:"2026-12-15",link:"https://uvic.ca/graduate/programs/graduate-programs/credential-pages/computer-science-msc/computer-science-msc.php",
+  elig_note:"Checked Nov 2026: apply by 15 Dec for September. You do not need a supervisor to apply, but supervisors make the final admission decisions, so list the people you want to work with. English score and funding are not on the page.",
+  requirements:["Apply by 15 Dec 2026","List potential supervisors","English test (confirm minimum)","Transcripts, statement, referees"]}),
+ ca("ca-carleton-cs","Carleton University","Master of Computer Science (Thesis)",{link:"https://carleton.ca/scs/future-students/graduate-studies/masters-program/",
+  elig_note:"Checked Nov 2026: you must secure a supervisor from the School of Computer Science to be admitted (you can apply first but must name at least one). Funding is considered automatically and stated in the offer. English score and deadline are on separate pages I have not read.",
+  requirements:["Name and secure a supervisor","English test (confirm minimum)","Confirm the Fall 2027 deadline","Transcripts, statement, referees"]}),
+ ca("ca-ottawa-cs","University of Ottawa","Master of Computer Science (Thesis)",{link:"https://catalogue.uottawa.ca/en/graduate/master-computer-science/",
+  elig_note:"Checked Nov 2026: needs an honours bachelor's in computer science with a B (70%) average, and you must identify a professor willing to supervise your thesis. English score, deadline and funding are on separate pages I have not read.",
+  requirements:["Honours CS bachelor's, B (70%) average","Identify a professor willing to supervise","English test (confirm minimum)","Confirm the deadline","Transcripts, statement, referees"]}),
+ {id:"au-deakin-ds",country:"Australia",cc:"AU",name:"Deakin University",program:"Master of Data Science",degree:"Masters",tuition:"AUD 45,800/yr (2027); 20-25% merit scholarships, 50-100% Vice-Chancellor's",open_date:null,close_date:null,intake:"Trimester 1, 2 or 3",ielts:"6.5",eligibility:"caution",priority:"low",verify:false,link:"https://www.deakin.edu.au/course/master-data-science-international",
+  elig_note:"Checked Nov 2026: IELTS 6.5 with no band below 6.0. With a related bachelor's plus two years of relevant work experience you can be credited down to one year of study. Tuition reductions: Vice-Chancellor's International Scholarship (100% or 50%), International Scholarship for Excellence (25%, select countries), 20% merit scholarship. Still expensive after a 25% reduction.",
+  requirements:["Bachelor's degree (related field shortens the course)","IELTS 6.5, no band below 6.0","Apply for a scholarship with the course application","Budget for the remaining tuition"]},
+ {id:"at-plus-ds",country:"Austria",cc:"AT",name:"University of Salzburg",program:"MSc Data Science",degree:"Masters",tuition:AT_FEE,open_date:null,close_date:null,intake:"Winter 2027/28",ielts:"",eligibility:"caution",priority:"medium",verify:true,link:"https://www.plus.ac.at/studium/studienangebot/masterstudien/data-science/",
+  elig_note:"Checked Nov 2026: taught in English; needs a bachelor's in computer science, mathematics or statistics (others may be asked for up to 45 ECTS of extra work). The English level and the non-EU dates are in separate documents I have not read."+AT_NOTE,
+  requirements:["Bachelor's in CS, maths or statistics","English certificate (confirm level)","Check this semester's dates","Legalised transcripts + degree certificate"]},
+ se2("se-gu-sai","University of Gothenburg","MSc Software and AI Engineering","Checked Nov 2026: needs 12 credits of programming, 12 of software engineering or design, 6 of AI or machine learning and 6 of mathematics; total cost SEK 294,000.","https://www.gu.se/en/study-gothenburg/software-and-ai-engineering-masters-programme-n2ase",true),
+ se2("se-gu-ads","University of Gothenburg","MSc Applied Data Science","Applied data science with machine learning.","https://www.gu.se/en/education/N2ADS",false),
+ se2("se-gu-cs","University of Gothenburg","MSc Computer Science","Run jointly with Chalmers' computer science department.","https://www.gu.se/en/education/N2COS",false),
+ se2("se-bth-aise","Blekinge Institute of Technology","MSc AI and Software Engineering","Checked Nov 2026: needs 20 credits of computer science or software engineering and 15 of mathematics (linear algebra, statistics). BTH is one of Sweden's main software-engineering research schools.","https://www.bth.se/english/education/programmes/masters-programme-in-ai-and-software-engineering-120-credits",true),
+ se2("se-bth-aiml","Blekinge Institute of Technology","MSc AI and Machine Learning","Two-year AI and machine-learning programme.","https://bth.se/eng/education/masters/dvama",false),
+ se2("se-bth-cs","Blekinge Institute of Technology","MSc Computer Science","Two-year computer science programme.","https://www.bth.se/english/education/programmes/masters-programme-in-computer-science-120-credits",false),
+ se2("se-ltu-ai","Luleå University of Technology","MSc Applied AI","Applied artificial intelligence.","https://www.ltu.se/en/education/programme/tmdia-master-programme-in-applied-ai",false),
+ se2("se-ltu-ds","Luleå University of Technology","MSc Data Science","Data science programme.","https://www.ltu.se/en/education/programme/fndsa-master-programme-in-data-science",false),
+ se2("se-mdu-se","Mälardalen University","MSc Software Engineering","Software engineering with close industry links.","https://www.mdu.se/en/malardalen-university/education/international/programme/masters-programme-in-software-engineering",false),
+ se2("se-mdu-ies","Mälardalen University","MSc Intelligent Embedded Systems","AI for embedded and autonomous systems.","https://www.mdu.se/en/malardalen-university/education/international/programme/masters-programme-in-intelligent-embedded-systems",false),
+ se2("se-su-css","Stockholm University","MSc Computer and Systems Sciences","Broad programme at the Department of Computer and Systems Sciences.","https://su.se/coursecatalogue/SCSSO",false),
+ se2("se-su-dads","Stockholm University","MSc Decision Analysis and Data Science","Data science and decision analysis.","https://sisu.it.su.se/search/archive_info/SBDSO/en",false),
+ hu("hu-elte-ai","ELTE","MSc Artificial Intelligence","Budapest","Checked Nov 2026 on ELTE's page: English, 4 semesters, needs a CS bachelor's or 60 ECTS of informatics and mathematics, English at B2. Self-financed tuition is EUR 3,200 a semester with a 30 Apr 2027 deadline for September; the Stipendium route is free.","https://www.elte.hu/en/node/320686",""),
+ hu("hu-elte-auto","ELTE","MSc Computer Science for Autonomous Systems","Budapest","Autonomous-systems programme connected to the EIT Digital master school.","https://elte.hu/en/computer-science-for-autonomous-systems-msc",""),
+ hu("hu-pecs-cse","University of Pécs","MSc Computer Science Engineering","Pécs","English, 4 semesters; needs a related BSc and a B2 certificate, with an online interview.","https://apply.stipendiumhungaricum.hu/courses/course/1380",""),
+ hu("hu-sze-cse","Széchenyi István University","MSc Computer Science Engineering","Győr","English, 4 semesters; asks for IELTS Academic 6.5 and a motivation letter.","https://apply.stipendiumhungaricum.hu/courses/course/2120","6.5"),
+ hu("hu-obuda-cse","Óbuda University","MSc Computer Science Engineering","Budapest","English, 4 semesters, in Budapest; the English score is not stated on the course page.","https://apply.stipendiumhungaricum.hu/courses/course/708",""),
+ hu("hu-miskolc-cse","University of Miskolc","MSc Computer Science Engineering","Miskolc","English; asks for IELTS 5.5 and a related BSc. The course page lists a duration of '1 or 2 semesters (60 ECTS)', which looks like a partial-study entry - confirm it is the full degree.","https://apply.stipendiumhungaricum.hu/courses/course/2013","5.5"),
+ hu("hu-debrecen-ds","University of Debrecen","MSc Data Science","Debrecen","Data science master's listed on the Stipendium course finder.","https://apply.stipendiumhungaricum.hu/courses/course/4079",""),
+ hu("hu-debrecen-cse","University of Debrecen","MSc Computer Science Engineering","Debrecen","Computer science engineering master's listed on the Stipendium course finder.","https://apply.stipendiumhungaricum.hu/courses/course/921","")
+);
+Object.assign(META,{
+ "us-iastate-phd":m("Ames, IA","full","opt","good",["ai","se","dist"],"research","None",""),
+ "us-buffalo-phd":m("Buffalo, NY","competitive","no","good",["ai","dist","sec"],"research","$100",""),
+ "us-buffalo-ms":m("Buffalo, NY","none","no","good",["ai","dist"],"course","$100"),
+ "us-ttu-phd":m("Lubbock, TX","","no","good",["ai","se"],"research","",""),
+ "us-ttu-ms":m("Lubbock, TX","none","no","good",["ai","se"],"course"),
+ "us-fiu-phd":m("Miami, FL","competitive","","moderate",["ai","sec","dist"],"research","",""),
+ "us-gmu-phd":m("Fairfax, VA","competitive","no","moderate",["ai","sec","se"],"research","",""),
+ "us-binghamton-phd":m("Binghamton, NY","competitive","opt","good",["dist","ai"],"research","","yes"),
+ "us-ull-phd":m("Lafayette, LA","competitive","no","moderate",["ai","dist"],"research","",""),
+ "ca-guelph-cs":m("Guelph, ON","full","no","good",["ai","ds","se"],"thesis"),
+ "ca-regina-cs":m("Regina, SK","supervisor","no","good",["ai","ds"],"thesis"),
+ "ca-windsor-cs":m("Windsor, ON","supervisor","","good",["ai","ds"],"thesis"),
+ "ca-mun-cs":m("St. John's, NL","competitive","opt","good",["ai","dist"],"thesis"),
+ "ca-uvic-cs":m("Victoria, BC","supervisor","","moderate",["se","ai","dist"],"thesis"),
+ "ca-carleton-cs":m("Ottawa, ON","supervisor","","moderate",["ai","sec","dist"],"thesis"),
+ "ca-ottawa-cs":m("Ottawa, ON","supervisor","","moderate",["ai","se"],"thesis"),
+ "au-deakin-ds":m("Melbourne","partial","no","moderate",["ds","ai"],"course"),
+ "at-plus-ds":m("Salzburg","lowcost","no","moderate",["ds","ai"],"thesis"),
+ "se-gu-sai":m("Gothenburg","schol","no","good",["se","ai"],"thesis","SEK 900"),
+ "se-gu-ads":m("Gothenburg","schol","no","good",["ds","ai"],"thesis","SEK 900"),
+ "se-gu-cs":m("Gothenburg","schol","no","moderate",["ai","se"],"thesis","SEK 900"),
+ "se-bth-aise":m("Karlskrona","schol","no","good",["se","ai"],"thesis","SEK 900"),
+ "se-bth-aiml":m("Karlskrona","schol","no","good",["ai"],"thesis","SEK 900"),
+ "se-bth-cs":m("Karlskrona","schol","no","good",["se","dist"],"thesis","SEK 900"),
+ "se-ltu-ai":m("Luleå","schol","no","good",["ai"],"thesis","SEK 900"),
+ "se-ltu-ds":m("Luleå","schol","no","good",["ds"],"thesis","SEK 900"),
+ "se-mdu-se":m("Västerås","schol","no","good",["se"],"thesis","SEK 900"),
+ "se-mdu-ies":m("Västerås","schol","no","good",["ai","dist"],"thesis","SEK 900"),
+ "se-su-css":m("Stockholm","schol","no","good",["ds","sec","se"],"thesis","SEK 900"),
+ "se-su-dads":m("Stockholm","schol","no","good",["ds","ai"],"thesis","SEK 900"),
+ "hu-elte-ai":m("Budapest","schol","no","good",["ai","genai"],"thesis","None via Stipendium"),
+ "hu-elte-auto":m("Budapest","schol","no","good",["ai","dist"],"thesis","None via Stipendium"),
+ "hu-pecs-cse":m("Pécs","schol","no","good",["se","ai"],"thesis","None via Stipendium"),
+ "hu-sze-cse":m("Győr","schol","no","good",["se","dist"],"thesis","None via Stipendium"),
+ "hu-obuda-cse":m("Budapest","schol","no","good",["se","sec"],"thesis","None via Stipendium"),
+ "hu-miskolc-cse":m("Miskolc","schol","no","moderate",["se"],"thesis","None via Stipendium"),
+ "hu-debrecen-ds":m("Debrecen","schol","no","good",["ds","ai"],"thesis","None via Stipendium"),
+ "hu-debrecen-cse":m("Debrecen","schol","no","good",["se","dist"],"thesis","None via Stipendium")
+});
+TASKS["2026-12"]=["Submit the December applications: George Mason and Memorial (1 Dec), Iowa State, UT Dallas and Victoria (15 Dec), Buffalo (31 Dec)","Rank your Swedish programmes on universityadmissions.se","Start document legalisation for Austria and Hungary"];
+TASKS["2027-01"]=["Sweden closes 15 Jan; TU Delft 15 Jan; Houston and Stony Brook 15 Jan; Simon Fraser 19 Jan","FIU: apply by 15 Jan for fellowships","Klagenfurt non-EU window opens 11 Jan; TU Wien's around 16 Jan","Stipendium Hungaricum closed 15 Jan last year"];
+TASKS["2027-02"]=["Pay the Swedish fee and upload documents by 1 Feb","Swedish Institute scholarship application, 8-24 Feb","Regina 15 Feb; Klagenfurt closes 28 Feb","Follow up politely with professors who have not replied"];
+TASKS["2027-03"]=["Guelph 1 Mar","University of Vienna registration, 2 Mar - 7 Apr","JKU Linz applications: start early, non-EU processing can take six months"];
+GUIDE.forEach(g=>{
+ if(g.country==="USA")g.points=["Iowa State funds every admitted PhD student (2-year TA, full tuition, health insurance), with a free application due 15 Dec.","IELTS 6.5 is accepted at Stony Brook, Buffalo, Texas Tech, Houston and UT Dallas; GRE is not required or is optional at all of them.","Excluded: ASU and Georgia Tech (IELTS 7.0), NJIT and North Texas (3.5 GPA), UNC Charlotte and UCF (GRE required).","Funding arrives as a TA/RA or fellowship offer; compare offers before accepting. A master's here is self-funded."];
+ if(g.country==="Canada"){g.headline="Funded thesis master's; a supervisor is the key";g.points=["Guelph guarantees CAD 20,000 a year for two years once you have an advisor and admission; Memorial lists CAD 20,000.","IELTS 6.5 is accepted at Simon Fraser, Regina, Windsor and Concordia. Saskatchewan, Alberta and Waterloo need 7.0 and are removed.","Regina, Guelph, Carleton, Ottawa and Manitoba all need a supervisor before or at admission: start emailing now.","Deadlines: Memorial 1 Dec, Victoria 15 Dec, Simon Fraser 19 Jan, Regina 15 Feb, Guelph 1 Mar, Windsor 15 Apr."];}
+ if(g.country==="Australia"){g.headline="No funded route you qualify for yet";g.points=["PhD entry expects an honours degree with research or a Master's, so the PhD options are removed.","Coursework master's accept IELTS 6.5 but cost AUD 46,000-50,000 a year; Deakin offers 20-25% merit reductions.","Macquarie's Master of Research is the path into a funded PhD, but its entry scholarship requires being in Australia already."];}
+ if(g.country==="Austria")g.points=["Bangladesh is on the tuition-exemption list (TU Wien fee page): only the ~€26 student-union fee per semester.","TU Wien needs IELTS 6.5 overall; TU Graz needs 7.0 and is removed. Klagenfurt and Innsbruck ask for B2.","Windows: Klagenfurt non-EU 11 Jan - 28 Feb 2027; TU Wien 16 Jan - 15 Jul (pattern); University of Vienna 2 Mar - 7 Apr plus an exam in Vienna; JKU Linz by 5 Sep.","Living costs are yours to fund; I found no general full scholarship for an Austrian master's."];
+ if(g.country==="Hungary")g.points=["Stipendium Hungaricum covers tuition, a monthly stipend, an accommodation contribution and medical insurance.","Eight universities list English-taught computing master's on the scholarship's course finder; most ask for B2 (Szeged and Miskolc IELTS 5.5, Győr 6.5).","The course pages showed 'not available for applying at the moment' on 11 Nov 2026: the 2027/28 call had not opened. Last year it ran 14 Nov - 15 Jan, so check daily.","You need nomination from the sending partner in Bangladesh as well as the university's own selection."];
+});
+NOT_DONE.splice(0,NOT_DONE.length,"English minimums for programmes showing 'IELTS —' (the department page did not state them)","Visa fees, proof-of-funds amounts and living-cost estimates per country","Course-specific prerequisites for most Swedish programmes","Your individual IELTS band scores, which several programmes check (for example no band below 6.0)","The 2027/28 Stipendium Hungaricum call, which had not opened when checked");
+
 window.PD={RETIRE,SCH_RETIRE,PATCH,EXTRA,META,PROFS,SCH_PATCH,SCH_EXTRA,SCH_META,GUIDE,NOT_DONE,TASKS};
 })();
