@@ -184,14 +184,15 @@ const SCH_PATCH={
    cover:"Full tuition, SEK 12,000 a month and a SEK 15,000 travel grant. Bangladesh is on the eligible list; you need 3,000+ hours of work experience and leadership evidence, both of which you have. Apply to programmes on universityadmissions.se by 15 Jan 2027, then to SI 8-24 Feb 2027. Dates come from a secondary source quoting si.se (the SI page did not load) - confirm there."},
  "sc-holland":{name:"NL Scholarship (formerly Holland Scholarship)",link:"https://studyinnl.org/finances/nl-scholarship",verify:true,
    cover:"EUR 5,000 once, in the first year, for non-EEA students at participating universities (checked Nov 2026). Not a full scholarship: non-EU tuition alone is roughly EUR 17,000-34,000 a year. Each university sets its own deadline."},
- "sc-mq-ivs":{name:"Macquarie research scholarships (MRes / PhD)",verify:true,
+ "sc-mq-ivs":{open_date:null,deadline:null,name:"Macquarie research scholarships (MRes / PhD)",verify:true,
    cover:"Competitive scholarships ranked on academic record and research evidence. Checked Nov 2026: the 'Road to Research' MRes award requires you to already be in Australia, so it is not available from Bangladesh. Rounds and 2027 amounts were not on the pages I could read."},
- "sc-oead":{name:"OeAD grants (Ernst Mach and others)",verify:true,
+ "sc-oead":{open_date:null,deadline:null,name:"OeAD grants (Ernst Mach and others)",verify:true,
    cover:"As far as I know these fund research stays for doctoral students and postdocs, not a full master's degree. Listed so you do not budget on it; confirm on oead.at."},
- "sc-vanier":{name:"Canadian federal doctoral awards",verify:true,
+ "sc-vanier":{open_date:null,deadline:null,name:"Canadian federal doctoral awards",verify:true,
    cover:"I could not confirm the current federal award scheme this round. For a thesis master's or PhD in Canada, the realistic funding is the department and supervisor package (for example Saskatchewan: tuition plus CAD 18,000 in year one)."},
  "sc-stiphun":{verify:true,cover:"Tuition-free study, a monthly stipend, an accommodation contribution and medical insurance, with no application fee; you may work up to 30 hours a week. Requires nomination by the sending partner in Bangladesh. The last call ran 14 Nov 2025 - 15 Jan 2026; I could not open an official page for the 2027/28 call, so check stipendiumhungaricum.hu now."},
- "sc-rtp":{verify:true,cover:"Australian research scholarship: full tuition, a stipend of AUD 44,293 a year (University of Sydney figure for 2027) and overseas student health cover. Highly competitive for international applicants and normally needs honours-level research or a Master's."}
+ "sc-dept-us":{open_date:null,deadline:null,verify:true,cover:"US PhD funding comes as a teaching or research assistantship offered with admission: tuition waiver plus stipend. None of the department pages I read calls it guaranteed, and each programme has its own deadline (see the programme cards)."},
+ "sc-rtp":{open_date:null,deadline:null,verify:true,cover:"Australian research scholarship: full tuition, a stipend of AUD 44,293 a year (University of Sydney figure for 2027) and overseas student health cover. Highly competitive for international applicants and normally needs honours-level research or a Master's."}
 };
 const SCH_EXTRA=[
  {id:"sc-at-exempt",country:"Austria",name:"Austrian tuition exemption for Bangladeshi citizens",cover:"Not a scholarship, but worth more than most: Bangladesh is on the exemption list, so you pay only the ~€26 student-union fee each semester at Austrian public universities (checked Nov 2026 on TU Wien's fee page). Living costs are not covered. Confirm the list at enrolment.",open_date:null,deadline:null,link:"https://www.tuwien.at/en/studies/admission/students-union-fee-and-tuition-fee/tuition-fee",verify:false},
