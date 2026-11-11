@@ -375,6 +375,51 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
 
 @media (max-width:860px){ .stat-grid{grid-template-columns:repeat(3,1fr)} .prof{grid-template-columns:1fr} }
 @media (max-width:520px){ .stat-grid{grid-template-columns:repeat(2,1fr)} .brand .sub{display:none} .field-row,.field-row-3{grid-template-columns:1fr} }
+
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:-6px 0 16px}
+.chipbtn{font:inherit;font-size:12px;font-weight:600;padding:5px 11px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--fg-2);cursor:pointer}
+.chipbtn:hover{border-color:var(--border-strong)}
+.chipbtn.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.cstrip{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:14px}
+.ccard{text-align:left;font:inherit;background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--rail,var(--accent));border-radius:10px;padding:9px 11px;cursor:pointer;display:flex;flex-direction:column;gap:2px;color:var(--fg);min-width:0}
+.ccard:hover{border-color:var(--border-strong);border-top-color:var(--rail,var(--accent))}
+.ccard.on{background:var(--accent-soft)}
+.ccard b{font-size:13px;font-weight:600}
+.ccard span{font-size:11.5px;color:var(--fg-2)}
+.facts{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12.5px;color:var(--fg-2)}
+.facts b{color:var(--fg);font-weight:600}
+#factRow{margin:6px 2px 0}
+.lead{font-size:13.5px;color:var(--fg-2);margin:0 0 16px;max-width:680px;line-height:1.5}
+.pcard{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--rail,var(--accent));border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 15px;display:flex;flex-direction:column;gap:9px;min-width:0}
+.pcard h3{font-size:16px;margin:0}
+.pcard .psub{font-size:12.5px;color:var(--fg-2)}
+.pcard .ptxt,.dv-card .ptxt{font-size:12.5px;color:var(--fg-2);line-height:1.5}
+.pcard .pmail{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px}
+.pcard .pmail code{font-family:inherit;font-weight:600;user-select:all;overflow-wrap:anywhere}
+.pcard .pnote{font-size:11.5px;color:var(--muted);line-height:1.45}
+.pcard .pangle{font-size:12.5px;line-height:1.5;background:var(--surface-2);border:1px solid var(--border);border-radius:9px;padding:9px 11px;color:var(--fg)}
+.pfoot{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:auto;padding-top:2px}
+.pfoot select,.pfoot input{font-family:inherit;font-size:12.5px;padding:7px 10px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg);border-radius:8px;min-width:0}
+.pfoot input{flex:1 1 140px}
+.minibtn{font:inherit;font-size:12px;font-weight:600;padding:4px 9px;border-radius:7px;border:1px solid var(--border);background:var(--surface-2);color:var(--fg);cursor:pointer;display:inline-flex;gap:5px;align-items:center;text-decoration:none;align-self:flex-start}
+.minibtn:hover{border-color:var(--border-strong)}
+.rankpill{font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:999px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:12.5px;margin:0}
+.kv dt{color:var(--muted)} .kv dd{margin:0;color:var(--fg);font-weight:500}
+.plan{display:flex;flex-direction:column;gap:24px}
+.plan h2{font-size:17px;margin:0 0 4px}
+.plan .lead{margin-bottom:12px}
+.gcards,.tl{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.gcard{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--rail,var(--accent));border-radius:var(--radius);padding:14px 15px}
+.gcard h3{font-size:14.5px;margin:0 0 3px}
+.gcard .gh{font-size:12.5px;font-weight:600;color:var(--fg-2);margin-bottom:8px}
+.gcard ul,.tlm ul,.plan .nd{margin:0;padding-left:18px;font-size:12.5px;color:var(--fg-2);line-height:1.55}
+.tlm{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:13px 15px}
+.tlm.now{border-color:var(--accent)}
+.tlm h3{font-size:13.5px;margin:0 0 8px}
+.tlm .dl{font-size:12.5px;display:flex;justify-content:space-between;gap:10px;padding:3px 0;color:var(--fg)}
+.tlm .dl span:last-child{color:var(--muted);white-space:nowrap}
+.tlm .lbl-mini{display:block;margin:8px 0 4px}
 </style>
 </head>
 <body>
@@ -388,6 +433,8 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
     <nav class="side-nav" id="tabs">
       <button class="tab on" data-tab="universities"><i class="ti ti-building-bank"></i><span>Universities</span><span class="cnt" id="cUni">0</span></button>
       <button class="tab" data-tab="scholarships"><i class="ti ti-award"></i><span>Scholarships</span><span class="cnt" id="cSch">0</span></button>
+      <button class="tab" data-tab="professors"><i class="ti ti-users"></i><span>Professors</span><span class="cnt" id="cProf">0</span></button>
+      <button class="tab" data-tab="plan"><i class="ti ti-route"></i><span>Plan</span></button>
       <button class="tab" data-tab="documents"><i class="ti ti-folder"></i><span>Documents</span></button>
       <button class="tab" data-tab="profile"><i class="ti ti-user"></i><span>Profile</span></button>
     </nav>
@@ -406,9 +453,10 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
       <div id="noteBar" class="note-bar" hidden><i class="ti ti-info-circle"></i><span id="noteBarTxt"></span></div>
       <div id="analysisStrip" class="astrip" hidden></div>
 
-      <div class="dash"><div class="stat-grid" id="statGrid"></div></div>
+      <div class="dash"><div class="stat-grid" id="statGrid"></div><div class="facts" id="factRow"></div></div>
 
   <div class="panel" id="panel-universities">
+    <div class="cstrip" id="countryStrip"></div>
     <div class="controls">
       <div class="seg" id="degSeg">
         <button data-deg="all" class="on">All</button>
@@ -439,6 +487,17 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
       <button class="btn" id="syncBtn" title="Add any new recommended programs and refresh their dates & requirements — your status, notes and checklist progress are never changed"><i class="ti ti-refresh"></i>Sync recommended</button>
       <button class="btn primary" id="addUniBtn"><i class="ti ti-plus"></i>Add program</button>
     </div>
+    <div class="chips" id="quickF">
+      <button class="chipbtn" data-q="funded">Funding route</button>
+      <button class="chipbtn" data-q="free">No tuition</button>
+      <button class="chipbtn" data-q="nogre">No GRE needed</button>
+      <button class="chipbtn" data-q="ielts" id="qIelts">IELTS 6.5 accepted</button>
+      <button class="chipbtn" data-q="direct">Direct PhD entry</button>
+      <button class="chipbtn" data-q="open">Open now</button>
+      <select class="ctl" id="fArea"><option value="all">All research areas</option></select>
+      <select class="ctl" id="fFit"><option value="all">Any fit</option></select>
+      <span class="facts" id="listCount"></span>
+    </div>
     <div id="uniHost"></div>
   </div>
 
@@ -454,6 +513,7 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
         <option value="rejected">Rejected</option>
       </select>
       <div class="ctl-sp"></div>
+      <button class="btn" id="syncSchBtn" title="Add new recommended scholarships and refresh their details. Your status and notes are never changed."><i class="ti ti-refresh"></i>Sync recommended</button>
       <button class="btn primary" id="addSchBtn"><i class="ti ti-plus"></i>Add scholarship</button>
     </div>
     <div id="schHost"></div>
@@ -463,6 +523,19 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
     <p style="font-size:13.5px;color:var(--fg-2);margin:0 0 16px;max-width:640px">Your master document checklist. These apply across most applications — get them ready once and reuse. Per-program document and requirement tracking lives on each university card.</p>
     <div class="docmaster" id="docHost"></div>
   </div>
+
+  <div class="panel" id="panel-professors" hidden>
+    <p class="lead">Researchers whose work overlaps yours. Every email address shown was printed on an official university page; where none could be verified the field is left blank. A research match is not evidence of funding, so each card says what the page actually states about openings.</p>
+    <div class="controls">
+      <select class="ctl" id="fPCountry"><option value="all">All countries</option></select>
+      <select class="ctl" id="fPArea"><option value="all">All research areas</option></select>
+      <select class="ctl" id="fPPrio"><option value="all">Any priority</option><option value="high">High priority</option><option value="medium">Medium priority</option><option value="low">Low priority</option></select>
+      <select class="ctl" id="fPStatus"><option value="all">Any contact status</option></select>
+    </div>
+    <div id="profsHost"></div>
+  </div>
+
+  <div class="panel" id="panel-plan" hidden><div class="plan" id="planHost"></div></div>
 
   <div class="panel" id="panel-profile" hidden><div class="prof" id="profHost"></div></div>
       </div>
@@ -518,6 +591,7 @@ select.ctl:focus,input.ctl:focus{outline:2px solid var(--accent-soft);border-col
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="data.js"></script>
 <script>
 /* ============ Supabase config ============ */
 const SB_URL="https://hrmdbjperwyjeaqnebdv.supabase.co";
@@ -636,6 +710,23 @@ const SCH_CATALOG=[
 ];
 
 /* ============ state ============ */
+/* ---- merge researched data (data.js) into the recommended catalog ---- */
+const PD=window.PD||{PATCH:{},EXTRA:[],META:{},PROFS:[],SCH_PATCH:{},SCH_EXTRA:[],SCH_META:{},GUIDE:[],NOT_DONE:[],TASKS:{}};
+CATALOG.forEach(c=>{const p=PD.PATCH[c.id];if(!p)return;Object.keys(p).forEach(k=>{if(k!=="_noteAdd")c[k]=p[k];});if(p._noteAdd)c.elig_note=(c.elig_note||"")+p._noteAdd;});
+PD.EXTRA.forEach(e=>{if(!CATALOG.some(c=>c.id===e.id))CATALOG.push(e);});
+SCH_CATALOG.forEach(c=>{const p=PD.SCH_PATCH[c.id];if(p)Object.assign(c,p);});
+PD.SCH_EXTRA.forEach(e=>{if(!SCH_CATALOG.some(c=>c.id===e.id))SCH_CATALOG.push(e);});
+function metaOf(u){return (u&&PD.META[u.id])||null;}
+const FUND={full:["Fully funded","pill-ok"],position:["Salaried position","pill-ok"],schol:["Full scholarship if awarded","pill-info"],competitive:["Funding competitive","pill-warn"],supervisor:["Supervisor-funded","pill-warn"],lowcost:["No tuition","pill-ok"],none:["Self-funded","pill-bad"]};
+const GRE={no:["No GRE","pill-ok"],opt:["GRE optional","pill-info"],req:["GRE required","pill-bad"]};
+const DIRECT={yes:["Direct from bachelor's","pill-ok"],exc:["Bachelor's: exceptional only","pill-warn"],ms:["Master's required","pill-slate"],hon:["Honours / research Master's needed","pill-slate"]};
+const FIT={strong:["Strong fit","pill-ok"],good:["Good fit","pill-ok"],moderate:["Moderate fit","pill-warn"],reach:["Reach","pill-orange"],concern:["Eligibility concern","pill-bad"],later:["After a Master's","pill-slate"]};
+const AREA={ai:"AI / machine learning",rl:"Reinforcement learning",fl:"Federated learning",genai:"Generative AI / LLMs",ds:"Data science",se:"Software engineering",dist:"Distributed / cloud systems",sec:"Security"};
+const PTYPE={thesis:"Master's with thesis",course:"Coursework master's",research:"Research degree",position:"Advertised position"};
+const PANELS=["universities","scholarships","professors","plan","documents","profile"];
+let qf={funded:false,free:false,nogre:false,ielts:false,direct:false,open:false};
+let outreach={};
+
 let unis=[],schols=[],profile=null,analysis=null;
 let loaded=false;
 let tab="universities",fDeg="all",noteTimers={};
@@ -648,6 +739,10 @@ const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;"
 
 /* ============ icons ============ */
 const ICONS={
+  users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/>',
+  mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
+  route:'<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h7a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h7"/>',
   moon:'<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
   refresh:'<path d="M20 11a8 8 0 0 0-14-5l-2 2M4 6V3M4 6h3M4 13a8 8 0 0 0 14 5l2-2M20 18v3M20 18h-3"/>',
   "building-bank":'<path d="M3 21h18M5 10h14M5 6l7-3 7 3M5 10v11M19 10v11M9 14v3M12 14v3M15 14v3"/>',award:'<circle cx="12" cy="9" r="6"/><path d="M9 14l-1 7 4-2 4 2-1-7"/>',
@@ -693,11 +788,15 @@ $("#refreshBtn").onclick=()=>{loadAll(true);};
 let toastT;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),2400);}
 
 /* ============ tabs ============ */
-$("#tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;closeDetail();tab=b.dataset.tab;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===b));["universities","scholarships","documents","profile"].forEach(p=>{$("#panel-"+p).hidden=p!==tab;});});
+function showTab(name){closeDetail();tab=name;document.querySelectorAll("#tabs .tab").forEach(x=>x.classList.toggle("on",x.dataset.tab===name));PANELS.forEach(p=>{$("#panel-"+p).hidden=p!==name;});window.scrollTo(0,0);}
+$("#tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;showTab(b.dataset.tab);});
 
 /* ============ filters ============ */
 $("#degSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;fDeg=b.dataset.deg;document.querySelectorAll("#degSeg button").forEach(x=>x.classList.toggle("on",x===b));renderUnis();});
-["#fCountry","#fIntake","#fStatus","#fSort"].forEach(s=>$(s).addEventListener("change",renderUnis));
+["#fCountry","#fIntake","#fStatus","#fSort","#fArea","#fFit"].forEach(s=>$(s).addEventListener("change",()=>{renderUnis();renderCountryStrip();}));
+$("#quickF").addEventListener("click",e=>{const b=e.target.closest("[data-q]");if(!b)return;qf[b.dataset.q]=!qf[b.dataset.q];b.classList.toggle("on",qf[b.dataset.q]);renderUnis();});
+$("#countryStrip").addEventListener("click",e=>{const b=e.target.closest("[data-country]");if(!b)return;const sel=$("#fCountry");sel.value=(sel.value===b.dataset.country)?"all":b.dataset.country;renderUnis();renderCountryStrip();});
+["#fPCountry","#fPArea","#fPPrio","#fPStatus"].forEach(s=>$(s).addEventListener("change",renderProfs));
 ["#fSchCountry","#fSchStatus"].forEach(s=>$(s).addEventListener("change",renderSchols));
 
 /* ============ data layer (Supabase) ============ */
@@ -716,6 +815,7 @@ async function loadAll(isManual){
     const prows=(pr&&pr.data)?pr.data:[];
     profile=(prows.find(r=>r.id==="me")||{}).data||null;
     analysis=(prows.find(r=>r.id==="analysis")||{}).data||null;
+    outreach=(prows.find(r=>r.id==="outreach")||{}).data||{};
     loaded=true; hideNote(); renderAll();
     if(profile&&profile.name){$("#userName").textContent=String(profile.name).split(" ")[0];$("#userAv").textContent=(profile.name[0]||"A").toUpperCase();$("#userChip").hidden=false;}
     if(isManual)toast("Up to date");
@@ -773,19 +873,24 @@ async function importCatalog(){
   const{error}=await sb.from("programs").upsert(rows,{onConflict:"id"});
   btns.forEach(b=>{b.disabled=false;if(b.dataset._h){b.innerHTML=b.dataset._h;delete b.dataset._h;}renderIcons(b);});
   if(error){toast("Sync failed: "+error.message);}
-  else{const added=CATALOG.filter(c=>!existing.has(c.id)).length;toast(added?("Synced — "+added+" new program"+(added>1?"s":"")+" added"):"Synced — all programs up to date");await loadAll();}
+  else{const added=CATALOG.filter(c=>!existing.has(c.id)).length;toast(added?("Synced — "+added+" new program"+(added>1?"s":"")+" added"):"Synced — all programs up to date");await syncSchols(true);await loadAll();}
 }
-async function importSchCatalog(){
-  if(!sb){toast("Database not connected");return;}
-  const btn=$("#importSchBtn");if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader"></i>Importing…';renderIcons(btn);}
-  const rows=SCH_CATALOG.map((c,i)=>Object.assign({status:"not_started",notes:"",created_at:Date.now()+i},c));
+// Scholarships sync the same way as programmes: only researched columns are
+// written, so your status and notes on existing rows are left alone.
+const SCH_CURATED=["id","country","name","cover","open_date","deadline","link","verify"];
+async function syncSchols(quiet){
+  if(!sb){if(!quiet)toast("Database not connected");return false;}
+  const existing=new Set(schols.map(x=>x.id));
+  const rows=SCH_CATALOG.map(c=>{const r={};SCH_CURATED.forEach(k=>{r[k]=(k in c)?c[k]:null;});return r;});
   const{error}=await sb.from("scholarships").upsert(rows,{onConflict:"id"});
-  if(error){toast("Import failed: "+error.message);if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-download"></i>Import recommended scholarships';renderIcons(btn);}}
-  else{toast("Imported "+rows.length+" scholarships");await loadAll();}
+  if(error){toast("Scholarship sync failed: "+error.message);return false;}
+  if(!quiet){const added=SCH_CATALOG.filter(c=>!existing.has(c.id)).length;toast(added?("Synced — "+added+" new scholarship"+(added>1?"s":"")+" added"):"Synced — scholarships up to date");}
+  return true;
 }
+async function importSchCatalog(){const ok=await syncSchols(false);if(ok)await loadAll();}
 async function seedProfileIfEmpty(){
   if(!sb||profile)return;
-  const data={name:"Mohammed Asfakul Ghani",degreeTarget:"Masters (open to PhD)",field:"Computer Science / Software Engineering",gpa:"3.44 / 4.00",ielts:"6.5",experience:"5+ yrs · Software Engineer (Lead)",countries:["Austria","Netherlands","Finland","Sweden","USA","Canada","Hungary"],summary:"Backend engineer with 5+ years in Java, Spring Boot and microservices, leading a team of 6 and shipping systems at scale. ICPC regional finalist with strong competitive-programming ratings. For master's admissions this industry depth and algorithmic background are real differentiators; the 3.44 GPA is solid but not exceptional, so let the experience and ICPC record carry the statement."};
+  const data={name:"Mohammed Asfakul Ghani",degreeTarget:"Masters (open to PhD)",field:"Computer Science / Software Engineering",gpa:"3.44 / 4.00",ielts:"6.5",experience:"5+ yrs · Software Engineer (Lead)",countries:["Austria","USA","Canada","Australia","Sweden","Hungary","Netherlands"],summary:"Backend engineer with 5+ years in Java, Spring Boot and microservices, leading a team of 6 and shipping systems at scale. ICPC regional finalist with strong competitive-programming ratings. For master's admissions this industry depth and algorithmic background are real differentiators; the 3.44 GPA is solid but not exceptional, so let the experience and ICPC record carry the statement."};
   await sb.from("profile").upsert({id:"me",data}).then(()=>{profile=data;renderProfile();});
 }
 
@@ -813,7 +918,7 @@ function winProgress(p){
 }
 
 /* ============ render ============ */
-function renderAll(){renderActive();renderSchols();renderDocs();renderProfile();updateStats();syncFilters();renderAnalysis();renderIcons();}
+function renderAll(){syncFilters();renderActive();renderCountryStrip();renderSchols();if(!(document.activeElement&&document.activeElement.closest&&document.activeElement.closest("#profsHost")))renderProfs();renderPlan();renderDocs();renderProfile();updateStats();renderAnalysis();renderIcons();}
 
 function relTime(iso){if(!iso)return "";const t=new Date(iso).getTime();if(isNaN(t))return "";const s=Math.max(0,Math.round((Date.now()-t)/1000));if(s<90)return "just now";const m=Math.round(s/60);if(m<60)return m+"m ago";const h=Math.round(m/60);if(h<24)return h+"h ago";const d=Math.round(h/24);return d+"d ago";}
 function renderAnalysis(){
@@ -858,7 +963,7 @@ function updateStats(){
     const chipStyle=t.hl?"":(TONE[t.tone]?`style="background:${TONE[t.tone][0]};color:${TONE[t.tone][1]}"`:"");
     return `<div class="stat${t.hl?" hl":""}"><div class="chip" ${chipStyle}><i class="ti ti-${t.ti}"></i></div><div class="v tnum">${t.v}</div><div class="k">${t.k}</div><div class="vsub">${t.sub}</div></div>`;
   }).join("");
-  renderIcons($("#statGrid"));
+  renderIcons($("#statGrid"));renderFacts();
 }
 
 function sortUnis(list){
@@ -879,8 +984,9 @@ function renderUnis(){
     host.innerHTML=`<div class="empty"><i class="ti ti-building-bank"></i><h3>No programs yet</h3><p>Start with a curated set of Computer Science master's and PhD programs across your target countries — opening &amp; closing dates, intake, tuition, eligibility and full requirements pre-filled. Edit or remove any of them.</p><button class="btn primary" id="importBtn"><i class="ti ti-download"></i>Import recommended programs</button></div>`;
     const ib=$("#importBtn");if(ib)ib.onclick=importCatalog;renderIcons(host);return;
   }
-  const cQ=$("#fCountry").value,iQ=$("#fIntake").value,sQ=$("#fStatus").value;
-  let list=unis.filter(u=>(fDeg==="all"||u.degree===fDeg)&&(cQ==="all"||u.country===cQ)&&(iQ==="all"||u.intake===iQ)&&(sQ==="all"||u.status===sQ));
+  const cQ=$("#fCountry").value,iQ=$("#fIntake").value,sQ=$("#fStatus").value,aQ=$("#fArea").value,fQ=$("#fFit").value;
+  let list=unis.filter(u=>(fDeg==="all"||u.degree===fDeg)&&(cQ==="all"||u.country===cQ)&&(iQ==="all"||u.intake===iQ)&&(sQ==="all"||u.status===sQ)&&passQuick(u,aQ,fQ));
+  $("#listCount").textContent=list.length===unis.length?"":("Showing "+list.length+" of "+unis.length);
   list=sortUnis(list);
   if(!list.length){host.innerHTML=`<div class="empty"><i class="ti ti-filter-off"></i><h3>Nothing matches</h3><p>No programs match these filters. Try widening them.</p></div>`;renderIcons(host);return;}
   host.innerHTML='<div class="grid">'+list.map(uniCard).join("")+"</div>";renderIcons(host);reopenCards();
@@ -901,11 +1007,7 @@ function uniCard(u){
         </div>
         <span class="bdg ${st.cls}">${st.label}</span>
       </div>
-      <div class="badges">
-        <span class="bdg ${el.cls}"><i class="ti ti-${el.ti}"></i>${el.label}</span>
-        <span class="bdg ${(PRIO[u.priority]||PRIO.medium).cls}">${(PRIO[u.priority]||PRIO.medium).label} priority</span>
-        <span class="bdg pill-slate">${esc(u.degree||"Masters")}</span>
-      </div>
+      <div class="badges">${fitBadge(u)}<span class="bdg pill-slate">${esc(u.degree||"Masters")}</span>${metaBadges(u)}</div>
       <div class="uni-meta">
         <span class="dmeta urg-${wp.state}"><span class="ddot"></span>${dateline}</span>
         <span class="dmeta"><i class="ti ti-cash"></i>${esc(u.tuition||"—")}</span>
@@ -925,6 +1027,7 @@ function uniCard(u){
   </div>`;
 }
 function onCardClick(e){const card=e.target.closest(".uni");if(!card)return;const id=card.dataset.id;const u=unis.find(x=>x.id===id)||{};let t;
+  if(e.target.closest("[data-goprofs]")){showTab("professors");return;}
   if(e.target.closest("[data-back]")){closeDetail();return;}
   if(e.target.closest("[data-open]")){openDetail(id);return;}
   if((t=e.target.closest("[data-pnode]"))){selStage[id]=+t.dataset.pnode;renderActive();return;}
@@ -968,7 +1071,7 @@ function renderDetail(){
       <div class="flag"><span class="flagchip">${cm.f}</span>${esc(u.country||"")}${u.intake?` · ${esc(u.intake)}`:""}${u.verify?' <span class="verify">verify</span>':""}</div>
       <div class="dv-title"><h2>${esc(u.name||"")}</h2><span class="bdg ${st.cls}">${st.label}</span></div>
       <div class="prog">${esc(u.program||"")}</div>
-      <div class="badges"><span class="bdg ${el.cls}"><i class="ti ti-${el.ti}"></i>${el.label}</span><span class="bdg ${(PRIO[u.priority]||PRIO.medium).cls}">${(PRIO[u.priority]||PRIO.medium).label} priority</span><span class="bdg pill-slate">${esc(u.degree||"Masters")}</span></div>
+      <div class="badges">${fitBadge(u)}<span class="bdg pill-slate">${esc(u.degree||"Masters")}</span>${metaBadges(u)}<span class="bdg ${(PRIO[u.priority]||PRIO.medium).cls}">${(PRIO[u.priority]||PRIO.medium).label} priority</span></div>
     </div>
     <div class="dv-grid">
       <div class="dv-main">
@@ -985,7 +1088,9 @@ function renderDetail(){
           <div class="dv-meta"><span class="dmeta"><i class="ti ti-language"></i>IELTS ${esc(u.ielts||"—")}${ieltsGap(u)}</span></div>
           <select class="dv-status" data-status>${statusOpts}</select>
         </div>
-        ${u.elig_note?`<div class="dv-card"><span class="lbl-mini">Why this fit</span><div class="elig-note">${esc(u.elig_note)}</div></div>`:""}
+        ${factsCard(u)}
+        ${u.elig_note?`<div class="dv-card"><span class="lbl-mini">What I found</span><div class="elig-note">${esc(u.elig_note)}</div></div>`:""}
+        ${peopleCard(u)}
         <div class="dv-card"><span class="lbl-mini">Notes</span><textarea class="note-area" data-note placeholder="Portal login, supervisor emails, to-dos…">${esc(u.notes||"")}</textarea></div>
         ${u.link?`<a class="applink" href="${esc(u.link)}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i>Open application page</a>`:""}
         <div class="dv-actions"><button class="btn" data-edit><i class="ti ti-pencil"></i>Edit details</button><button class="btn danger-btn" data-del><i class="ti ti-trash"></i>Delete</button></div>
@@ -995,6 +1100,103 @@ function renderDetail(){
   renderIcons($("#detailView"));
 }
 ["#uniHost","#detailView"].forEach(sel=>{const n=$(sel);if(!n)return;n.addEventListener("click",onCardClick);n.addEventListener("keydown",onCardKeydown);n.addEventListener("change",onCardChange);n.addEventListener("input",onCardInput);});
+
+/* ============ labels, quick filters, country overview ============ */
+function fitBadge(u){const mt=metaOf(u);if(mt&&FIT[mt.fit])return `<span class="bdg ${FIT[mt.fit][1]}">${FIT[mt.fit][0]}</span>`;const el=ELIG[u.eligibility]||ELIG.match;return `<span class="bdg ${el.cls}"><i class="ti ti-${el.ti}"></i>${el.label}</span>`;}
+function metaBadges(u){const mt=metaOf(u);if(!mt)return "";const out=[];
+  if(FUND[mt.fund])out.push(`<span class="bdg ${FUND[mt.fund][1]}">${FUND[mt.fund][0]}</span>`);
+  if(GRE[mt.gre])out.push(`<span class="bdg ${GRE[mt.gre][1]}">${GRE[mt.gre][0]}</span>`);
+  if(u.degree==="PhD"&&DIRECT[mt.direct])out.push(`<span class="bdg ${DIRECT[mt.direct][1]}">${DIRECT[mt.direct][0]}</span>`);
+  return out.join("");}
+function ieltsOk(u){const r=parseFloat(u&&u.ielts);return !isNaN(r)&&r<=myIelts();}
+function isOpenNow(u){const c=daysLeft(u.close_date),o=daysLeft(u.open_date);return c!=null&&c>=0&&(o==null||o<=0);}
+function passQuick(u,aQ,fQ){const mt=metaOf(u)||{};
+  if(aQ!=="all"&&!(mt.areas||[]).includes(aQ))return false;
+  if(fQ!=="all"&&mt.fit!==fQ)return false;
+  if(qf.funded&&!["full","position","schol","competitive","supervisor"].includes(mt.fund))return false;
+  if(qf.free&&mt.fund!=="lowcost")return false;
+  if(qf.nogre&&!(mt.gre==="no"||mt.gre==="opt"))return false;
+  if(qf.ielts&&!ieltsOk(u))return false;
+  if(qf.direct&&!(u.degree==="PhD"&&(mt.direct==="yes"||mt.direct==="exc")))return false;
+  if(qf.open&&!isOpenNow(u))return false;
+  return true;}
+function renderCountryStrip(){const host=$("#countryStrip");if(!host)return;
+  if(!loaded||!unis.length){host.innerHTML="";return;}
+  const order=PD.GUIDE.map(g=>g.country);const cs=[...new Set(unis.map(u=>u.country).filter(Boolean))].sort((a,b)=>{const x=order.indexOf(a),y=order.indexOf(b);return (x<0?99:x)-(y<0?99:y)||a.localeCompare(b);});
+  const cur=$("#fCountry").value;
+  host.innerHTML=cs.map(c=>{const l=unis.filter(u=>u.country===c),cm=countryMeta(c);const ms=l.filter(u=>u.degree==="Masters").length,ph=l.filter(u=>u.degree==="PhD").length;const ok=l.filter(ieltsOk).length;
+    return `<button class="ccard${cur===c?" on":""}" data-country="${esc(c)}" style="--rail:${cm.c}"><b>${cm.f} ${esc(c)}</b><span>${ms} master's · ${ph} PhD</span><span>${ok} accept IELTS ${myIelts()}</span></button>`;}).join("");}
+function renderFacts(){const host=$("#factRow");if(!host)return;if(!unis.length){host.innerHTML="";return;}
+  const mm=u=>metaOf(u)||{};
+  const funded=unis.filter(u=>["full","position","schol","competitive","supervisor"].includes(mm(u).fund)).length;
+  const free=unis.filter(u=>mm(u).fund==="lowcost").length;
+  const nogre=unis.filter(u=>mm(u).gre==="no"||mm(u).gre==="opt").length;
+  const direct=unis.filter(u=>u.degree==="PhD"&&(mm(u).direct==="yes"||mm(u).direct==="exc")).length;
+  const openPos=PD.PROFS.filter(p=>p.ev===1).length;
+  const q=$("#qIelts");if(q)q.textContent="IELTS "+myIelts()+" accepted";
+  host.innerHTML=`<span><b>${funded}</b> with a funding route</span><span><b>${free}</b> with no tuition</span><span><b>${unis.filter(ieltsOk).length}</b> accept IELTS ${myIelts()}</span><span><b>${nogre}</b> need no GRE</span><span><b>${direct}</b> PhDs open to bachelor's holders</span><span><b>${PD.PROFS.length}</b> professors, ${openPos} with stated openings</span>`;}
+function factsCard(u){const mt=metaOf(u);if(!mt)return "";
+  const rows=[["City",mt.city],["Funding",FUND[mt.fund]&&FUND[mt.fund][0]],["GRE",GRE[mt.gre]?GRE[mt.gre][0]:"Not confirmed"],u.degree==="PhD"?["Entry",DIRECT[mt.direct]?DIRECT[mt.direct][0]:"Not confirmed"]:null,["Format",PTYPE[mt.type]],["Application fee",mt.fee||"Not confirmed"],["Research areas",(mt.areas||[]).map(a=>AREA[a]).join(", ")]].filter(r=>r&&r[1]);
+  return `<div class="dv-card"><span class="lbl-mini">Key facts</span><dl class="kv">${rows.map(r=>`<dt>${r[0]}</dt><dd>${esc(r[1])}</dd>`).join("")}</dl></div>`;}
+function peopleCard(u){const ps=PD.PROFS.filter(p=>p.prog===u.id);if(!ps.length)return "";
+  return `<div class="dv-card"><span class="lbl-mini">People to contact</span>${ps.map(p=>`<div class="ptxt"><b style="color:var(--fg)">${esc(p.name)}</b> · ${esc(p.overlap)}${p.email?` <span style="user-select:all;color:var(--fg)">${esc(p.email)}</span>`:""}</div>`).join("")}<button class="minibtn" data-goprofs><i class="ti ti-users"></i>Open professors list</button></div>`;}
+
+/* ============ professors and outreach ============ */
+const PSTATUS={none:"Not contacted",draft:"Drafting",sent:"Emailed",replied:"Replied",meeting:"Meeting / interview",closed:"Closed"};
+const EV={1:["Open funded position stated","pill-ok"],2:["Says they are seeking students","pill-ok"],3:["Accepts inquiries, funding unknown","pill-info"],4:["Research match only","pill-slate"]};
+const PPRIO={high:0,medium:1,low:2};
+function renderProfs(){const host=$("#profsHost");if(!host)return;$("#cProf").textContent=PD.PROFS.length;
+  const cQ=$("#fPCountry").value,aQ=$("#fPArea").value,pQ=$("#fPPrio").value,sQ=$("#fPStatus").value;
+  const list=PD.PROFS.filter(p=>(cQ==="all"||p.country===cQ)&&(aQ==="all"||p.areas.includes(aQ))&&(pQ==="all"||p.prio===pQ)&&(sQ==="all"||((outreach[p.id]||{}).status||"none")===sQ))
+    .sort((a,b)=>((a.rank||99)-(b.rank||99))||(PPRIO[a.prio]-PPRIO[b.prio])||a.name.localeCompare(b.name));
+  if(!list.length){host.innerHTML=`<div class="empty"><i class="ti ti-filter-off"></i><h3>Nothing matches</h3><p>No professors match these filters.</p></div>`;renderIcons(host);return;}
+  host.innerHTML='<div class="grid">'+list.map(profCard).join("")+"</div>";renderIcons(host);}
+function profCard(p){const cm=countryMeta(p.country),o=outreach[p.id]||{},st=o.status||"none",ev=EV[p.ev]||EV[4];
+  const opts=Object.keys(PSTATUS).map(k=>`<option value="${k}"${st===k?" selected":""}>${PSTATUS[k]}</option>`).join("");
+  const hasProg=p.prog&&unis.some(u=>u.id===p.prog);
+  return `<div class="pcard" data-pid="${esc(p.id)}" style="--rail:${cm.c}">
+    <div class="flag"><span class="flagchip">${cm.f}</span>${esc(p.country)}${p.rank?` <span class="rankpill">Email #${p.rank}</span>`:""}<span class="bdg ${(PRIO[p.prio]||PRIO.medium).cls}">${(PRIO[p.prio]||PRIO.medium).label} priority</span></div>
+    <div><h3>${esc(p.name)}</h3><div class="psub">${esc(p.pos)} · ${esc(p.uni)}</div></div>
+    <div class="badges">${p.areas.map(a=>`<span class="bdg pill-slate">${esc(AREA[a]||a)}</span>`).join("")}</div>
+    <div class="ptxt">${esc(p.overlap)}</div>
+    <div><span class="bdg ${ev[1]}">${ev[0]}</span><div class="pnote" style="margin-top:5px">${esc(p.evNote||"")}</div></div>
+    ${p.email?`<div class="pmail"><i class="ti ti-mail"></i><code>${esc(p.email)}</code><button class="minibtn" data-copy="${esc(p.email)}"><i class="ti ti-copy"></i>Copy</button></div>`:`<div class="pmail"><i class="ti ti-mail"></i><span class="psub">Email not verified</span></div>`}
+    ${p.emailNote?`<div class="pnote">${esc(p.emailNote)}</div>`:""}
+    ${p.angle?`<div class="pangle"><span class="lbl-mini">How to approach</span><br>${esc(p.angle)}</div>`:""}
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="minibtn" href="${esc(p.profile)}" target="_blank" rel="noopener"><i class="ti ti-external-link"></i>Official page</a>${hasProg?`<button class="minibtn" data-openprog="${esc(p.prog)}"><i class="ti ti-arrow-up-right"></i>Related programme</button>`:""}</div>
+    <div class="pfoot"><select data-pstatus title="Contact status">${opts}</select><input data-pnote placeholder="Notes: date sent, reply, next step" value="${esc(o.note||"")}">${o.date?`<span class="pnote">Emailed ${fmtDate(o.date)}</span>`:""}</div>
+  </div>`;}
+async function saveOutreach(){if(!sb)return;const{error}=await sb.from("profile").upsert({id:"outreach",data:outreach});if(error)toast("Couldn't save: "+error.message);}
+let pNoteT;
+$("#profsHost").addEventListener("change",e=>{const c=e.target.closest(".pcard");if(!c||!e.target.matches("[data-pstatus]"))return;const id=c.dataset.pid,v=e.target.value,o=Object.assign({},outreach[id]);o.status=v;if(v==="sent"&&!o.date)o.date=new Date().toISOString().slice(0,10);outreach[id]=o;saveOutreach();renderProfs();toast("Saved");});
+$("#profsHost").addEventListener("input",e=>{const c=e.target.closest(".pcard");if(!c||!e.target.matches("[data-pnote]"))return;const id=c.dataset.pid;outreach[id]=Object.assign({},outreach[id],{note:e.target.value});clearTimeout(pNoteT);pNoteT=setTimeout(()=>{saveOutreach();toast("Notes saved");},800);});
+$("#profsHost").addEventListener("click",e=>{let t;
+  if((t=e.target.closest("[data-copy]"))){const v=t.dataset.copy;(navigator.clipboard?navigator.clipboard.writeText(v):Promise.reject()).then(()=>toast("Email copied")).catch(()=>toast(v));return;}
+  if((t=e.target.closest("[data-openprog]"))){showTab("universities");openDetail(t.dataset.openprog);return;}});
+
+/* ============ plan: country guide and timeline ============ */
+function renderPlan(){const host=$("#planHost");if(!host)return;
+  const guide=PD.GUIDE.slice().sort((a,b)=>a.rank-b.rank).map(g=>{const cm=countryMeta(g.country);return `<div class="gcard" style="--rail:${cm.c}"><h3>${cm.f} ${esc(g.country)}</h3><div class="gh">${esc(g.headline)}</div><ul>${g.points.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`;}).join("");
+  const months=[];for(let y=2026,mo=11;!(y===2027&&mo===10);){months.push(y+"-"+String(mo).padStart(2,"0"));mo++;if(mo>12){mo=1;y++;}}
+  const nowYm=new Date().toISOString().slice(0,7);
+  const tl=months.map(ym=>{const dls=[];
+    unis.forEach(u=>{if(u.close_date&&u.close_date.slice(0,7)===ym)dls.push([u.close_date,(u.name||"")+" · "+(u.program||"")]);});
+    schols.forEach(x=>{if(x.deadline&&x.deadline.slice(0,7)===ym)dls.push([x.deadline,(x.name||"")+" (scholarship)"]);});
+    dls.sort((a,b)=>a[0].localeCompare(b[0]));
+    const label=new Date(ym+"-01T00:00:00").toLocaleDateString("en-GB",{month:"long",year:"numeric"});const tasks=PD.TASKS[ym]||[];
+    return `<div class="tlm${ym===nowYm?" now":""}"><h3>${label}${ym===nowYm?" · now":""}</h3>${tasks.length?`<ul>${tasks.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}${dls.length?`<span class="lbl-mini">Deadlines in your list</span>${dls.map(d=>`<div class="dl"><span>${esc(d[1])}</span><span>${fmtDate(d[0])}</span></div>`).join("")}`:""}</div>`;}).join("");
+  host.innerHTML=`<section><h2>How each country works for you</h2><p class="lead">Ordered by how realistic and affordable each route is for your profile, from pages read in November 2026.</p><div class="gcards">${guide}</div></section>
+  <section><h2>November 2026 to September 2027</h2><p class="lead">Preparation steps, with the deadlines of the programmes and scholarships in your list added automatically. Dates on entries marked "verify" follow last year's pattern.</p><div class="tl">${tl}</div></section>
+  <section><h2>Not researched yet</h2><ul class="nd">${PD.NOT_DONE.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></section>`;}
+
+/* ============ scholarship labels ============ */
+const SCLS={full:["Full funding","pill-ok"],waiver:["Tuition only","pill-info"],partial:["Partial","pill-warn"],small:["Small award","pill-slate"],research:["Not for a master's","pill-slate"]};
+const SPOT={strong:["Strong eligibility","pill-ok"],good:["Good potential","pill-ok"],moderate:["Moderate potential","pill-warn"],hard:["Highly competitive","pill-orange"],concern:["Eligibility concern","pill-bad"]};
+function schBadges(s){const mt=PD.SCH_META[s.id];if(!mt)return "";const out=[];
+  if(SCLS[mt.cls])out.push(`<span class="bdg ${SCLS[mt.cls][1]}">${SCLS[mt.cls][0]}</span>`);
+  if(SPOT[mt.pot])out.push(`<span class="bdg ${SPOT[mt.pot][1]}">${SPOT[mt.pot][0]}</span>`);
+  out.push(mt.bd==="yes"?'<span class="bdg pill-ok">Bangladesh eligible</span>':'<span class="bdg pill-slate">Bangladesh: confirm</span>');
+  return `<div class="badges">${out.join("")}</div>`;}
 
 /* ============ scholarships ============ */
 function renderSchols(){
@@ -1013,7 +1215,7 @@ function schCard(s){
   const opts=Object.keys(SCH_STATUS).map(k=>`<option value="${k}"${(s.status||"not_started")===k?" selected":""}>${SCH_STATUS[k].label}</option>`).join("");
   return `<div class="sch" data-id="${esc(s.id)}" style="--rail:${cm.c}">
     <div class="uni-head"><div style="min-width:0"><div class="flag"><span class="flagchip">${cm.f}</span>${esc(s.country||"")}${s.verify?' <span class="verify">verify</span>':""}</div><h3 style="font-size:15.5px;margin-top:4px">${esc(s.name||"")}</h3></div><span class="bdg ${st.cls}">${st.label}</span></div>
-    <div class="sch-cover">${esc(s.cover||"")}</div>
+    ${schBadges(s)}<div class="sch-cover">${esc(s.cover||"")}</div>
     <div class="runway-wrap rw-${wp.state}" style="padding-left:0;padding-right:0">
       <div class="runway-head">
         <span class="rw-date">${s.open_date?("Opens "+fmtDate(s.open_date)):" "}</span>
@@ -1037,7 +1239,7 @@ function renderDocs(){
 
 /* ============ profile ============ */
 function renderProfile(){
-  const p=profile||{};const countries=p.countries&&p.countries.length?p.countries:["Austria","Netherlands","Finland","Sweden","USA","Canada","Hungary"];
+  const p=profile||{};const countries=p.countries&&p.countries.length?p.countries:["Austria","USA","Canada","Australia","Sweden","Hungary","Netherlands"];
   $("#profHost").innerHTML=`
     <div class="card"><h3>Applicant profile</h3>
       <div class="prow"><span class="pl">Name</span><span class="pv">${esc(p.name||"Mohammed Asfakul Ghani")}</span></div>
@@ -1067,6 +1269,12 @@ function openUniModal(u){
   $("#uniOverlay").classList.add("open");
 }
 function closeUni(){$("#uniOverlay").classList.remove("open");}
+{const sb3=$("#syncSchBtn");if(sb3)sb3.onclick=importSchCatalog;}
+$("#fArea").innerHTML='<option value="all">All research areas</option>'+Object.keys(AREA).map(k=>`<option value="${k}">${AREA[k]}</option>`).join("");
+$("#fPArea").innerHTML=$("#fArea").innerHTML;
+$("#fFit").innerHTML='<option value="all">Any fit</option>'+Object.keys(FIT).map(k=>`<option value="${k}">${FIT[k][0]}</option>`).join("");
+$("#fPStatus").innerHTML='<option value="all">Any contact status</option>'+Object.keys(PSTATUS).map(k=>`<option value="${k}">${PSTATUS[k]}</option>`).join("");
+$("#fPCountry").innerHTML='<option value="all">All countries</option>'+[...new Set(PD.PROFS.map(p=>p.country))].sort().map(c=>`<option value="${c}">${c}</option>`).join("");
 $("#addUniBtn").onclick=()=>openUniModal(null);{const sb2=$("#syncBtn");if(sb2)sb2.onclick=importCatalog;}$("#uniClose").onclick=closeUni;$("#uniCancel").onclick=closeUni;
 $("#uniOverlay").addEventListener("click",e=>{if(e.target===$("#uniOverlay"))closeUni();});
 $("#uniSave").onclick=async()=>{
