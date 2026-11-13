@@ -404,5 +404,91 @@ GUIDE.forEach(g=>{
 });
 NOT_DONE.splice(0,NOT_DONE.length,"English minimums for programmes showing 'IELTS —' (the department page did not state them)","Visa fees, proof-of-funds amounts and living-cost estimates per country","Course-specific prerequisites for most Swedish programmes","Your individual IELTS band scores, which several programmes check (for example no band below 6.0)","The 2027/28 Stipendium Hungaricum call, which had not opened when checked");
 
+/* ---- United Kingdom (researched Nov 2026) ----
+   UK taught master's are one year and accept IELTS 6.5 and a 2:1 (your GPA
+   3.44 maps to a 2:1), with no GRE. Tuition for non-UK students is high
+   (roughly GBP 28,000-38,000), so the funded routes below matter most.
+   Both big funded routes (Commonwealth, Chevening) have CLOSED for 2027
+   entry and reopen in mid-2027 for 2028 entry. */
+const UK_CLOSED=" Timing, checked Nov 2026: the UK's funded routes (Commonwealth, Chevening) have closed for 2027 entry. They reopen around August-October 2027 for 2028 entry, so the UK is realistically a 2028 target with funding, or a self-funded master's in 2027.";
+function uk(id,name,program,city,o){return Object.assign({id,country:"UK",cc:"GB",name,program,degree:"Masters",intake:"Sept 2027",open_date:null,close_date:null,ielts:"6.5",eligibility:"match",priority:"low",verify:true,tuition:"Self-funded; see note"},o);}
+EXTRA.push(
+ uk("uk-surrey-ai","University of Surrey","MSc Artificial Intelligence","Guildford",{ielts:"6.5",eligibility:"match",priority:"medium",verify:false,tuition:"GBP 28,050/yr (with placement), 2025-26",
+  elig_note:"Good fit on entry. Checked Nov 2026: accepts a 2:2 (your 3.44 is above this), IELTS 6.5 with writing 6.0 and 5.5 in the other parts, no GRE. Tuition GBP 28,050/yr for the placement version. Self-funded unless you win a scholarship."+UK_CLOSED,
+  link:"https://www.surrey.ac.uk/postgraduate/artificial-intelligence-industrial-practice-msc",
+  requirements:["2:2 or above in CS / engineering / maths (you clear this)","IELTS 6.5; writing 6.0, others 5.5","No GRE","Apply early (rolling; closes when full)","Budget ~GBP 28,000 tuition + living costs"]}),
+ uk("uk-qmul-ai","Queen Mary University of London","MSc Artificial Intelligence","London",{eligibility:"match",priority:"medium",verify:false,tuition:"~GBP 31,000/yr (confirm on the course page)",
+  elig_note:"Good fit, and your industry years help. Checked Nov 2026: a 2:1 in EE/CS/maths, OR applicants with equivalent industrial experience are considered - your 5+ years is relevant. IELTS 6.5 (or TOEFL 92), no GRE. London living costs are high; self-funded unless a scholarship is won."+UK_CLOSED,
+  link:"https://www.prospects.ac.uk/universities/queen-mary-university-of-london-3860/computer-science-9562/courses/artificial-intelligence-122273",
+  requirements:["2:1 in EE/CS/maths, or strong industrial experience","IELTS 6.5 / TOEFL 92","No GRE","Apply early (rolling)","Budget for London tuition + living costs"]}),
+ uk("uk-glasgow-ds","University of Glasgow","MSc Data Science","Glasgow",{eligibility:"match",priority:"medium",verify:false,tuition:"~GBP 30,000/yr (confirm on the course page)",
+  elig_note:"Good fit. Checked Nov 2026: a 2:1 with computing as a major (50%+ computing in your last two years), IELTS 6.5 overall with writing 6.5 and no part below 6.0, no GRE. Strong systems and data research. Self-funded unless a scholarship is won."+UK_CLOSED,
+  link:"https://www.gla.ac.uk/postgraduate/taught/datascience/",
+  requirements:["2:1 with computing as a major","IELTS 6.5 overall; writing 6.5; no part below 6.0","No GRE","Apply early (rolling)","Budget for tuition + living costs"]}),
+ uk("uk-birmingham-aiml","University of Birmingham","MSc Artificial Intelligence and Machine Learning","Birmingham",{close_date:"2027-08-27",eligibility:"match",priority:"medium",verify:false,tuition:"~GBP 31,500/yr (confirm on the course page)",
+  elig_note:"Good fit. Checked Nov 2026: a 2:1 in a numerate discipline with a 2:1 average in maths-related modules, IELTS 6.5 with no band below 6.0, no GRE. Deadline 27 Aug 2027, but applications close once full - apply early. Self-funded unless a scholarship is won."+UK_CLOSED,
+  link:"https://www.birmingham.ac.uk/postgraduate/courses/taught/computer-science/artificial-intelligence",
+  requirements:["2:1 in a numerate discipline; 2:1 in maths modules","IELTS 6.5; no band below 6.0","No GRE","Apply by 27 Aug 2027 (closes earlier if full)","Budget for tuition + living costs"]}),
+ uk("uk-leeds-ai-online","University of Leeds","MSc Artificial Intelligence (online)","Leeds / online",{intake:"Jan / Mar / May 2027",eligibility:"match",priority:"medium",verify:false,tuition:"GBP 15,000 total (pay per module)",
+  elig_note:"Affordable fallback. Checked Nov 2026: this is the ONLINE MSc - GBP 15,000 in total (far below a campus master's), paid module by module, with Jan/Mar/May starts, a 2:1 numerate degree and IELTS 6.5 (no part below 6.0). Online study gives no student visa and no UK residence, so it does not open UK work or PhD routes the way an on-campus degree does. Leeds also runs an on-campus Advanced Computer Science (AI) master's.",
+  link:"https://courses.leeds.ac.uk/d995/artificial-intelligence-online-msc",
+  requirements:["2:1 in a numerate/computing discipline","IELTS 6.5; no part below 6.0","No GRE","GBP 15,000 total, paid per module","Note: online - no visa, no UK residence"]}),
+ uk("uk-southampton-ai","University of Southampton","MSc Artificial Intelligence","Southampton",{tuition:"~GBP 32,000/yr (confirm on the course page)",priority:"medium",
+  elig_note:"Strong research match: Southampton's ECS is a leader in agents, web science and distributed AI. Typical entry is a 2:1 in CS or a numerate subject with IELTS 6.5; confirm the exact figures on the course page. Self-funded unless a scholarship is won."+UK_CLOSED,
+  link:"https://www.southampton.ac.uk/courses/artificial-intelligence-masters-msc",
+  requirements:["2:1 in CS or a numerate subject (confirm)","IELTS 6.5 (confirm bands)","No GRE","Apply early (rolling)","Budget for tuition + living costs"]}),
+ uk("uk-sheffield-acs","University of Sheffield","MSc Advanced Computer Science","Sheffield",{tuition:"~GBP 30,000/yr (confirm on the course page)",priority:"low",
+  elig_note:"Checked only at a general level (Nov 2026): Sheffield normally asks for a 2:1 in computer science and IELTS 6.5, no GRE. A broad advanced-CS master's with AI, SE and systems options. Confirm the exact entry and fee on the course page. Self-funded unless a scholarship is won."+UK_CLOSED,
+  link:"https://www.sheffield.ac.uk/postgraduate/taught/courses/2027/advanced-computer-science-msc",
+  requirements:["2:1 in computer science (confirm)","IELTS 6.5 (confirm bands)","No GRE","Apply early (rolling)","Budget for tuition + living costs"]}),
+ uk("uk-lancaster-ds","Lancaster University","MSc Data Science","Lancaster",{eligibility:"match",priority:"low",tuition:"~GBP 27,000/yr (confirm on the course page)",
+  elig_note:"Lenient entry and strong systems research. Checked Nov 2026: accepts a 2:2 in any discipline with exposure to quantitative methods (you clear this). IELTS and the exact fee are not on the summary page - confirm both. Lancaster's school is strong in networked and distributed systems. Self-funded unless a scholarship is won."+UK_CLOSED,
+  link:"https://www.prospects.ac.uk/universities/lancaster-university-3806/computing-10859/courses/data-science-110681",
+  requirements:["2:2 in any discipline with quantitative exposure","IELTS (confirm the minimum)","No GRE","Apply early (rolling)","Budget for tuition + living costs"]}),
+ uk("uk-manchester-acs","University of Manchester","MSc Advanced Computer Science","Manchester",{tuition:"~GBP 35,000/yr (confirm on the course page)",priority:"low",
+  elig_note:"Checked only at a general level (Nov 2026): Manchester normally asks for a 2:1 in computer science and IELTS 6.5, no GRE, with named pathways in AI, software engineering and systems/software security. High tuition; self-funded unless a scholarship is won. Confirm entry and fee on the course page."+UK_CLOSED,
+  link:"https://www.manchester.ac.uk/study/masters/courses/list/",
+  requirements:["2:1 in computer science (confirm)","IELTS 6.5 (confirm bands)","No GRE","Apply early (rolling)","Budget ~GBP 35,000 tuition + living costs"]}),
+ uk("uk-nottingham-ml","University of Nottingham","MSc Machine Learning in Science","Nottingham",{tuition:"~GBP 30,000/yr (confirm on the course page)",priority:"low",
+  elig_note:"Checked only at a general level (Nov 2026): Nottingham normally asks for a 2:1 in a science/computing/maths subject and IELTS 6.5, no GRE. Confirm entry and fee on the course page. Self-funded unless a scholarship is won."+UK_CLOSED,
+  link:"https://www.nottingham.ac.uk/pgstudy/course/taught/machine-learning-in-science-msc",
+  requirements:["2:1 in science / computing / maths (confirm)","IELTS 6.5 (confirm bands)","No GRE","Apply early (rolling)","Budget for tuition + living costs"]}),
+ {id:"uk-commonwealth-phd",country:"UK",cc:"GB",name:"UK universities (Commonwealth PhD, LDC route)",program:"PhD - fully funded via the Commonwealth Scholarship",degree:"PhD",tuition:"Fully funded if awarded (fees + stipend + flights)",open_date:null,close_date:null,intake:"2028 (apply ~Oct 2027)",ielts:"6.5",eligibility:"match",priority:"high",verify:false,
+  elig_note:"A rare fully-funded, bachelor's-eligible PhD route - and you meet the core criteria. Checked Nov 2026 (CSC via KCL/Southampton): the Commonwealth PhD Scholarship for Least Developed Countries lists Bangladesh, and a 2:1 bachelor's is enough (no Master's needed). It funds fees, a monthly stipend and flights. Two caveats: the research must show development relevance (your bank-payments and fintech-infrastructure work can frame an AI-for-financial-inclusion or trustworthy-systems proposal), and you apply through a UK university plus your national nominating agency. The 2027 round closed ~20 Oct 2026, so this is a 2028-entry route - start lining up a supervisor now.",
+  link:"https://cscuk.fcdo.gov.uk/scholarships/commonwealth-phd-scholarships-for-least-developed-countries-and-fragile-and-conflict-affected-states/",
+  requirements:["Bangladesh citizen with a 2:1 bachelor's (you qualify; no Master's needed)","Frame research with clear development relevance","Secure a UK supervisor and a PhD place","Apply via the CSC + your national nominating agency","Next round opens ~2027 for 2028 entry","IELTS to the university's PhD minimum (usually 6.5)"]}
+);
+Object.assign(META,{
+ "uk-surrey-ai":m("Guildford","none","no","good",["ai","dist"],"course","confirm"),
+ "uk-qmul-ai":m("London","none","no","good",["ai","ds"],"course","confirm"),
+ "uk-glasgow-ds":m("Glasgow","none","no","good",["ds","ai","dist"],"course","confirm"),
+ "uk-birmingham-aiml":m("Birmingham","none","no","good",["ai"],"course","confirm"),
+ "uk-leeds-ai-online":m("Online","none","no","moderate",["ai"],"course","None"),
+ "uk-southampton-ai":m("Southampton","none","no","good",["ai","dist","se"],"course","confirm"),
+ "uk-sheffield-acs":m("Sheffield","none","no","moderate",["ai","se","dist"],"course","confirm"),
+ "uk-lancaster-ds":m("Lancaster","none","no","good",["ds","dist"],"course","confirm"),
+ "uk-manchester-acs":m("Manchester","none","no","moderate",["se","sec","dist"],"course","confirm"),
+ "uk-nottingham-ml":m("Nottingham","none","no","moderate",["ai","ds"],"course","confirm"),
+ "uk-commonwealth-phd":m("Various UK","full","no","good",["ai","dist","se"],"research","None","yes")
+});
+SCH_EXTRA.push(
+ {id:"sc-cw-phd",country:"UK",name:"Commonwealth PhD Scholarship (Least Developed Countries)",cover:"Fully funded UK PhD: fees, a monthly stipend and return flights. Bangladesh is on the eligible list and a 2:1 bachelor's qualifies (no Master's needed) - the strongest UK route for you. Research must show development relevance. Apply via a UK university plus your national nominating agency. The 2027 round closed ~20 Oct 2026; the next round opens around mid-2027 for 2028 entry.",open_date:null,deadline:null,link:"https://cscuk.fcdo.gov.uk/scholarships/commonwealth-phd-scholarships-for-least-developed-countries-and-fragile-and-conflict-affected-states/",verify:true},
+ {id:"sc-cw-masters",country:"UK",name:"Commonwealth Master's Scholarship",cover:"Fully funded one-year UK master's: tuition, a monthly living allowance and return travel. Bangladesh eligible; needs a 2:1 (or a 2:2 plus a postgraduate qualification). You apply to a UK master's AND through your national nominating agency in Bangladesh. The 2027 round closed ~20 Oct 2026; reopens around mid-2027 for 2028 entry.",open_date:null,deadline:null,link:"https://cscuk.fcdo.gov.uk/scholarships/commonwealth-masters-scholarships/",verify:true},
+ {id:"sc-cw-shared",country:"UK",name:"Commonwealth Shared Scholarship",cover:"Fully funded one-year UK master's for students from least-developed/low-income countries who could not otherwise afford it. Bangladesh eligible. You apply directly through a participating UK university alongside your master's application (no separate nominating agency). Usually closes around December for the following September.",open_date:null,deadline:null,link:"https://cscuk.fcdo.gov.uk/scholarships/commonwealth-shared-scholarships/",verify:true},
+ {id:"sc-chevening",country:"UK",name:"Chevening Scholarship",cover:"Fully funded one-year UK master's: tuition, a monthly stipend, flights and more. Needs 2,800 hours of work experience (you clear this easily) and a commitment to return home for two years. Highly competitive, with no subject or university limit. The 2027/28 round is CLOSED; the next round opens around August 2027 for 2028 entry.",open_date:null,deadline:null,link:"https://www.chevening.org/scholarship/bangladesh/",verify:true}
+);
+Object.assign(SCH_META,{
+ "sc-cw-phd":{bd:"yes",cls:"full",pot:"good"},
+ "sc-cw-masters":{bd:"yes",cls:"full",pot:"hard"},
+ "sc-cw-shared":{bd:"yes",cls:"full",pot:"good"},
+ "sc-chevening":{bd:"yes",cls:"full",pot:"good"}
+});
+GUIDE.forEach(g=>{if(g.country==="Australia")g.rank=7;if(g.country==="Netherlands")g.rank=8;});
+GUIDE.push({country:"UK",rank:6,headline:"Fully funded routes fit you, but 2027 deadlines have passed",
+ points:["The Commonwealth PhD for Least Developed Countries lists Bangladesh and accepts a 2:1 bachelor's with no Master's - a rare fully-funded bachelor's-to-PhD route. Research must show development relevance.","Chevening needs 2,800 work hours, which you clear; it funds a one-year master's. Commonwealth Master's and Shared scholarships also fund a master's in full.","All of these closed for 2027 entry (around Oct 2026). They reopen in mid-2027 for 2028 entry, so treat the UK as a 2028 funded target and line up a supervisor now.","Self-funded master's are one year but cost GBP 28,000-38,000; most accept IELTS 6.5 and a 2:1 (Surrey and Lancaster accept a 2:2), and none needs a GRE."]});
+TASKS["2027-08"]=["TU Wien non-EU window closes around 15 Jul (carried over)","Chevening 2028/29 opens around now - prepare your work-experience and leadership essays","Travel booking, insurance, final document copies for a 2027 start"];
+TASKS["2027-09"]=["JKU Linz deadline 5 Sep","Enrolment and arrival for a 2027 start","Commonwealth 2028 applications open around now: line up a UK supervisor for the PhD route"];
+NOT_DONE.push("UK professors to contact (none added yet - the official profile pages were not reachable this round)","Exact UK tuition and IELTS bands for Southampton, Sheffield, Manchester and Nottingham (shown as 'confirm')","The Bangladesh national nominating agency for Commonwealth scholarships, and its own earlier deadline");
+
 window.PD={RETIRE,SCH_RETIRE,PATCH,EXTRA,META,PROFS,SCH_PATCH,SCH_EXTRA,SCH_META,GUIDE,NOT_DONE,TASKS};
 })();
