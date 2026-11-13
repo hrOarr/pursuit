@@ -490,5 +490,81 @@ TASKS["2027-08"]=["TU Wien non-EU window closes around 15 Jul (carried over)","C
 TASKS["2027-09"]=["JKU Linz deadline 5 Sep","Enrolment and arrival for a 2027 start","Commonwealth 2028 applications open around now: line up a UK supervisor for the PhD route"];
 NOT_DONE.push("UK professors to contact (none added yet - the official profile pages were not reachable this round)","Exact UK tuition and IELTS bands for Southampton, Sheffield, Manchester and Nottingham (shown as 'confirm')","The Bangladesh national nominating agency for Commonwealth scholarships, and its own earlier deadline");
 
+/* ---- China (researched Nov 2026) ----
+   The Chinese Government Scholarship (CSC) fully funds a master's: tuition, a
+   free dorm or housing subsidy, a monthly stipend (CNY 3,000 master's /
+   CNY 3,500 PhD) and medical insurance. English-taught CS/AI programmes at top
+   universities accept IELTS 6.0 (your 6.5 clears it) and need no GRE. Unlike
+   the UK, the 2027 round is OPEN now (CSC batches Nov 2026 - Feb 2027).
+   Two things to know: for computer science you normally must get a supervisor's
+   acceptance letter BEFORE you apply, and most PhDs require a master's first
+   (direct bachelor-to-PhD exists only at some universities, e.g. SJTU). */
+const CN_FUND="Fully funded via CSC / university scholarship: tuition + free dorm or subsidy + CNY 3,000/mo stipend + insurance";
+const CN_SUP=" For computer science you must normally secure a supervisor's acceptance (pre-admission) letter before applying - email potential supervisors now. English-taught CS is offered at top universities but is less common than in Europe, so confirm the specific programme is taught in English.";
+const CN_REQ_MS=["Bachelor's in CS or related; under 35 (CSC master's age limit)","IELTS 6.0+ (your 6.5 clears it); no GRE","Secure a supervisor's acceptance letter first (CS requirement)","Apply in the CSC rounds (Nov 2026 - Feb 2027)","Transcripts, study plan, two recommendation letters","Medical check; CNY ~800 application fee at some universities"];
+function cn(id,name,program,city,fit,areas,o){return Object.assign({id,country:"China",cc:"CN",name,program,degree:"Masters",intake:"Sept 2027",open_date:"2026-11-05",close_date:null,ielts:"6.0",eligibility:"match",priority:"medium",verify:true,tuition:CN_FUND,
+  elig_note:(o&&o._note?o._note:"")+" CSC fully funds this (tuition + free dorm + CNY 3,000/mo + insurance); you qualify (bachelor's, under 35)."+CN_SUP,
+  link:o&&o.link||"https://www.campuschina.org/",requirements:CN_REQ_MS},o&&o.extra||{});}
+EXTRA.push(
+ cn("cn-sjtu-cs","Shanghai Jiao Tong University","MSc Computer Science and Technology","Shanghai","good",["ai","dist","se"],
+  {close_date:"2027-02-15",verify:false,link:"https://en.sjtu.edu.cn/study-sjtu/prospective/degree-programs/271",
+   _note:"Strong fit and fully verified (Nov 2026): a top-3 Chinese CS school. Applications open 5 Nov 2026; CSC via the university closes 15 Dec (round 1) and 15 Feb 2027 (final); SJTU/Shanghai scholarships 31 Mar; self-funded 31 May. The School of Computer Science requires a supervisor's Letter of Intent for both master's and PhD. CNY 800 application fee."}),
+ cn("cn-zju-cs","Zhejiang University","MSc Computer Science and Technology","Hangzhou","good",["ai","fl","dist"],
+  {_note:"Good fit: one of China's strongest CS and AI schools, with major federated-learning and systems groups - close to your interests. Dates follow the usual CSC pattern; confirm on the ZJU international admissions site.",link:"https://iczu.zju.edu.cn/admissionsen/"}),
+ cn("cn-ustc-cs","University of Science and Technology of China","MSc Computer Science and Technology","Hefei","good",["ai","ds","dist"],
+  {_note:"Good fit: elite research university, strong in AI and data mining.",link:"https://en.ustc.edu.cn/"}),
+ cn("cn-hit-cs","Harbin Institute of Technology","MSc Computer Science and Technology","Harbin","good",["ai","se","dist"],
+  {verify:false,_note:"Good fit, English requirement verified (Nov 2026): HIT accepts IELTS 6.0 for English-taught programmes. A top engineering university, strong in CS, NLP and robotics. Confirm the CS programme is English-taught and the CSC deadline on the HIT international site.",link:"https://en.hit.edu.cn/"}),
+ cn("cn-buaa-cs","Beihang University (BUAA)","MSc Computer Science and Technology","Beijing","good",["ai","dist","se"],
+  {open_date:"2026-11-01",close_date:"2027-01-22",verify:false,link:"https://is.buaa.edu.cn/en/",
+   _note:"Good fit, fully verified (Nov 2026): CSC High-level Postgraduate Program. IELTS 6.0 / TOEFL 90; GRE recommended if available. Applications open 1 Nov 2026 with batch deadlines 25 Nov, 28 Dec and 22 Jan 2027. A supervisor pre-admission letter is required and the study plan must be signed by the supervisor."}),
+ cn("cn-hust-cs","Huazhong University of Science and Technology","MSc Computer Science and Technology","Wuhan","good",["dist","ai","se"],
+  {_note:"Good fit: strong systems, cloud and data research.",link:"http://ipgs.hust.edu.cn/"}),
+ cn("cn-uestc-ai","University of Electronic Science and Technology of China","MSc Artificial Intelligence","Chengdu","good",["ai","genai","sec"],
+  {_note:"Good fit: a specialist electronics/CS university with strong AI and security groups.",link:"https://en.uestc.edu.cn/"}),
+ cn("cn-tongji-cs","Tongji University","MSc Computer Science and Technology","Shanghai","moderate",["se","ai","ds"],
+  {_note:"Tongji runs English-taught engineering programmes and is well set up for international students.",link:"https://en.tongji.edu.cn/"}),
+ cn("cn-tsinghua-ai","Tsinghua University","MSc / PhD Artificial Intelligence","Beijing","reach",["ai","genai","rl"],
+  {eligibility:"stretch",priority:"low",_note:"Reach: China's top university and one of the best AI schools in the world - admission is extremely competitive. Worth one ambitious application if a supervisor is interested.",link:"https://www.tsinghua.edu.cn/en/"}),
+ {id:"cn-sjtu-phd",country:"China",cc:"CN",name:"Shanghai Jiao Tong University",program:"PhD Computer Science (direct entry possible)",degree:"PhD",intake:"Sept 2027",open_date:"2026-11-05",close_date:"2027-02-15",ielts:"6.0",eligibility:"caution",priority:"medium",verify:false,tuition:CN_FUND.replace("3,000","3,500"),
+  elig_note:"One of the few Chinese PhDs you could enter directly from a bachelor's: SJTU states that some schools accept bachelor's holders for direct entry to doctoral study. Verified Nov 2026. CSC fully funds it (tuition + dorm + CNY 3,500/mo + insurance), IELTS 6.0, under 40. You must obtain a supervisor's Letter of Intent from the School of Computer Science before applying, and direct entry is competitive - a strong supervisor match matters most. CSC via the university closes 15 Feb 2027."+CN_SUP,
+  link:"https://en.sjtu.edu.cn/study-sjtu/prospective/degree-programs/271",
+  requirements:["Bachelor's in CS (direct-entry PhD) or a master's; under 40","IELTS 6.0+; no GRE","Supervisor's Letter of Intent (required, School of CS)","Research/study plan signed by the supervisor","Apply by 15 Feb 2027 (CSC via university)","Transcripts, two recommendation letters"]},
+ {id:"cn-zju-phd",country:"China",cc:"CN",name:"Zhejiang University",program:"PhD Computer Science",degree:"PhD",intake:"Sept 2027",open_date:null,close_date:null,ielts:"6.0",eligibility:"stretch",priority:"low",verify:true,tuition:CN_FUND.replace("3,000","3,500"),
+  elig_note:"Usually requires a master's, so this is most likely a step after a funded master's - but ZJU has outstanding federated-learning and systems groups, the closest match in China to your work. CSC-funded if admitted. Confirm whether direct bachelor entry is possible and secure a supervisor first."+CN_SUP,
+  link:"https://iczu.zju.edu.cn/admissionsen/",
+  requirements:["Master's in CS (direct bachelor entry unlikely here - confirm)","IELTS 6.0+; no GRE","Secure a supervisor first","Research plan","Apply in the CSC rounds (Dec 2026 - Feb 2027)","Transcripts, recommendation letters"]}
+);
+Object.assign(META,{
+ "cn-sjtu-cs":m("Shanghai","full","no","good",["ai","dist","se"],"thesis","CNY 800"),
+ "cn-zju-cs":m("Hangzhou","full","no","good",["ai","fl","dist"],"thesis",""),
+ "cn-ustc-cs":m("Hefei","full","no","good",["ai","ds","dist"],"thesis",""),
+ "cn-hit-cs":m("Harbin","full","no","good",["ai","se","dist"],"thesis",""),
+ "cn-buaa-cs":m("Beijing","full","opt","good",["ai","dist","se"],"thesis",""),
+ "cn-hust-cs":m("Wuhan","full","no","good",["dist","ai","se"],"thesis",""),
+ "cn-uestc-ai":m("Chengdu","full","no","good",["ai","genai","sec"],"thesis",""),
+ "cn-tongji-cs":m("Shanghai","full","no","moderate",["se","ai","ds"],"thesis",""),
+ "cn-tsinghua-ai":m("Beijing","full","no","reach",["ai","genai","rl"],"thesis",""),
+ "cn-sjtu-phd":m("Shanghai","full","no","moderate",["ai","dist","se"],"research","CNY 800","exc"),
+ "cn-zju-phd":m("Hangzhou","full","no","later",["fl","ai","dist"],"research","","ms")
+});
+SCH_EXTRA.push(
+ {id:"sc-csc",country:"China",name:"Chinese Government Scholarship (CSC)",cover:"Fully funds a master's or PhD: tuition, a free dormitory or housing subsidy, a monthly stipend (CNY 3,000 master's / CNY 3,500 PhD) and medical insurance. Bangladesh participates heavily. Two routes: Type A through the Bangladesh government channel (via the embassy/ministry), or Type B directly through the university, which nominates you. For CS you normally need a supervisor's acceptance letter first. Master's needs a bachelor's (age <35); PhD normally needs a master's (age <40), with direct bachelor entry only at some universities. 2027 rounds run Nov 2026 - Feb 2027.",open_date:"2026-11-01",deadline:"2027-02-15",link:"https://www.campuschina.org/",verify:true},
+ {id:"sc-cn-univ",country:"China",name:"University & provincial scholarships (SJTU, Shanghai Govt, etc.)",cover:"If the CSC round closes or is missed, universities run their own full and partial scholarships (e.g. SJTU Scholarship, Shanghai Government Scholarship) on later deadlines - SJTU's is 31 Mar 2027. Coverage ranges from a full package to a tuition waiver only, so check each award. A strong supervisor backing you is the key factor.",open_date:null,deadline:"2027-03-31",link:"https://en.sjtu.edu.cn/study-sjtu/prospective/degree-programs/271",verify:true}
+);
+Object.assign(SCH_META,{
+ "sc-csc":{bd:"yes",cls:"full",pot:"good"},
+ "sc-cn-univ":{bd:"yes",cls:"full",pot:"moderate"}
+});
+GUIDE.forEach(g=>{if(["Hungary","Sweden","Canada","UK","Australia","Netherlands"].includes(g.country))g.rank+=1;});
+GUIDE.push({country:"China",rank:3,headline:"Fully funded, IELTS 6.0, and open for 2027 now",
+ points:["The Chinese Government Scholarship fully funds a master's - tuition, a free dorm, CNY 3,000/month and insurance - and you qualify (bachelor's, under 35).","English-taught CS/AI programmes at top universities accept IELTS 6.0 (your 6.5 clears it) and need no GRE. 2027 applications are open now (CSC batches Nov 2026 - Feb 2027).","For computer science you normally need a supervisor's acceptance letter before applying - email supervisors now. A PhD usually needs a master's first; direct bachelor-to-PhD exists only at some universities (e.g. SJTU).","China leads the world in federated-learning research (your project area), so the research match is strong - especially at Zhejiang and SJTU."]});
+TASKS["2026-11"]=(TASKS["2026-11"]||[]).concat(["China: CSC applications open (SJTU 5 Nov, Beihang 1 Nov) - email CS supervisors now for an acceptance letter","Beihang CSC batch deadline 25 Nov"]);
+TASKS["2026-12"]=(TASKS["2026-12"]||[]).concat(["China: SJTU CSC round 1 by 15 Dec; Beihang batch 28 Dec"]);
+TASKS["2027-01"]=(TASKS["2027-01"]||[]).concat(["China: Beihang final CSC batch 22 Jan"]);
+TASKS["2027-02"]=(TASKS["2027-02"]||[]).concat(["China: SJTU final CSC deadline 15 Feb"]);
+TASKS["2027-03"]=(TASKS["2027-03"]||[]).concat(["China: SJTU/Shanghai university scholarships 31 Mar (fallback if you missed the CSC round)"]);
+NOT_DONE.push("The exact list of English-taught CS/AI programmes at each Chinese university (confirm the programme is in English)","Per-university IELTS confirmation in China beyond Beihang and HIT (IELTS 6.0 shown as the common bar)","China professors to contact, and the Bangladesh CSC Type A government channel");
+
 window.PD={RETIRE,SCH_RETIRE,PATCH,EXTRA,META,PROFS,SCH_PATCH,SCH_EXTRA,SCH_META,GUIDE,NOT_DONE,TASKS};
 })();
