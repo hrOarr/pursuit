@@ -930,7 +930,7 @@ function fmtDate(d){if(!d)return "—";const dt=new Date(d+"T00:00:00");if(isNaN
 function closeClass(n){if(n==null)return "dl-ok";if(n<0)return "dl-soon";if(n<=30)return "dl-soon";if(n<=75)return "dl-near";return "dl-ok";}
 function closeText(n){if(n==null)return "No date";if(n<0)return "Closed";if(n===0)return "Closes today";return "Closes in "+n+"d";}
 function openText(n){if(n==null)return "";if(n>0)return "Opens in "+n+"d";return "Open now";}
-const COUNTRY={"Austria":{f:"🇦🇹",c:"#d6453f"},"Netherlands":{f:"🇳🇱",c:"#e8820c"},"Finland":{f:"🇫🇮",c:"#4a7fe0"},"Sweden":{f:"🇸🇪",c:"#d9a521"},"USA":{f:"🇺🇸",c:"#3b5bd0"},"Canada":{f:"🇨🇦",c:"#e0564f"},"Hungary":{f:"🇭🇺",c:"#2f9e6b"},"UK":{f:"🇬🇧",c:"#2e5090"},"China":{f:"🇨🇳",c:"#d8332a"},"Australia":{f:"🇦🇺",c:"#15887a"},"EU-wide":{f:"🇪🇺",c:"#6366e0"},"Germany":{f:"🇩🇪",c:"#556070"}};
+const COUNTRY={"Austria":{f:"🇦🇹",c:"#d6453f"},"Netherlands":{f:"🇳🇱",c:"#e8820c"},"Finland":{f:"🇫🇮",c:"#4a7fe0"},"Sweden":{f:"🇸🇪",c:"#d9a521"},"USA":{f:"🇺🇸",c:"#3b5bd0"},"Canada":{f:"🇨🇦",c:"#e0564f"},"Hungary":{f:"🇭🇺",c:"#2f9e6b"},"UK":{f:"🇬🇧",c:"#2e5090"},"China":{f:"🇨🇳",c:"#d8332a"},"France":{f:"🇫🇷",c:"#334db3"},"Australia":{f:"🇦🇺",c:"#15887a"},"EU-wide":{f:"🇪🇺",c:"#6366e0"},"Germany":{f:"🇩🇪",c:"#556070"}};
 function countryMeta(name){return COUNTRY[name]||{f:"🌍",c:"var(--accent)"};}
 function winProgress(p){
   const o=daysLeft(p.open_date),c=daysLeft(p.close_date);

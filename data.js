@@ -566,5 +566,76 @@ TASKS["2027-02"]=(TASKS["2027-02"]||[]).concat(["China: SJTU final CSC deadline 
 TASKS["2027-03"]=(TASKS["2027-03"]||[]).concat(["China: SJTU/Shanghai university scholarships 31 Mar (fallback if you missed the CSC round)"]);
 NOT_DONE.push("The exact list of English-taught CS/AI programmes at each Chinese university (confirm the programme is in English)","Per-university IELTS confirmation in China beyond Beihang and HIT (IELTS 6.0 shown as the common bar)","China professors to contact, and the Bangladesh CSC Type A government channel");
 
+/* ---- France (researched Nov 2026) ----
+   France's draw is cheap public tuition (about EUR 3,770/yr for non-EU
+   master's, and many universities or scholarships waive it to the EUR 243 EU
+   rate), strong AI research (the 3IA institutes), English-taught CS/AI master's
+   at the better schools, IELTS 6.5 and no GRE. The catch: the flagship Eiffel
+   scholarship caps master's applicants at about 25, so with 5+ years of work
+   you are most likely over the limit - university/IDEX scholarships are the
+   realistic aid, and a French PhD is a salaried contract that needs a master's. */
+const FR_TUIT="~EUR 3,770/yr non-EU (often waived to EUR 243 by the university or a scholarship)";
+const FR_NOTE=" Checked Nov 2026: French public tuition for non-EU master's is about EUR 3,770/yr, and many universities or scholarships reduce it to the EUR 243 EU rate - far cheaper than the UK or Australia. Apply through Campus France 'Etudes en France' (Bangladesh); the 2027 round runs roughly Oct 2026 - Jan 2027. Eiffel master's is age-capped at ~25 (likely excludes you); university/IDEX scholarships are the realistic aid.";
+const FR_REQ=["Bachelor's in CS/engineering with maths & programming","IELTS 6.5 (B2); no GRE","Apply via Campus France 'Etudes en France' (Bangladesh)","Target a university/IDEX scholarship (Eiffel master's is age-capped ~25)","Transcripts, CV, motivation letter","Budget living costs; tuition is low or waived"];
+function fr(id,name,program,city,fit,areas,o){return Object.assign({id,country:"France",cc:"FR",name,program,degree:"Masters",intake:"Sept 2027",open_date:null,close_date:null,ielts:"6.5",eligibility:"match",priority:"medium",verify:true,tuition:FR_TUIT,
+  elig_note:(o&&o._note?o._note:"")+FR_NOTE,link:o&&o.link||"https://www.campusfrance.org/en",requirements:FR_REQ},o&&o.extra||{});}
+EXTRA.push(
+ fr("fr-grenoble-mosig","Universite Grenoble Alpes","MSc Informatics (MoSIG)","Grenoble","good",["ai","dist","se"],
+  {verify:false,eligibility:"match",priority:"high",link:"https://mosig.imag.fr/MainEn/Admissions",
+   _note:"Strong fit and verified (Nov 2026): a leading English-taught MSc in Informatics, IELTS 6.5 (TOEFL 100), for a BSc/BEng with computing and solid programming. Grenoble's LIG lab is strong in distributed systems, ML and HCI. IDEX master's scholarships (EUR 6,000-11,000/yr) are open to international students and are not as age-restricted as Eiffel."}),
+ fr("fr-parissaclay-ai","Universite Paris-Saclay","M2 Artificial Intelligence","Paris-Saclay","good",["ai","rl","genai"],
+  {priority:"high",link:"https://www.universite-paris-saclay.fr/en/education/master/artificial-intelligence",
+   _note:"Strong fit: Paris-Saclay is France's top-ranked university and its M2 AI is taught in English with leading ML/RL labs (Inria, LISN). Competitive. IDEX international master's scholarships available (not age-capped like Eiffel)."}),
+ fr("fr-ipparis-ai","Institut Polytechnique de Paris","MSc Artificial Intelligence / Data & AI","Palaiseau","reach",["ai","ds","genai"],
+  {eligibility:"caution",priority:"low",link:"https://www.ip-paris.fr/en/education/masters",
+   _note:"Reach: IP Paris (Ecole Polytechnique, Telecom Paris) runs prestigious English-taught MSc programmes in AI and Data & AI - very competitive, and the MSc track can carry higher tuition than a public master's. Excellent research and industry links."}),
+ fr("fr-eurecom-ds","EURECOM (via IP Paris / Telecom Paris)","MSc Data Science & AI","Sophia Antipolis","good",["ds","ai","sec"],
+  {link:"https://www.eurecom.fr/en/teaching/master-science-msc",
+   _note:"Good fit: EURECOM is a small, fully English-taught, very international graduate school on the Riviera tech park, strong in data science, security and communications. Confirm the exact fee and IELTS on the course page."}),
+ fr("fr-cotedazur-ds","Universite Cote d'Azur","MSc Data Science & AI","Nice","good",["ai","ds"],
+  {link:"https://univ-cotedazur.eu/msc/data-science-and-artificial-intelligence",
+   _note:"Good fit: an English-taught MSc attached to the 3IA Cote d'Azur institute (a national AI centre). MSc scholarships are offered on merit. Confirm the IELTS minimum on the course page."}),
+ fr("fr-sorbonne-cs","Sorbonne Universite","MSc Computer Science (AI / Data)","Paris","moderate",["ai","ds","dist"],
+  {_note:"Sorbonne's CS master's (tracks such as DAC data-science and ANDROIDE for agents/decision) is well regarded; several M2 tracks are English-taught while M1 can be partly in French. Confirm the language and IELTS for your track.",link:"https://sciences.sorbonne-universite.fr/en"}),
+ fr("fr-bordeaux-cs","Universite de Bordeaux","MSc Computer Science","Bordeaux","good",["dist","se","ai"],
+  {_note:"A solid, less-competitive public option with low tuition; some CS master's tracks are English-taught. Confirm the language and IELTS on the course page.",link:"https://www.u-bordeaux.fr/en/education"}),
+ fr("fr-lille-ds","Universite de Lille","MSc Data Science / Machine Learning","Lille","good",["ai","ds"],
+  {_note:"Lille has strong ML research (Inria) and English-taught data-science/ML master's tracks. Confirm the language and IELTS on the course page.",link:"https://www.univ-lille.fr/en/"}),
+ fr("fr-telecom-sudparis","Telecom SudParis (IP Paris)","MSc Computer Science / Distributed Systems","Evry","good",["dist","se","sec"],
+  {_note:"An engineering school strong in distributed systems, cloud and networks - close to your production-systems background. English-taught MSc tracks; confirm the fee and IELTS.",link:"https://www.telecom-sudparis.eu/en/"}),
+ {id:"fr-doctoral-phd",country:"France",cc:"FR",name:"French universities (doctoral contract)",program:"PhD - salaried doctoral contract (CS/AI)",degree:"PhD",intake:"Rolling / advertised positions",open_date:null,close_date:null,ielts:"6.5",eligibility:"stretch",priority:"low",verify:false,tuition:"Salaried: ~EUR 2,044/mo gross (contrat doctoral), 3 years",
+  elig_note:"A French PhD is a salaried job (the contrat doctoral, ~EUR 2,044/month gross for 3 years) and needs a completed master's - so it is a step after an MSc. Positions are advertised on lab, ecole-doctorale and ABG/EURAXESS sites, and the 3IA AI institutes (MIAI Grenoble, ANITI Toulouse, PRAIRIE Paris, 3IA Cote d'Azur) fund AI doctorates. The Eiffel PhD scholarship (age <=30) can also fund a doctorate. Secure a supervisor first.",
+  link:"https://abg.asso.fr/en",
+  requirements:["Completed master's in CS (required)","Find a supervisor / advertised funded position","IELTS ~6.5; no GRE","Research proposal","Apply to specific positions (ABG, EURAXESS, lab sites)","Eiffel PhD (<=30) or 3IA funding are options"]}
+);
+Object.assign(META,{
+ "fr-grenoble-mosig":m("Grenoble","schol","no","good",["ai","dist","se"],"thesis","EUR 243-3,770"),
+ "fr-parissaclay-ai":m("Paris-Saclay","schol","no","good",["ai","rl","genai"],"thesis","EUR 243-3,770"),
+ "fr-ipparis-ai":m("Palaiseau","competitive","no","reach",["ai","ds","genai"],"course","varies"),
+ "fr-eurecom-ds":m("Sophia Antipolis","competitive","no","good",["ds","ai","sec"],"thesis","confirm"),
+ "fr-cotedazur-ds":m("Nice","schol","no","good",["ai","ds"],"thesis","confirm"),
+ "fr-sorbonne-cs":m("Paris","lowcost","no","moderate",["ai","ds","dist"],"thesis","EUR 243-3,770"),
+ "fr-bordeaux-cs":m("Bordeaux","lowcost","no","good",["dist","se","ai"],"thesis","EUR 243-3,770"),
+ "fr-lille-ds":m("Lille","lowcost","no","good",["ai","ds"],"thesis","EUR 243-3,770"),
+ "fr-telecom-sudparis":m("Evry","competitive","no","good",["dist","se","sec"],"thesis","confirm"),
+ "fr-doctoral-phd":m("Various France","position","no","later",["dist","ai","se"],"position","","ms")
+});
+SCH_EXTRA.push(
+ {id:"sc-eiffel",country:"France",name:"France Excellence Eiffel Scholarship",cover:"Monthly allowance (about EUR 1,200 master's / EUR 2,100 PhD) plus travel, health cover and housing help; public tuition is separately waived. AGE CAP: master's applicants up to ~25 (with 5+ years' experience you are most likely over this), PhD up to ~30. You cannot apply yourself - a French institution nominates you, so contact its international office first. Institution deadlines fall around Nov-Dec; Campus France closes 8 Jan 2027.",open_date:null,deadline:"2027-01-08",link:"https://www.campusfrance.org/en/eiffel-scholarship-program-of-excellence",verify:true},
+ {id:"sc-fr-idex",country:"France",name:"University / IDEX excellence scholarships",cover:"The realistic aid for you: excellence/IDEX master's scholarships at Grenoble Alpes, Paris-Saclay, Cote d'Azur and others - typically EUR 6,000-12,000/yr - awarded on merit and generally NOT age-capped like Eiffel. Some also waive tuition. You usually apply to the programme and the scholarship together. Deadlines vary by university (often Jan-Mar).",open_date:null,deadline:null,link:"https://www.univ-grenoble-alpes.fr/menu-principal/international/fund-your-studies/",verify:true},
+ {id:"sc-fr-doctoral",country:"France",name:"Doctoral contract & 3IA AI funding (PhD)",cover:"A French PhD is a salaried contract (~EUR 2,044/mo gross, 3 years), so it is itself the funding - but it needs a master's first. The four 3IA AI institutes (MIAI Grenoble, ANITI Toulouse, PRAIRIE Paris, 3IA Cote d'Azur) fund AI doctorates; positions are advertised on ABG and EURAXESS. The Eiffel PhD scholarship (age <=30) is an additional route.",open_date:null,deadline:null,link:"https://abg.asso.fr/en",verify:true}
+);
+Object.assign(SCH_META,{
+ "sc-eiffel":{bd:"yes",cls:"full",pot:"concern"},
+ "sc-fr-idex":{bd:"yes",cls:"partial",pot:"good"},
+ "sc-fr-doctoral":{bd:"yes",cls:"full",pot:"good"}
+});
+GUIDE.forEach(g=>{if(["UK","Australia","Netherlands"].includes(g.country))g.rank+=1;});
+GUIDE.push({country:"France",rank:7,headline:"Cheap public master's and strong AI, but the big scholarship is age-capped",
+ points:["Public tuition is about EUR 3,770/yr for non-EU master's, and universities or scholarships often waive it to EUR 243 - far cheaper than the UK or Australia. English-taught CS/AI master's, IELTS 6.5, no GRE.","The Eiffel master's scholarship caps applicants at ~25, so with 5+ years' work you are most likely over it. University/IDEX scholarships (EUR 6,000-12,000/yr, merit-based, not age-capped) are the realistic aid.","France is an AI powerhouse via the four 3IA institutes (Grenoble, Toulouse, Paris, Cote d'Azur). Grenoble MoSIG and Paris-Saclay are the strongest English-taught entry points.","A PhD is a salaried doctoral contract that needs a master's first; the Eiffel PhD (age <=30) and 3IA funding can support it. Apply through Campus France for a 2027 start (closes ~Jan 2027)."]});
+TASKS["2026-12"]=(TASKS["2026-12"]||[]).concat(["France: contact university international offices (Eiffel nominations close ~Nov-Dec); open your Campus France 'Etudes en France' file"]);
+TASKS["2027-01"]=(TASKS["2027-01"]||[]).concat(["France: Campus France / Eiffel deadline 8 Jan; start university/IDEX scholarship applications"]);
+NOT_DONE.push("Per-programme IELTS and tuition in France beyond Grenoble MoSIG (shown as 'confirm'); which M2 tracks are fully English-taught","France professors to contact, and the exact Campus France Bangladesh timeline and fees");
+
 window.PD={RETIRE,SCH_RETIRE,PATCH,EXTRA,META,PROFS,SCH_PATCH,SCH_EXTRA,SCH_META,GUIDE,NOT_DONE,TASKS};
 })();
