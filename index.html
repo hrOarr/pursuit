@@ -727,8 +727,8 @@ const SCH_CATALOG=[
 /* ============ state ============ */
 /* ---- merge researched data (data.js) into the recommended catalog ---- */
 const PD=window.PD||{PATCH:{},EXTRA:[],META:{},PROFS:[],SCH_PATCH:{},SCH_EXTRA:[],SCH_META:{},GUIDE:[],NOT_DONE:[],TASKS:{}};
-CATALOG.forEach(c=>{const p=PD.PATCH[c.id];if(!p)return;Object.keys(p).forEach(k=>{if(k!=="_noteAdd")c[k]=p[k];});if(p._noteAdd)c.elig_note=(c.elig_note||"")+p._noteAdd;});
 PD.EXTRA.forEach(e=>{if(!CATALOG.some(c=>c.id===e.id))CATALOG.push(e);});
+CATALOG.forEach(c=>{const p=PD.PATCH[c.id];if(!p)return;Object.keys(p).forEach(k=>{if(k!=="_noteAdd")c[k]=p[k];});if(p._noteAdd)c.elig_note=(c.elig_note||"")+p._noteAdd;});
 SCH_CATALOG.forEach(c=>{const p=PD.SCH_PATCH[c.id];if(p)Object.assign(c,p);});
 PD.SCH_EXTRA.forEach(e=>{if(!SCH_CATALOG.some(c=>c.id===e.id))SCH_CATALOG.push(e);});
 function appliedDate(u){return (u&&u.docs&&u.docs.applied_date)||(u&&u.applied_date)||null;}

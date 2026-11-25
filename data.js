@@ -637,5 +637,74 @@ TASKS["2026-12"]=(TASKS["2026-12"]||[]).concat(["France: contact university inte
 TASKS["2027-01"]=(TASKS["2027-01"]||[]).concat(["France: Campus France / Eiffel deadline 8 Jan; start university/IDEX scholarship applications"]);
 NOT_DONE.push("Per-programme IELTS and tuition in France beyond Grenoble MoSIG (shown as 'confirm'); which M2 tracks are fully English-taught","France professors to contact, and the exact Campus France Bangladesh timeline and fees");
 
+
+/* ---- Austria deep-dive (verified from official sites, Nov 2026) ----
+   Scope: all public universities with English-taught CS/AI/DS master's,
+   filtered to the user's English level (IELTS 6.5 overall, no band below
+   6.5). Both winter (starts October) and summer (starts March) intakes
+   checked, with the non-EU ("third-country") deadlines, which differ from
+   the EU/EEA ones. Tuition: Bangladeshi citizens are on Austria's fee-
+   exemption list, so public-university tuition is only the ~EUR 26/sem
+   student-union (OeH) fee.
+   MATCH (IELTS 6.5 / CEFR B2): TU Wien, University of Vienna, JKU Linz,
+   University of Innsbruck, University of Klagenfurt (AAU).
+   EXCLUDED (need IELTS 7.0 / CEFR C1): TU Graz, University of Graz,
+   University of Salzburg (PLUS). */
+
+function atAdd(id,txt){ // append to an existing PATCH note, else start one
+  const p=PATCH[id]||(PATCH[id]={});
+  p._noteAdd=(p._noteAdd||"")+txt;
+}
+function atSet(id,obj){ Object.assign(PATCH[id]||(PATCH[id]={}),obj); }
+
+// ---- TU Wien (IELTS 6.5 overall, no band minimum, CEFR B2; both intakes) ----
+const TUW_DL=" Deadlines, verified Nov 2026 on tuwien.at (non-EU third countries): winter semester apply by 15 July, summer semester by 15 January. Processing takes about 10-12 weeks, so apply as early as the portal opens. English requirement verified: level B2, shown by IELTS Academic 6.5 overall with no band minimum - you meet it. Both intakes are open for most English master's.";
+["at-tuwien-se","at-tuwien-ds","at-tuwien-lc"].forEach(id=>{
+  atSet(id,{ielts:"6.5",eligibility:"match",verify:false,intake:"Winter 2027/28 (summer also)",close_date:"2027-07-15"});
+  atAdd(id,TUW_DL);
+});
+
+// ---- University of Vienna (CEFR B2; selection procedure; winter intake) ----
+const UNIVIE_DL=" Verified Nov 2026 on studieren.univie.ac.at: the English requirement is CEFR B2, which IELTS 6.5 meets. CS/Data Science master's use a selection procedure - you apply 2 March-7 April for the following winter, and there is a written entrance exam held in Vienna around 8 July that you must attend in person (plan for the trip). About 85 study places; the admission letter is valid for that winter and the following summer. One application per year, winter start only.";
+atSet("at-univie-cs",{ielts:"6.5",eligibility:"match",verify:false,intake:"Winter 2027/28",close_date:"2027-04-07"});
+atAdd("at-univie-cs",UNIVIE_DL);
+atSet("at-univie-ds",{ielts:"6.5",eligibility:"match",verify:false,intake:"Winter 2027/28",close_date:"2027-04-07"});
+atAdd("at-univie-ds",UNIVIE_DL);
+
+// ---- JKU Linz (CEFR B2; both intakes, winter main) ----
+const JKU_DL=" Deadlines, verified Nov 2026 on jku.at (non-EU): winter semester apply by 5 September, summer semester by 5 February. CS master's starts in winter (summer only in exceptional cases); AI and Data Science recommend winter but allow summer. Non-EU applicants should apply at least six months ahead for the residence permit. English requirement: CEFR B2, met by IELTS 6.5.";
+["at-jku-cs","at-jku-ai"].forEach(id=>{
+  atSet(id,{ielts:"6.5",eligibility:"match",verify:false,intake:"Winter 2027/28 (summer also)",close_date:"2027-09-05"});
+  atAdd(id,JKU_DL);
+});
+
+// ---- University of Innsbruck (IELTS 6.5 overall, no band min, B2; both intakes) ----
+const UIBK_DL=" Deadlines, verified Nov 2026 on uibk.ac.at (non-EU, complete application): winter semester by about 10 August, summer semester by about 10 January; the master's admission period for a summer start runs to 31 March. English requirement: IELTS 6.5 overall (no band minimum) / CEFR B2 - you meet it.";
+atSet("at-uibk-cs",{ielts:"6.5",eligibility:"match",verify:false,intake:"Winter 2027/28 (summer also)",close_date:"2027-08-10"});
+atAdd("at-uibk-cs",UIBK_DL);
+
+// ---- University of Klagenfurt / AAU (IELTS 6.5 with >=6.0 each; both intakes) ----
+const AAU_DL=" Verified Nov 2026 on aau.at: MSc Artificial Intelligence and Cybersecurity asks for IELTS 6.5 overall with at least 6.0 in every band (CEFR B2) - you meet it. Online application runs 13 January-30 April in three windows (EUR 50 fee + a short motivation video); non-EU applicants are advised to use the first window (Jan-Feb). Winter enrolment by 31 October; a summer start is possible if requirements are met by late October (enrol by 31 March). Entry needs a relevant CS bachelor, or an engineering degree with a solid CS core.";
+atSet("at-aau-ai",{ielts:"6.5",eligibility:"match",verify:false,intake:"Winter 2027/28 (summer also)",close_date:"2027-04-30"});
+atAdd("at-aau-ai",AAU_DL);
+
+// ---- Excluded: need IELTS 7.0 / CEFR C1 ----
+// TU Graz (at-tugraz-se, at-tugraz-cs) already retired.
+// University of Salzburg PLUS requires CEFR C1 -> remove.
+if(!RETIRE.includes("at-plus-ds"))RETIRE.push("at-plus-ds");
+
+// ---- Country guide for Austria ----
+(function(){
+  const g=GUIDE.find(x=>x.country==="Austria");
+  const pts=["Verified Nov 2026: five public universities match your IELTS 6.5 (no band below 6.5): TU Wien, University of Vienna, JKU Linz, University of Innsbruck and University of Klagenfurt. TU Graz, University of Graz and University of Salzburg need IELTS 7.0 / CEFR C1, so they are excluded.","As a Bangladeshi citizen you are on Austria's tuition-exemption list, so public-university tuition is only the ~EUR 26/semester student-union fee. Confirm the list still includes Bangladesh when you enrol.","Non-EU deadlines differ by university and are early: TU Wien 15 Jul (winter) / 15 Jan (summer); JKU 5 Sep / 5 Feb; Innsbruck ~10 Aug / ~10 Jan; Klagenfurt applications 13 Jan-30 Apr; University of Vienna has a selection procedure (apply 2 Mar-7 Apr, in-person written exam in Vienna ~8 Jul, winter start only).","Most English master's run a winter (October) intake; summer (March) is offered at JKU, Innsbruck, Klagenfurt and most TU Wien programmes, but not for the Vienna CS/DS selection track. Apply at least six months ahead for the student residence permit (proof of ~EUR 15,300/yr living funds)."];
+  if(g){g.headline="Five universities match your IELTS 6.5; near-free tuition for Bangladeshi citizens";g.points=pts;}
+  else GUIDE.push({country:"Austria",rank:4,headline:"Five universities match your IELTS 6.5; near-free tuition for Bangladeshi citizens",points:pts});
+})();
+
+TASKS["2027-01"]=(TASKS["2027-01"]||[]).concat(["Austria: University of Vienna CS/DS application opens 2 Mar (apply by 7 Apr); Klagenfurt AI window opens 13 Jan"]);
+TASKS["2027-07"]=(TASKS["2027-07"]||[]).concat(["Austria: TU Wien winter deadline 15 Jul; book travel for the University of Vienna entrance exam (~8 Jul, in Vienna)"]);
+NOT_DONE.push("Austria professors to contact at TU Wien / JKU / Klagenfurt (distributed systems, ML, federated learning) - named supervisor list still to build");
+
+
 window.PD={RETIRE,SCH_RETIRE,PATCH,EXTRA,META,PROFS,SCH_PATCH,SCH_EXTRA,SCH_META,GUIDE,NOT_DONE,TASKS};
 })();
